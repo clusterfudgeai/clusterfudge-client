@@ -5,8 +5,8 @@ import dataclasses_json
 import grpc
 from grpc import ssl_channel_credentials
 
-from proto.launches import launches_pb2_grpc
-from proto.launches import launches_pb2
+from . import launches_pb2_grpc
+from . import launches_pb2
 
 import json
 
