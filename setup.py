@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='clusterfudge',  # Name used on PyPI (make it unique)
-    version='0.0.2',
+    version='0.0.3',
     description='Clusterfudge Python client library.',
     long_description=open('README.md').read(), 
     long_description_content_type='text/markdown',
