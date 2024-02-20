@@ -11,9 +11,10 @@ setup(
     url='https://github.com/clusterfudgeai/python', 
     packages=find_packages(),  # Finds packages automatically
    install_requires=[
-        'dataclasses_json', 
-        'grpcio',  # Note: use 'grpcio' 
-        'google-protobuf',
+        "dataclasses; python_version<'3.7'",
+        "dataclasses-json",
+        "grpcio",
+        "protobuf",
    ],
     classifiers=[
         "Programming Language :: Python :: 3",
