@@ -1,4 +1,3 @@
-
 import dataclasses
 from sys import stderr
 import dataclasses_json
@@ -7,8 +6,6 @@ from grpc import ssl_channel_credentials
 
 from . import launches_pb2_grpc
 from . import launches_pb2
-
-import json
 
 
 @dataclasses_json.dataclass_json(letter_case=dataclasses_json.LetterCase.CAMEL)
@@ -21,7 +18,7 @@ class APIKeyCallCredentials(grpc.AuthMetadataPlugin):
     def __init__(self, api_key: str):
         self.api_key = api_key
 
-    def __call__(self, context, callback):
+    def __call__(self, _, callback):
         credentials = (("authorization", "Bearer " + self.api_key),)
         callback(credentials, None)
 
