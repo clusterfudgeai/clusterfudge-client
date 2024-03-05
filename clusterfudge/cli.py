@@ -64,7 +64,9 @@ async def _login(tenant_id: Optional[str] = None):
 
 def _save_token_to_file(token: str):
     token_data = {"token": token}
-    filepath = os.path.join(os.path.expanduser("~"), ".clusterfudge", "config.json")
+    config_dir = os.path.join(os.path.expanduser("~"), ".clusterfudge")
+    os.makedirs(config_dir, exist_ok=True)
+    filepath = os.path.join(config_dir, "config.json")
     with open(filepath, "w") as token_file:
         json.dump(token_data, token_file)
     typer.echo("Token saved to file successfully.")
