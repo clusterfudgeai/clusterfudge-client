@@ -34,6 +34,7 @@ class Resources:
     a100_40gb: int = 0
     a100_80gb: int = 0
     h100: int = 0
+    rtx3090: int = 0
 
 
 @dataclasses.dataclass(kw_only=True)
@@ -112,4 +113,5 @@ def _resources_to_proto(r: Resources | None) -> resources_pb2.Resources:
         gpu_a100_40gb=r.a100_40gb,
         gpu_a100_80gb=r.a100_80gb,
         gpu_h100=r.h100,
+        gpu_rtx3090=r.rtx3090,
     )
