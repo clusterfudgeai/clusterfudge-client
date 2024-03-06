@@ -79,26 +79,26 @@ class Client:
     ) -> launches_pb2.Launch:
         """Create a launch"""
 
-        launch_script_contents: str = ""
+        launch_script_body: str = ""
         stack = inspect.stack()
         caller_frame = stack[1]
         caller_file_path = caller_frame.filename
         try:
             with open(caller_file_path, "r") as file:
-                launch_script_contents = file.read()
+                launch_script_body = file.read()
         except FileNotFoundError:
             pass
 
         return self.launches_stub.CreateLaunch(
             launches_pb2.CreateLaunchRequest(
-                # name=create_launch_request.name,
-                # description=create_launch_request.description,
+                title=create_launch_request.name,
+                description=create_launch_request.description,
                 command=create_launch_request.command,
                 replicas=create_launch_request.replicas,
                 replica_resources=_resources_to_proto(
                     create_launch_request.replica_resources
                 ),
-                # launch_script_contents=launch_script_contents,
+                launch_script_body=launch_script_body,
             )
         )
 
