@@ -1,12 +1,13 @@
 import dataclasses
 import inspect
+import os
 from collections.abc import Sequence
+
 import dataclasses_json
 import grpc
 from grpc import ssl_channel_credentials
 
-from clusterfudge_proto.launches import launches_pb2_grpc
-from clusterfudge_proto.launches import launches_pb2
+from clusterfudge_proto.launches import launches_pb2, launches_pb2_grpc
 from clusterfudge_proto.resources import resources_pb2
 
 
@@ -57,7 +58,9 @@ class Client:
 
     def _load_config_from_file(self) -> ClusterfudgeConfig:
         try:
-            with open("/Users/george/.clusterfudge/config.json") as f:
+            with open(
+                os.path.join(os.path.expanduser("~"), ".clusterfudge", "config.json")
+            ) as f:
                 return ClusterfudgeConfig.from_json(f.read())
         except FileNotFoundError as e:
             raise RuntimeError(

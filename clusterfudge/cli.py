@@ -1,12 +1,12 @@
-from typing import Optional
-import webbrowser
-import os
-import typer
-import webbrowser
-import contextlib
-from aiohttp import web
 import asyncio
+import contextlib
 import json
+import os
+import webbrowser
+from typing import Optional
+
+import typer
+from aiohttp import web
 
 app = typer.Typer(
     name="clusterfudge",
