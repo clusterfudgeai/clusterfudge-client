@@ -1,5 +1,6 @@
 import dataclasses
 import inspect
+import json
 import os
 from collections.abc import Sequence
 
@@ -57,14 +58,19 @@ class Client:
         self.launches_stub = launches_pb2_grpc.LaunchesStub(self.channel)
 
     def _load_config_from_file(self) -> ClusterfudgeConfig:
+        config_path = os.path.join(
+            os.path.expanduser("~"), ".clusterfudge", "config.json"
+        )
         try:
-            with open(
-                os.path.join(os.path.expanduser("~"), ".clusterfudge", "config.json")
-            ) as f:
+            with open(config_path) as f:
                 return ClusterfudgeConfig.from_json(f.read())
         except FileNotFoundError as e:
             raise RuntimeError(
-                "Configuration file not found. Please run 'fudge login' to set up your configuration."
+                "Configuration file not found. Please run 'fudge login' to set up."
+            ) from e
+        except json.JSONDecodeError as e:
+            raise RuntimeError(
+                f"Configuration file {config_path} is not valid JSON. Please run 'fudge login' to set up."
             ) from e
 
     def create_launch(
