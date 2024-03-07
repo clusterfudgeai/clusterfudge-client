@@ -57,7 +57,7 @@ class GetLaunchRequest(_message.Message):
     def __init__(self, id: _Optional[str] = ...) -> None: ...
 
 class Launch(_message.Message):
-    __slots__ = ["command", "command_to_run", "description", "hostnames", "id", "launch_id", "launch_script_body", "launched_by", "replica_resources", "replicas", "status", "submitted_at", "title"]
+    __slots__ = ["command", "command_to_run", "description", "hostnames", "id", "launch_id", "launch_script_body", "launched_by", "replica_resources", "replicas", "scheduling_log", "status", "submitted_at", "title"]
     class Status(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
         __slots__ = []
     COMMAND_FIELD_NUMBER: _ClassVar[int]
@@ -77,6 +77,7 @@ class Launch(_message.Message):
     LAUNCH_STATUS_UNMANAGED: Launch.Status
     REPLICAS_FIELD_NUMBER: _ClassVar[int]
     REPLICA_RESOURCES_FIELD_NUMBER: _ClassVar[int]
+    SCHEDULING_LOG_FIELD_NUMBER: _ClassVar[int]
     STATUS_FIELD_NUMBER: _ClassVar[int]
     SUBMITTED_AT_FIELD_NUMBER: _ClassVar[int]
     TITLE_FIELD_NUMBER: _ClassVar[int]
@@ -90,10 +91,11 @@ class Launch(_message.Message):
     launched_by: str
     replica_resources: _resources_pb2.Resources
     replicas: int
+    scheduling_log: _containers.RepeatedScalarFieldContainer[str]
     status: Launch.Status
     submitted_at: _timestamp_pb2.Timestamp
     title: str
-    def __init__(self, launch_id: _Optional[int] = ..., launched_by: _Optional[str] = ..., submitted_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., command_to_run: _Optional[str] = ..., command: _Optional[_Iterable[str]] = ..., hostnames: _Optional[_Iterable[str]] = ..., status: _Optional[_Union[Launch.Status, str]] = ..., id: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., replicas: _Optional[int] = ..., replica_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., launch_script_body: _Optional[str] = ...) -> None: ...
+    def __init__(self, launch_id: _Optional[int] = ..., launched_by: _Optional[str] = ..., submitted_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., command_to_run: _Optional[str] = ..., command: _Optional[_Iterable[str]] = ..., hostnames: _Optional[_Iterable[str]] = ..., status: _Optional[_Union[Launch.Status, str]] = ..., id: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., replicas: _Optional[int] = ..., replica_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., launch_script_body: _Optional[str] = ..., scheduling_log: _Optional[_Iterable[str]] = ...) -> None: ...
 
 class LaunchDetails(_message.Message):
     __slots__ = ["commands", "launch", "logs", "xids"]
