@@ -1,1 +1,10 @@
-from .clusterfudge import Client, ClusterfudgeConfig, CreateLaunchRequest, Resources
+from .clusterfudge import (
+    Client,
+    ClusterfudgeConfig,
+    CreateLaunchRequest,
+    GitRepo,
+    Job,
+    LocalDir,
+    Process,
+    Resources,
+)

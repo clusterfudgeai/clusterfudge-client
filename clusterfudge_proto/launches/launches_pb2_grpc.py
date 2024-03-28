@@ -44,10 +44,20 @@ class LaunchesStub(object):
                 request_serializer=launches_dot_launches__pb2.StopLaunchRequest.SerializeToString,
                 response_deserializer=launches_dot_launches__pb2.StopLaunchResponse.FromString,
                 )
+        self.RerunLaunch = channel.unary_unary(
+                '/clusterfudge.Launches/RerunLaunch',
+                request_serializer=launches_dot_launches__pb2.RerunLaunchRequest.SerializeToString,
+                response_deserializer=launches_dot_launches__pb2.RerunLaunchResponse.FromString,
+                )
         self.ListResources = channel.unary_unary(
                 '/clusterfudge.Launches/ListResources',
                 request_serializer=launches_dot_launches__pb2.ListResourcesRequest.SerializeToString,
                 response_deserializer=launches_dot_launches__pb2.ListResourcesResponse.FromString,
+                )
+        self.DownloadZip = channel.unary_unary(
+                '/clusterfudge.Launches/DownloadZip',
+                request_serializer=launches_dot_launches__pb2.DownloadZipRequest.SerializeToString,
+                response_deserializer=launches_dot_launches__pb2.DownloadZipResponse.FromString,
                 )
 
 
@@ -90,7 +100,19 @@ class LaunchesServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def RerunLaunch(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def ListResources(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DownloadZip(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -129,10 +151,20 @@ def add_LaunchesServicer_to_server(servicer, server):
                     request_deserializer=launches_dot_launches__pb2.StopLaunchRequest.FromString,
                     response_serializer=launches_dot_launches__pb2.StopLaunchResponse.SerializeToString,
             ),
+            'RerunLaunch': grpc.unary_unary_rpc_method_handler(
+                    servicer.RerunLaunch,
+                    request_deserializer=launches_dot_launches__pb2.RerunLaunchRequest.FromString,
+                    response_serializer=launches_dot_launches__pb2.RerunLaunchResponse.SerializeToString,
+            ),
             'ListResources': grpc.unary_unary_rpc_method_handler(
                     servicer.ListResources,
                     request_deserializer=launches_dot_launches__pb2.ListResourcesRequest.FromString,
                     response_serializer=launches_dot_launches__pb2.ListResourcesResponse.SerializeToString,
+            ),
+            'DownloadZip': grpc.unary_unary_rpc_method_handler(
+                    servicer.DownloadZip,
+                    request_deserializer=launches_dot_launches__pb2.DownloadZipRequest.FromString,
+                    response_serializer=launches_dot_launches__pb2.DownloadZipResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -247,6 +279,23 @@ class Launches(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
+    def RerunLaunch(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/clusterfudge.Launches/RerunLaunch',
+            launches_dot_launches__pb2.RerunLaunchRequest.SerializeToString,
+            launches_dot_launches__pb2.RerunLaunchResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
     def ListResources(request,
             target,
             options=(),
@@ -260,5 +309,22 @@ class Launches(object):
         return grpc.experimental.unary_unary(request, target, '/clusterfudge.Launches/ListResources',
             launches_dot_launches__pb2.ListResourcesRequest.SerializeToString,
             launches_dot_launches__pb2.ListResourcesResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DownloadZip(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/clusterfudge.Launches/DownloadZip',
+            launches_dot_launches__pb2.DownloadZipRequest.SerializeToString,
+            launches_dot_launches__pb2.DownloadZipResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

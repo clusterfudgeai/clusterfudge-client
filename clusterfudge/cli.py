@@ -7,6 +7,7 @@ from typing import Optional
 
 import typer
 from aiohttp import web
+from typing_extensions import Annotated
 
 app = typer.Typer(
     name="clusterfudge",
@@ -73,7 +74,15 @@ def _save_token_to_file(token: str):
 
 
 @app.command()
-def login(tenant_id: Optional[str] = None):
+def login(
+    tenant_id: Annotated[
+        Optional[str],
+        typer.Argument(
+            help="Override tenant ID for login.",
+            hidden=True,
+        ),
+    ] = None
+):
     asyncio.run(_login(tenant_id))
 
 
