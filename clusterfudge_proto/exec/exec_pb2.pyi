@@ -36,7 +36,7 @@ class BulkCreateCommandResponse(_message.Message):
     def __init__(self) -> None: ...
 
 class Command(_message.Message):
-    __slots__ = ["acknowledged_at", "cmd_line", "command", "env", "exec_err", "execution_completed_at", "execution_started_at", "exit_code", "hostname", "id", "pid", "reference_id", "requested_at", "requested_by", "resource_request", "state", "tenant_id"]
+    __slots__ = ["acknowledged_at", "cmd_line", "command", "env", "exec_err", "execution_completed_at", "execution_started_at", "exit_code", "git_branch", "git_repo", "hostname", "id", "job_name", "pid", "reference_id", "requested_at", "requested_by", "resource_request", "state", "tenant_id", "zip_id"]
     ACKNOWLEDGED_AT_FIELD_NUMBER: _ClassVar[int]
     CMD_LINE_FIELD_NUMBER: _ClassVar[int]
     COMMAND_FIELD_NUMBER: _ClassVar[int]
@@ -45,8 +45,11 @@ class Command(_message.Message):
     EXECUTION_STARTED_AT_FIELD_NUMBER: _ClassVar[int]
     EXEC_ERR_FIELD_NUMBER: _ClassVar[int]
     EXIT_CODE_FIELD_NUMBER: _ClassVar[int]
+    GIT_BRANCH_FIELD_NUMBER: _ClassVar[int]
+    GIT_REPO_FIELD_NUMBER: _ClassVar[int]
     HOSTNAME_FIELD_NUMBER: _ClassVar[int]
     ID_FIELD_NUMBER: _ClassVar[int]
+    JOB_NAME_FIELD_NUMBER: _ClassVar[int]
     PID_FIELD_NUMBER: _ClassVar[int]
     REFERENCE_ID_FIELD_NUMBER: _ClassVar[int]
     REQUESTED_AT_FIELD_NUMBER: _ClassVar[int]
@@ -54,6 +57,7 @@ class Command(_message.Message):
     RESOURCE_REQUEST_FIELD_NUMBER: _ClassVar[int]
     STATE_FIELD_NUMBER: _ClassVar[int]
     TENANT_ID_FIELD_NUMBER: _ClassVar[int]
+    ZIP_ID_FIELD_NUMBER: _ClassVar[int]
     acknowledged_at: _timestamp_pb2.Timestamp
     cmd_line: _containers.RepeatedScalarFieldContainer[str]
     command: CommandType
@@ -62,8 +66,11 @@ class Command(_message.Message):
     execution_completed_at: _timestamp_pb2.Timestamp
     execution_started_at: _timestamp_pb2.Timestamp
     exit_code: _wrappers_pb2.Int32Value
+    git_branch: str
+    git_repo: str
     hostname: str
     id: str
+    job_name: str
     pid: _wrappers_pb2.Int32Value
     reference_id: str
     requested_at: _timestamp_pb2.Timestamp
@@ -71,7 +78,8 @@ class Command(_message.Message):
     resource_request: _resources_pb2.Resources
     state: CommandState
     tenant_id: str
-    def __init__(self, tenant_id: _Optional[str] = ..., hostname: _Optional[str] = ..., id: _Optional[str] = ..., requested_by: _Optional[str] = ..., requested_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., acknowledged_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., command: _Optional[_Union[CommandType, str]] = ..., env: _Optional[_Iterable[str]] = ..., reference_id: _Optional[str] = ..., execution_started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., execution_completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., exec_err: _Optional[str] = ..., exit_code: _Optional[_Union[_wrappers_pb2.Int32Value, _Mapping]] = ..., state: _Optional[_Union[CommandState, str]] = ..., pid: _Optional[_Union[_wrappers_pb2.Int32Value, _Mapping]] = ..., cmd_line: _Optional[_Iterable[str]] = ..., resource_request: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ...) -> None: ...
+    zip_id: str
+    def __init__(self, tenant_id: _Optional[str] = ..., hostname: _Optional[str] = ..., id: _Optional[str] = ..., requested_by: _Optional[str] = ..., requested_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., acknowledged_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., command: _Optional[_Union[CommandType, str]] = ..., env: _Optional[_Iterable[str]] = ..., reference_id: _Optional[str] = ..., execution_started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., execution_completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., exec_err: _Optional[str] = ..., exit_code: _Optional[_Union[_wrappers_pb2.Int32Value, _Mapping]] = ..., state: _Optional[_Union[CommandState, str]] = ..., pid: _Optional[_Union[_wrappers_pb2.Int32Value, _Mapping]] = ..., cmd_line: _Optional[_Iterable[str]] = ..., resource_request: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., zip_id: _Optional[str] = ..., git_repo: _Optional[str] = ..., git_branch: _Optional[str] = ..., job_name: _Optional[str] = ...) -> None: ...
 
 class CommandResponse(_message.Message):
     __slots__ = ["command", "id", "reference_id", "requested_at"]
