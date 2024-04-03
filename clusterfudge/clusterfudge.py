@@ -37,6 +37,7 @@ class Resources:
     a100_80gb: int = 0
     h100: int = 0
     rtx3090: int = 0
+    rtx6000: int = 0
     t4: int = 0
 
 
@@ -52,6 +53,16 @@ class GitRepo:
 
 
 @dataclasses.dataclass(kw_only=True)
+class OnReplicaFailureOtherReplicasContinue:
+    pass
+
+
+@dataclasses.dataclass(kw_only=True)
+class OnReplicaFailureOtherReplicasAreStopped:
+    pass
+
+
+@dataclasses.dataclass(kw_only=True)
 class Process:
     command: Sequence[str]
     resource_requirements: Optional[Resources] = None
@@ -62,6 +73,9 @@ class Job:
     short_name: str
     replicas: int
     processes: Sequence[Process]
+    replica_failure_behaviour: Optional[
+        OnReplicaFailureOtherReplicasContinue | OnReplicaFailureOtherReplicasAreStopped
+    ] = None
 
 
 @dataclasses.dataclass(kw_only=True)
@@ -107,13 +121,35 @@ def _proto_req_from_create_launch_request_v2(
                 )
             )
 
-        jobs.append(
-            launches_pb2.Job(
-                short_name=job.short_name,
-                replicas=job.replicas,
-                processes=processes,
-            )
+        job_pb = launches_pb2.Job(
+            short_name=job.short_name,
+            replicas=job.replicas,
+            processes=processes,
         )
+
+        if job.replica_failure_behaviour is not None:
+            if isinstance(
+                job.replica_failure_behaviour, OnReplicaFailureOtherReplicasContinue
+            ):
+                job_pb.MergeFrom(
+                    launches_pb2.Job(
+                        on_replica_failure_other_replicas_continue=launches_pb2.OnReplicaFailureOtherReplicasContinue()
+                    )
+                )
+            elif isinstance(
+                job.replica_failure_behaviour, OnReplicaFailureOtherReplicasAreStopped
+            ):
+                job_pb.MergeFrom(
+                    launches_pb2.Job(
+                        on_replica_failure_other_replicas_are_stopped=launches_pb2.OnReplicaFailureOtherReplicasAreStopped()
+                    )
+                )
+            else:
+                raise ValueError(
+                    f"Unknown replica failure behaviour: {job.replica_failure_behaviour}"
+                )
+
+        jobs.append(job_pb)
 
     return launches_pb2.CreateLaunchRequest(
         title=create_launch_request.name,
@@ -231,5 +267,6 @@ def _resources_to_proto(r: Resources | None) -> resources_pb2.Resources:
         gpu_a100_80gb=r.a100_80gb,
         gpu_h100=r.h100,
         gpu_rtx3090=r.rtx3090,
+        gpu_rtx6000=r.rtx6000,
         gpu_t4=r.t4,
     )

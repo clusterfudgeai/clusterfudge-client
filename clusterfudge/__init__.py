@@ -5,6 +5,8 @@ from .clusterfudge import (
     GitRepo,
     Job,
     LocalDir,
+    OnReplicaFailureOtherReplicasContinue,
+    OnReplicaFailureOtherReplicasAreStopped,
     Process,
     Resources,
 )
