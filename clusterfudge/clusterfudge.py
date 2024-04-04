@@ -41,34 +41,34 @@ class Resources:
     t4: int = 0
 
 
-@dataclasses.dataclass(kw_only=True)
+@dataclasses.dataclass()
 class LocalDir:
     pass
 
 
-@dataclasses.dataclass(kw_only=True)
+@dataclasses.dataclass()
 class GitRepo:
     repo: str
     branch: str
 
 
-@dataclasses.dataclass(kw_only=True)
+@dataclasses.dataclass()
 class OnReplicaFailureOtherReplicasContinue:
     pass
 
 
-@dataclasses.dataclass(kw_only=True)
+@dataclasses.dataclass()
 class OnReplicaFailureOtherReplicasAreStopped:
     pass
 
 
-@dataclasses.dataclass(kw_only=True)
+@dataclasses.dataclass()
 class Process:
     command: Sequence[str]
     resource_requirements: Optional[Resources] = None
 
 
-@dataclasses.dataclass(kw_only=True)
+@dataclasses.dataclass()
 class Job:
     short_name: str
     replicas: int
@@ -78,12 +78,12 @@ class Job:
     ] = None
 
 
-@dataclasses.dataclass(kw_only=True)
+@dataclasses.dataclass()
 class CreateLaunchRequest:
+    jobs: Sequence[Job]
     name: Optional[str] = None
     description: Optional[str] = None
     deployment: Optional[LocalDir | GitRepo] = None
-    jobs: Sequence[Job]
 
 
 def _validate_create_launch_request_v2(

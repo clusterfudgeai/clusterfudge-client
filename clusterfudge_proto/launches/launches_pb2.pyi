@@ -11,13 +11,14 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class ClusterResources(_message.Message):
-    __slots__ = ["available_resources", "cordoned_resources", "gpu_a100_40gb", "gpu_a100_80gb", "gpu_h100", "gpu_rtx3090", "gpu_t4", "name", "offline_resources", "shard_resources", "total_resources", "used_non_clusterfudge", "used_resources"]
+    __slots__ = ["available_resources", "cordoned_resources", "gpu_a100_40gb", "gpu_a100_80gb", "gpu_h100", "gpu_rtx3090", "gpu_rtx6000", "gpu_t4", "name", "offline_resources", "shard_resources", "total_resources", "used_non_clusterfudge", "used_resources"]
     AVAILABLE_RESOURCES_FIELD_NUMBER: _ClassVar[int]
     CORDONED_RESOURCES_FIELD_NUMBER: _ClassVar[int]
     GPU_A100_40GB_FIELD_NUMBER: _ClassVar[int]
     GPU_A100_80GB_FIELD_NUMBER: _ClassVar[int]
     GPU_H100_FIELD_NUMBER: _ClassVar[int]
     GPU_RTX3090_FIELD_NUMBER: _ClassVar[int]
+    GPU_RTX6000_FIELD_NUMBER: _ClassVar[int]
     GPU_T4_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     OFFLINE_RESOURCES_FIELD_NUMBER: _ClassVar[int]
@@ -31,6 +32,7 @@ class ClusterResources(_message.Message):
     gpu_a100_80gb: ResourceStatuses
     gpu_h100: ResourceStatuses
     gpu_rtx3090: ResourceStatuses
+    gpu_rtx6000: ResourceStatuses
     gpu_t4: ResourceStatuses
     name: str
     offline_resources: _resources_pb2.Resources
@@ -38,7 +40,7 @@ class ClusterResources(_message.Message):
     total_resources: _resources_pb2.Resources
     used_non_clusterfudge: _resources_pb2.Resources
     used_resources: _resources_pb2.Resources
-    def __init__(self, name: _Optional[str] = ..., total_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., used_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., used_non_clusterfudge: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., available_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., cordoned_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., offline_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., shard_resources: _Optional[_Iterable[_Union[ShardResources, _Mapping]]] = ..., gpu_rtx3090: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_a100_40gb: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_a100_80gb: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_h100: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_t4: _Optional[_Union[ResourceStatuses, _Mapping]] = ...) -> None: ...
+    def __init__(self, name: _Optional[str] = ..., total_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., used_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., used_non_clusterfudge: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., available_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., cordoned_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., offline_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., shard_resources: _Optional[_Iterable[_Union[ShardResources, _Mapping]]] = ..., gpu_rtx3090: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_a100_40gb: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_a100_80gb: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_h100: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_t4: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_rtx6000: _Optional[_Union[ResourceStatuses, _Mapping]] = ...) -> None: ...
 
 class CreateLaunchRequest(_message.Message):
     __slots__ = ["cluster", "command", "command_to_run", "description", "git_branch", "git_repo", "hostnames", "jobs", "launch_script_body", "launched_by", "replica_resources", "replicas", "shard", "title", "zip_file_contents"]
@@ -115,14 +117,18 @@ class ImportantLog(_message.Message):
     def __init__(self, id: _Optional[str] = ..., hostname: _Optional[str] = ..., occurred_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., launch_id: _Optional[str] = ..., exec_command_id: _Optional[str] = ..., text_payload: _Optional[str] = ...) -> None: ...
 
 class Job(_message.Message):
-    __slots__ = ["processes", "replicas", "short_name"]
+    __slots__ = ["on_replica_failure_other_replicas_are_stopped", "on_replica_failure_other_replicas_continue", "processes", "replicas", "short_name"]
+    ON_REPLICA_FAILURE_OTHER_REPLICAS_ARE_STOPPED_FIELD_NUMBER: _ClassVar[int]
+    ON_REPLICA_FAILURE_OTHER_REPLICAS_CONTINUE_FIELD_NUMBER: _ClassVar[int]
     PROCESSES_FIELD_NUMBER: _ClassVar[int]
     REPLICAS_FIELD_NUMBER: _ClassVar[int]
     SHORT_NAME_FIELD_NUMBER: _ClassVar[int]
+    on_replica_failure_other_replicas_are_stopped: OnReplicaFailureOtherReplicasAreStopped
+    on_replica_failure_other_replicas_continue: OnReplicaFailureOtherReplicasContinue
     processes: _containers.RepeatedCompositeFieldContainer[Process]
     replicas: int
     short_name: str
-    def __init__(self, short_name: _Optional[str] = ..., replicas: _Optional[int] = ..., processes: _Optional[_Iterable[_Union[Process, _Mapping]]] = ...) -> None: ...
+    def __init__(self, short_name: _Optional[str] = ..., replicas: _Optional[int] = ..., processes: _Optional[_Iterable[_Union[Process, _Mapping]]] = ..., on_replica_failure_other_replicas_continue: _Optional[_Union[OnReplicaFailureOtherReplicasContinue, _Mapping]] = ..., on_replica_failure_other_replicas_are_stopped: _Optional[_Union[OnReplicaFailureOtherReplicasAreStopped, _Mapping]] = ...) -> None: ...
 
 class Launch(_message.Message):
     __slots__ = ["cluster", "command", "command_to_run", "description", "git_branch", "git_repo", "hostnames", "id", "jobs", "launch_id", "launch_script_body", "launched_by", "replica_resources", "replicas", "scheduling_log", "shard", "status", "submitted_at", "title", "zip_id"]
@@ -243,6 +249,14 @@ class ListResourcesResponse(_message.Message):
     resource_consumers: _containers.RepeatedCompositeFieldContainer[_exec_pb2.Command]
     def __init__(self, clusters: _Optional[_Iterable[_Union[ClusterResources, _Mapping]]] = ..., resource_consumers: _Optional[_Iterable[_Union[_exec_pb2.Command, _Mapping]]] = ...) -> None: ...
 
+class OnReplicaFailureOtherReplicasAreStopped(_message.Message):
+    __slots__ = []
+    def __init__(self) -> None: ...
+
+class OnReplicaFailureOtherReplicasContinue(_message.Message):
+    __slots__ = []
+    def __init__(self) -> None: ...
+
 class Process(_message.Message):
     __slots__ = ["command", "resource_requirements"]
     COMMAND_FIELD_NUMBER: _ClassVar[int]
@@ -288,13 +302,14 @@ class ResourceStatuses(_message.Message):
     def __init__(self, total: _Optional[_Union[ResourceCountWithHostnames, _Mapping]] = ..., used: _Optional[_Union[ResourceCountWithHostnames, _Mapping]] = ..., used_non_clusterfudge: _Optional[_Union[ResourceCountWithHostnames, _Mapping]] = ..., available: _Optional[_Union[ResourceCountWithHostnames, _Mapping]] = ..., cordoned: _Optional[_Union[ResourceCountWithHostnames, _Mapping]] = ..., offline: _Optional[_Union[ResourceCountWithHostnames, _Mapping]] = ...) -> None: ...
 
 class ShardResources(_message.Message):
-    __slots__ = ["available_resources", "cordoned_resources", "gpu_a100_40gb", "gpu_a100_80gb", "gpu_h100", "gpu_rtx3090", "gpu_t4", "name", "offline_resources", "total_resources", "used_non_clusterfudge", "used_resources"]
+    __slots__ = ["available_resources", "cordoned_resources", "gpu_a100_40gb", "gpu_a100_80gb", "gpu_h100", "gpu_rtx3090", "gpu_rtx6000", "gpu_t4", "name", "offline_resources", "total_resources", "used_non_clusterfudge", "used_resources"]
     AVAILABLE_RESOURCES_FIELD_NUMBER: _ClassVar[int]
     CORDONED_RESOURCES_FIELD_NUMBER: _ClassVar[int]
     GPU_A100_40GB_FIELD_NUMBER: _ClassVar[int]
     GPU_A100_80GB_FIELD_NUMBER: _ClassVar[int]
     GPU_H100_FIELD_NUMBER: _ClassVar[int]
     GPU_RTX3090_FIELD_NUMBER: _ClassVar[int]
+    GPU_RTX6000_FIELD_NUMBER: _ClassVar[int]
     GPU_T4_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     OFFLINE_RESOURCES_FIELD_NUMBER: _ClassVar[int]
@@ -307,13 +322,14 @@ class ShardResources(_message.Message):
     gpu_a100_80gb: ResourceStatuses
     gpu_h100: ResourceStatuses
     gpu_rtx3090: ResourceStatuses
+    gpu_rtx6000: ResourceStatuses
     gpu_t4: ResourceStatuses
     name: str
     offline_resources: _resources_pb2.Resources
     total_resources: _resources_pb2.Resources
     used_non_clusterfudge: _resources_pb2.Resources
     used_resources: _resources_pb2.Resources
-    def __init__(self, name: _Optional[str] = ..., total_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., used_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., used_non_clusterfudge: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., available_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., cordoned_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., offline_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., gpu_rtx3090: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_a100_40gb: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_a100_80gb: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_h100: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_t4: _Optional[_Union[ResourceStatuses, _Mapping]] = ...) -> None: ...
+    def __init__(self, name: _Optional[str] = ..., total_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., used_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., used_non_clusterfudge: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., available_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., cordoned_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., offline_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., gpu_rtx3090: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_a100_40gb: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_a100_80gb: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_h100: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_t4: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_rtx6000: _Optional[_Union[ResourceStatuses, _Mapping]] = ...) -> None: ...
 
 class StopLaunchRequest(_message.Message):
     __slots__ = ["id"]
