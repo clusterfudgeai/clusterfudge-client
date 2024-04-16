@@ -84,6 +84,9 @@ class CreateLaunchRequest:
     name: Optional[str] = None
     description: Optional[str] = None
     deployment: Optional[LocalDir | GitRepo] = None
+    cluster: Optional[str] = None
+    shard: Optional[str] = None
+    hostnames: Optional[Sequence[str]] = None
 
 
 def _validate_create_launch_request_v2(
@@ -154,6 +157,9 @@ def _proto_req_from_create_launch_request_v2(
     return launches_pb2.CreateLaunchRequest(
         title=create_launch_request.name,
         description=create_launch_request.description,
+        cluster=create_launch_request.cluster,
+        shard=create_launch_request.shard,
+        hostnames=create_launch_request.hostnames,
         jobs=jobs,
     )
 
