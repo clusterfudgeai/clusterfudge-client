@@ -50,6 +50,7 @@ class LocalDir:
 class GitRepo:
     repo: str
     branch: str
+    commit: Optional[str] | None = None
 
 
 @dataclasses.dataclass()
@@ -221,6 +222,7 @@ class Client:
             elif isinstance(create_launch_request.deployment, GitRepo):
                 protoReq.git_repo = create_launch_request.deployment.repo
                 protoReq.git_branch = create_launch_request.deployment.branch
+                protoReq.git_commit = create_launch_request.deployment.commit
             else:
                 raise ValueError(
                     f"Unknown deployment type: {create_launch_request.deployment}"
