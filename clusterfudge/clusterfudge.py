@@ -39,6 +39,10 @@ class Resources:
     rtx3090: int = 0
     rtx6000: int = 0
     t4: int = 0
+    l4: int = 0
+    v100: int = 0
+    p100: int = 0
+    p4: int = 0
 
 
 @dataclasses.dataclass()
@@ -228,7 +232,16 @@ class Client:
                     f"Unknown deployment type: {create_launch_request.deployment}"
                 )
 
-        return self.launches_stub.CreateLaunch(protoReq)
+        try:
+            with self.launches_stub.CreateLaunch(protoReq) as launch:
+                return launch
+        except grpc.RpcError as e:
+            status_code = e.code() if hasattr(e, 'code') else None
+            details = e.details() if hasattr(e, 'details') else None
+            if status_code == grpc.StatusCode.UNAUTHENTICATED:
+                raise AuthenticationError(e, details=details, status_code=status_code) from None
+            else:
+                raise e
 
 
 def _create_zip_file_of_project_contents_in_memory() -> io.BytesIO:
@@ -277,4 +290,30 @@ def _resources_to_proto(r: Resources | None) -> resources_pb2.Resources:
         gpu_rtx3090=r.rtx3090,
         gpu_rtx6000=r.rtx6000,
         gpu_t4=r.t4,
+        gpu_l4=r.l4,
+        gpu_v100=r.v100,
+        gpu_p4=r.p4,
+        gpu_p100=r.p100,
     )
+
+
+class AuthenticationError(Exception):
+    """Exception raised for authentication failures."""
+    
+    def __init__(self, original_exception, details=None, status_code=None):
+        self.original_exception = original_exception
+        self.details = details
+        self.status_code = status_code
+        self.message = self.user_friendly_message()
+        super().__init__(self.message)
+
+    def user_friendly_message(self):
+        base_message = "\n\nAuthentication failed. Please refresh your credentials with 'fudge login'."
+
+        if self.details:
+            base_message += f"\n\tDetails: {self.details}"
+        
+        if self.status_code:
+            base_message += f"\n\tStatus code: {self.status_code}"
+        
+        return base_message
