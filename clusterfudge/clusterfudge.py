@@ -226,15 +226,15 @@ class Client:
             elif isinstance(create_launch_request.deployment, GitRepo):
                 protoReq.git_repo = create_launch_request.deployment.repo
                 protoReq.git_branch = create_launch_request.deployment.branch
-                protoReq.git_commit = create_launch_request.deployment.commit
+                if create_launch_request.deployment.commit is not None:
+                    protoReq.git_commit = create_launch_request.deployment.commit
             else:
                 raise ValueError(
                     f"Unknown deployment type: {create_launch_request.deployment}"
                 )
 
         try:
-            with self.launches_stub.CreateLaunch(protoReq) as launch:
-                return launch
+            return self.launches_stub.CreateLaunch(protoReq)
         except grpc.RpcError as e:
             status_code = e.code() if hasattr(e, 'code') else None
             details = e.details() if hasattr(e, 'details') else None
