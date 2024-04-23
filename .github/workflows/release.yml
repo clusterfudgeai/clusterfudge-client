@@ -1,7 +1,5 @@
 name: release
-defaults:
-  run:
-    working-directory: ./clusterfudge
+
 on:
   push:
     branches:
