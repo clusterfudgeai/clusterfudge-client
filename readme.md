@@ -1,9 +1,19 @@
-Clusterfudge Client Library
-===========================
+# Clusterfudge Python Client + CLI
 
+Clusterfudge's Python client for launching workloads, and integrated CLI.
 
-## How to Build and Distribute (for fudgeneers)
-0. `pip install twine` or delete the current contents of `./dist/*`
-1. Incr version number in setup.py
-2. Build `python3 -m build`
-3. Upload using twine `twine upload dist/*` (using your PiPy API token)
+## Documentation
+
+See the [Clusterfudge platform docs](https://docs.clusterfudge.com)
+
+Python library documentation coming soon...
+
+## Requirements:
+
+    Python: >= 3.9
+
+## Install
+
+Clusterfudge is available via pypi using your preferred package management tool.
+
+`pip install clusterfudge`
