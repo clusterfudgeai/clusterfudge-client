@@ -298,7 +298,7 @@ def _resources_to_proto(r: Resources | None) -> resources_pb2.Resources:
 
 
 class AuthenticationError(Exception):
-    """Exception raised for authentication failures."""
+    """Exception raised for authentication failures"""
     
     def __init__(self, original_exception, details=None, status_code=None):
         self.original_exception = original_exception
