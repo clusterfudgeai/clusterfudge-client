@@ -30,9 +30,40 @@ async def _login(tenant_id: Optional[str] = None):
             print("No token found in request")
             future.set_result(None)
 
-        return web.Response(
-            text="Token saved successfully. You can close this tab now."
-        )
+        html_content = """
+            <html>
+            <head>
+                <style>
+                    body {
+                        font-family: sans-serif;
+                        background-color: hsl(240 10% 3.9%);
+                        text-align: center;
+                        color: white;
+                        font-size: 16px;
+                    }
+                    .logo {
+                        font-family: 'Quantico', sans-serif;
+                        text-shadow: 1px 1px 0px red;
+                        letter-spacing: 0.05em;
+                        font-style: italic;
+                        font-weight: 700;
+                        text-transform: uppercase;
+                        font-size: 1.5rem;
+                        margin: 2rem 0;
+                    }
+                </style>
+            </head>
+            <body>
+                <h1 class="logo">Clusterfudge</h1>
+                <div>
+                    <p style="padding:3em;">Login successful, you can now return to your terminal to start using Clusterfudge.</p>
+                    <p>If you have not already installed the <b>fudgelet</b> on your nodes, please follow the instructions <a href="https://docs.clusterfudge.com/quickstart#2-install-the-fudgelet-on-a-linux-node">here</a>.</p>
+                    <p>More documentation about the Clusterfudge platform can be found <a href="https://docs.clusterfudge.com/">here</a>.</p>
+                </div>
+            </body>
+            </html>
+            """
+        return web.Response(body=html_content, content_type='text/html')
 
     @contextlib.asynccontextmanager
     async def _run_local_server():
@@ -61,6 +92,11 @@ async def _login(tenant_id: Optional[str] = None):
         token = future.result()
 
     _save_token_to_file(token)
+    typer.echo("")
+    typer.echo("If you have not already installed the fudgelet on your nodes, please follow the instructions at https://docs.clusterfudge.com/quickstart#2-install-the-fudgelet-on-a-linux-node")
+    typer.echo("")
+    typer.echo("Otherwise, you're ready to start launching with Clusterfudge")
+    typer.echo("")
 
 
 def _save_token_to_file(token: str):
