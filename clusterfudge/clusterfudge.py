@@ -236,10 +236,12 @@ class Client:
         try:
             return self.launches_stub.CreateLaunch(protoReq)
         except grpc.RpcError as e:
-            status_code = e.code() if hasattr(e, 'code') else None
-            details = e.details() if hasattr(e, 'details') else None
+            status_code = e.code() if hasattr(e, "code") else None
+            details = e.details() if hasattr(e, "details") else None
             if status_code == grpc.StatusCode.UNAUTHENTICATED:
-                raise AuthenticationError(e, details=details, status_code=status_code) from None
+                raise AuthenticationError(
+                    e, details=details, status_code=status_code
+                ) from None
             else:
                 raise e
 
@@ -298,8 +300,8 @@ def _resources_to_proto(r: Resources | None) -> resources_pb2.Resources:
 
 
 class AuthenticationError(Exception):
-    """Exception raised for authentication failures"""
-    
+    """Exception raised for authentication failures."""
+
     def __init__(self, original_exception, details=None, status_code=None):
         self.original_exception = original_exception
         self.details = details
@@ -312,8 +314,8 @@ class AuthenticationError(Exception):
 
         if self.details:
             base_message += f"\n\tDetails: {self.details}"
-        
+
         if self.status_code:
             base_message += f"\n\tStatus code: {self.status_code}"
-        
+
         return base_message
