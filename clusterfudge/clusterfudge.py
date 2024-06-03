@@ -113,6 +113,41 @@ def _validate_create_launch_request_v2(
                 raise ValueError(f"command must be non-empty for job {sn}")
 
 
+class SchedulingError(Exception):
+    def __init__(self, message: str, scheduling_log: str):
+        self.message = message
+        self.scheduling_log = scheduling_log
+        super().__init__(self.message)
+
+    def prettyprint(self):
+        print()
+        print(self.message)
+        print()
+        print("Scheduling log:")
+        print("---------------")
+        print(self.scheduling_log)
+        print("---------------")
+
+
+def _is_scheduling_error(e: grpc.RpcError) -> bool:
+    return e.details().startswith("failed to schedule launch:")
+
+
+# TODO(geotho): return this structured from the backend.
+def _grpc_error_to_clusterfudge_error(e: grpc.RpcError) -> SchedulingError:
+    details = e.details() if hasattr(e, "details") else None
+    detail_lines = details.splitlines() if details else []
+
+    message = detail_lines[0] if detail_lines else ""
+
+    for i, line in enumerate(detail_lines):
+        if line.strip().startswith("Scheduling log:"):
+            scheduling_log = "\n".join(detail_lines[i + 1 :])
+            break
+
+    return SchedulingError(message, scheduling_log)
+
+
 def _proto_req_from_create_launch_request_v2(
     create_launch_request: CreateLaunchRequest,
 ) -> launches_pb2.CreateLaunchRequest:
@@ -242,8 +277,8 @@ class Client:
                 raise AuthenticationError(
                     e, details=details, status_code=status_code
                 ) from None
-            else:
-                raise e
+            if _is_scheduling_error(e):
+                raise _grpc_error_to_clusterfudge_error(e) from None
 
 
 def _create_zip_file_of_project_contents_in_memory() -> io.BytesIO:
