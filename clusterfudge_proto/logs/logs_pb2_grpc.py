@@ -2,7 +2,6 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from ..logs import logs_pb2 as logs_dot_logs__pb2
 
 
 class LogsStub(object):
@@ -14,46 +13,14 @@ class LogsStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.ListLogs = channel.unary_unary(
-                '/clusterfudge.log.Logs/ListLogs',
-                request_serializer=logs_dot_logs__pb2.ListLogsRequest.SerializeToString,
-                response_deserializer=logs_dot_logs__pb2.ListLogsResponse.FromString,
-                )
-        self.ListLogSources = channel.unary_unary(
-                '/clusterfudge.log.Logs/ListLogSources',
-                request_serializer=logs_dot_logs__pb2.ListLogSourcesRequest.SerializeToString,
-                response_deserializer=logs_dot_logs__pb2.ListLogSourcesResponse.FromString,
-                )
 
 
 class LogsServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def ListLogs(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def ListLogSources(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
 
 def add_LogsServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'ListLogs': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListLogs,
-                    request_deserializer=logs_dot_logs__pb2.ListLogsRequest.FromString,
-                    response_serializer=logs_dot_logs__pb2.ListLogsResponse.SerializeToString,
-            ),
-            'ListLogSources': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListLogSources,
-                    request_deserializer=logs_dot_logs__pb2.ListLogSourcesRequest.FromString,
-                    response_serializer=logs_dot_logs__pb2.ListLogSourcesResponse.SerializeToString,
-            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
             'clusterfudge.log.Logs', rpc_method_handlers)
@@ -63,37 +30,3 @@ def add_LogsServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class Logs(object):
     """Missing associated documentation comment in .proto file."""
-
-    @staticmethod
-    def ListLogs(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/clusterfudge.log.Logs/ListLogs',
-            logs_dot_logs__pb2.ListLogsRequest.SerializeToString,
-            logs_dot_logs__pb2.ListLogsResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def ListLogSources(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/clusterfudge.log.Logs/ListLogSources',
-            logs_dot_logs__pb2.ListLogSourcesRequest.SerializeToString,
-            logs_dot_logs__pb2.ListLogSourcesResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

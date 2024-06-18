@@ -15,7 +15,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0flogs/logs.proto\x12\x10\x63lusterfudge.log\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd0\x01\n\x0fListLogsRequest\x12\x11\n\thostnames\x18\x01 \x03(\t\x12.\n\nstart_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12,\n\x08\x65nd_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\r\n\x05limit\x18\x04 \x01(\x05\x12\x0f\n\x07sources\x18\x05 \x03(\t\x12\x12\n\nlaunch_ids\x18\x06 \x03(\t\x12\x18\n\x10\x65xec_command_ids\x18\x07 \x03(\t\"7\n\x10ListLogsResponse\x12#\n\x04logs\x18\x01 \x03(\x0b\x32\x15.clusterfudge.log.Log\"\x17\n\x15ListLogSourcesRequest\")\n\x16ListLogSourcesResponse\x12\x0f\n\x07sources\x18\x01 \x03(\t\"\xd4\x01\n\x03Log\x12\x10\n\x08hostname\x18\x01 \x01(\t\x12\x0e\n\x06source\x18\x02 \x01(\t\x12\x10\n\x08\x63ontents\x18\x03 \x01(\t\x12-\n\tlogged_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x07seen_at\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x11\n\ttenant_id\x18\x06 \x01(\t\x12\x11\n\tlaunch_id\x18\x07 \x01(\t\x12\x17\n\x0f\x65xec_command_id\x18\x08 \x01(\t2\xc2\x01\n\x04Logs\x12S\n\x08ListLogs\x12!.clusterfudge.log.ListLogsRequest\x1a\".clusterfudge.log.ListLogsResponse\"\x00\x12\x65\n\x0eListLogSources\x12\'.clusterfudge.log.ListLogSourcesRequest\x1a(.clusterfudge.log.ListLogSourcesResponse\"\x00\x42,Z*github.com/clusterfudgeai/fudge/proto/logsb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0flogs/logs.proto\x12\x10\x63lusterfudge.log\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd4\x01\n\x03Log\x12\x10\n\x08hostname\x18\x01 \x01(\t\x12\x0e\n\x06source\x18\x02 \x01(\t\x12\x10\n\x08\x63ontents\x18\x03 \x01(\t\x12-\n\tlogged_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x07seen_at\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x11\n\ttenant_id\x18\x06 \x01(\t\x12\x11\n\tlaunch_id\x18\x07 \x01(\t\x12\x17\n\x0f\x65xec_command_id\x18\x08 \x01(\t2\x06\n\x04LogsB,Z*github.com/clusterfudgeai/fudge/proto/logsb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -23,16 +23,8 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'logs.logs_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['DESCRIPTOR']._options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z*github.com/clusterfudgeai/fudge/proto/logs'
-  _globals['_LISTLOGSREQUEST']._serialized_start=71
-  _globals['_LISTLOGSREQUEST']._serialized_end=279
-  _globals['_LISTLOGSRESPONSE']._serialized_start=281
-  _globals['_LISTLOGSRESPONSE']._serialized_end=336
-  _globals['_LISTLOGSOURCESREQUEST']._serialized_start=338
-  _globals['_LISTLOGSOURCESREQUEST']._serialized_end=361
-  _globals['_LISTLOGSOURCESRESPONSE']._serialized_start=363
-  _globals['_LISTLOGSOURCESRESPONSE']._serialized_end=404
-  _globals['_LOG']._serialized_start=407
-  _globals['_LOG']._serialized_end=619
-  _globals['_LOGS']._serialized_start=622
-  _globals['_LOGS']._serialized_end=816
+  _globals['_LOG']._serialized_start=71
+  _globals['_LOG']._serialized_end=283
+  _globals['_LOGS']._serialized_start=285
+  _globals['_LOGS']._serialized_end=291
 # @@protoc_insertion_point(module_scope)

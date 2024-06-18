@@ -29,11 +29,6 @@ class LaunchesStub(object):
                 request_serializer=launches_dot_launches__pb2.ListLaunchesRequest.SerializeToString,
                 response_deserializer=launches_dot_launches__pb2.ListLaunchesResponse.FromString,
                 )
-        self.ListLaunchesWithCommandStatuses = channel.unary_unary(
-                '/clusterfudge.Launches/ListLaunchesWithCommandStatuses',
-                request_serializer=launches_dot_launches__pb2.ListLaunchesRequest.SerializeToString,
-                response_deserializer=launches_dot_launches__pb2.ListLaunchesWithCommandStatusesResponse.FromString,
-                )
         self.CreateLaunch = channel.unary_unary(
                 '/clusterfudge.Launches/CreateLaunch',
                 request_serializer=launches_dot_launches__pb2.CreateLaunchRequest.SerializeToString,
@@ -48,6 +43,11 @@ class LaunchesStub(object):
                 '/clusterfudge.Launches/RerunLaunch',
                 request_serializer=launches_dot_launches__pb2.RerunLaunchRequest.SerializeToString,
                 response_deserializer=launches_dot_launches__pb2.RerunLaunchResponse.FromString,
+                )
+        self.LaunchJupyterNotebook = channel.unary_unary(
+                '/clusterfudge.Launches/LaunchJupyterNotebook',
+                request_serializer=launches_dot_launches__pb2.LaunchJupyterNotebookRequest.SerializeToString,
+                response_deserializer=launches_dot_launches__pb2.LaunchJupyterNotebookResponse.FromString,
                 )
         self.ListResources = channel.unary_unary(
                 '/clusterfudge.Launches/ListResources',
@@ -82,12 +82,6 @@ class LaunchesServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def ListLaunchesWithCommandStatuses(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def CreateLaunch(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -101,6 +95,12 @@ class LaunchesServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def RerunLaunch(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def LaunchJupyterNotebook(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -136,11 +136,6 @@ def add_LaunchesServicer_to_server(servicer, server):
                     request_deserializer=launches_dot_launches__pb2.ListLaunchesRequest.FromString,
                     response_serializer=launches_dot_launches__pb2.ListLaunchesResponse.SerializeToString,
             ),
-            'ListLaunchesWithCommandStatuses': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListLaunchesWithCommandStatuses,
-                    request_deserializer=launches_dot_launches__pb2.ListLaunchesRequest.FromString,
-                    response_serializer=launches_dot_launches__pb2.ListLaunchesWithCommandStatusesResponse.SerializeToString,
-            ),
             'CreateLaunch': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateLaunch,
                     request_deserializer=launches_dot_launches__pb2.CreateLaunchRequest.FromString,
@@ -155,6 +150,11 @@ def add_LaunchesServicer_to_server(servicer, server):
                     servicer.RerunLaunch,
                     request_deserializer=launches_dot_launches__pb2.RerunLaunchRequest.FromString,
                     response_serializer=launches_dot_launches__pb2.RerunLaunchResponse.SerializeToString,
+            ),
+            'LaunchJupyterNotebook': grpc.unary_unary_rpc_method_handler(
+                    servicer.LaunchJupyterNotebook,
+                    request_deserializer=launches_dot_launches__pb2.LaunchJupyterNotebookRequest.FromString,
+                    response_serializer=launches_dot_launches__pb2.LaunchJupyterNotebookResponse.SerializeToString,
             ),
             'ListResources': grpc.unary_unary_rpc_method_handler(
                     servicer.ListResources,
@@ -228,23 +228,6 @@ class Launches(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def ListLaunchesWithCommandStatuses(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/clusterfudge.Launches/ListLaunchesWithCommandStatuses',
-            launches_dot_launches__pb2.ListLaunchesRequest.SerializeToString,
-            launches_dot_launches__pb2.ListLaunchesWithCommandStatusesResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
     def CreateLaunch(request,
             target,
             options=(),
@@ -292,6 +275,23 @@ class Launches(object):
         return grpc.experimental.unary_unary(request, target, '/clusterfudge.Launches/RerunLaunch',
             launches_dot_launches__pb2.RerunLaunchRequest.SerializeToString,
             launches_dot_launches__pb2.RerunLaunchResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def LaunchJupyterNotebook(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/clusterfudge.Launches/LaunchJupyterNotebook',
+            launches_dot_launches__pb2.LaunchJupyterNotebookRequest.SerializeToString,
+            launches_dot_launches__pb2.LaunchJupyterNotebookResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

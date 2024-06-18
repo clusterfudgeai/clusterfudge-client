@@ -2,6 +2,7 @@ from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from resources import resources_pb2 as _resources_pb2
 from exec import exec_pb2 as _exec_pb2
 from logs import logs_pb2 as _logs_pb2
+from pagespb import pages_pb2 as _pages_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
@@ -15,15 +16,19 @@ class ListResourcesRequest(_message.Message):
     def __init__(self) -> None: ...
 
 class ListResourcesResponse(_message.Message):
-    __slots__ = ("clusters", "resource_consumers")
+    __slots__ = ("clusters", "resource_consumers", "total", "available")
     CLUSTERS_FIELD_NUMBER: _ClassVar[int]
     RESOURCE_CONSUMERS_FIELD_NUMBER: _ClassVar[int]
+    TOTAL_FIELD_NUMBER: _ClassVar[int]
+    AVAILABLE_FIELD_NUMBER: _ClassVar[int]
     clusters: _containers.RepeatedCompositeFieldContainer[ClusterResources]
     resource_consumers: _containers.RepeatedCompositeFieldContainer[_exec_pb2.Command]
-    def __init__(self, clusters: _Optional[_Iterable[_Union[ClusterResources, _Mapping]]] = ..., resource_consumers: _Optional[_Iterable[_Union[_exec_pb2.Command, _Mapping]]] = ...) -> None: ...
+    total: _resources_pb2.Resources
+    available: _resources_pb2.Resources
+    def __init__(self, clusters: _Optional[_Iterable[_Union[ClusterResources, _Mapping]]] = ..., resource_consumers: _Optional[_Iterable[_Union[_exec_pb2.Command, _Mapping]]] = ..., total: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., available: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ...) -> None: ...
 
 class ClusterResources(_message.Message):
-    __slots__ = ("name", "total_resources", "used_resources", "used_non_clusterfudge", "available_resources", "cordoned_resources", "offline_resources", "shard_resources", "gpu_rtx3090", "gpu_a100_40gb", "gpu_a100_80gb", "gpu_h100", "gpu_t4", "gpu_rtx6000", "gpu_l4", "gpu_p4", "gpu_p100", "gpu_v100")
+    __slots__ = ("name", "total_resources", "used_resources", "used_non_clusterfudge", "available_resources", "cordoned_resources", "offline_resources", "shard_resources", "gpu_rtx3090", "gpu_a100_40gb", "gpu_a100_80gb", "gpu_h100", "gpu_t4", "gpu_rtx6000", "gpu_l4", "gpu_p4", "gpu_p100", "gpu_v100", "gpu_rtx3080")
     NAME_FIELD_NUMBER: _ClassVar[int]
     TOTAL_RESOURCES_FIELD_NUMBER: _ClassVar[int]
     USED_RESOURCES_FIELD_NUMBER: _ClassVar[int]
@@ -42,6 +47,7 @@ class ClusterResources(_message.Message):
     GPU_P4_FIELD_NUMBER: _ClassVar[int]
     GPU_P100_FIELD_NUMBER: _ClassVar[int]
     GPU_V100_FIELD_NUMBER: _ClassVar[int]
+    GPU_RTX3080_FIELD_NUMBER: _ClassVar[int]
     name: str
     total_resources: _resources_pb2.Resources
     used_resources: _resources_pb2.Resources
@@ -60,7 +66,8 @@ class ClusterResources(_message.Message):
     gpu_p4: ResourceStatuses
     gpu_p100: ResourceStatuses
     gpu_v100: ResourceStatuses
-    def __init__(self, name: _Optional[str] = ..., total_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., used_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., used_non_clusterfudge: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., available_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., cordoned_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., offline_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., shard_resources: _Optional[_Iterable[_Union[ClusterResources, _Mapping]]] = ..., gpu_rtx3090: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_a100_40gb: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_a100_80gb: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_h100: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_t4: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_rtx6000: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_l4: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_p4: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_p100: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_v100: _Optional[_Union[ResourceStatuses, _Mapping]] = ...) -> None: ...
+    gpu_rtx3080: ResourceStatuses
+    def __init__(self, name: _Optional[str] = ..., total_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., used_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., used_non_clusterfudge: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., available_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., cordoned_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., offline_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., shard_resources: _Optional[_Iterable[_Union[ClusterResources, _Mapping]]] = ..., gpu_rtx3090: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_a100_40gb: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_a100_80gb: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_h100: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_t4: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_rtx6000: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_l4: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_p4: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_p100: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_v100: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_rtx3080: _Optional[_Union[ResourceStatuses, _Mapping]] = ...) -> None: ...
 
 class ResourceStatuses(_message.Message):
     __slots__ = ("total", "used", "used_non_clusterfudge", "available", "cordoned", "offline")
@@ -99,14 +106,20 @@ class GetLaunchDetailsRequest(_message.Message):
     def __init__(self, id: _Optional[str] = ...) -> None: ...
 
 class ListLaunchesRequest(_message.Message):
-    __slots__ = ()
-    def __init__(self) -> None: ...
+    __slots__ = ("page",)
+    PAGE_FIELD_NUMBER: _ClassVar[int]
+    page: _pages_pb2.Page
+    def __init__(self, page: _Optional[_Union[_pages_pb2.Page, _Mapping]] = ...) -> None: ...
 
 class ListLaunchesResponse(_message.Message):
-    __slots__ = ("launches",)
+    __slots__ = ("launches", "launch_status_counts", "page_details")
     LAUNCHES_FIELD_NUMBER: _ClassVar[int]
+    LAUNCH_STATUS_COUNTS_FIELD_NUMBER: _ClassVar[int]
+    PAGE_DETAILS_FIELD_NUMBER: _ClassVar[int]
     launches: _containers.RepeatedCompositeFieldContainer[Launch]
-    def __init__(self, launches: _Optional[_Iterable[_Union[Launch, _Mapping]]] = ...) -> None: ...
+    launch_status_counts: _containers.RepeatedCompositeFieldContainer[LaunchStatusCounts]
+    page_details: _pages_pb2.PageDetails
+    def __init__(self, launches: _Optional[_Iterable[_Union[Launch, _Mapping]]] = ..., launch_status_counts: _Optional[_Iterable[_Union[LaunchStatusCounts, _Mapping]]] = ..., page_details: _Optional[_Union[_pages_pb2.PageDetails, _Mapping]] = ...) -> None: ...
 
 class StopLaunchRequest(_message.Message):
     __slots__ = ("id",)
@@ -180,36 +193,6 @@ class Launch(_message.Message):
     git_commit: str
     def __init__(self, launch_id: _Optional[int] = ..., launched_by: _Optional[str] = ..., submitted_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., command_to_run: _Optional[str] = ..., command: _Optional[_Iterable[str]] = ..., hostnames: _Optional[_Iterable[str]] = ..., status: _Optional[_Union[Launch.Status, str]] = ..., id: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., replicas: _Optional[int] = ..., replica_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., launch_script_body: _Optional[str] = ..., scheduling_log: _Optional[_Iterable[str]] = ..., zip_id: _Optional[str] = ..., git_repo: _Optional[str] = ..., git_branch: _Optional[str] = ..., shard: _Optional[str] = ..., cluster: _Optional[str] = ..., jobs: _Optional[_Iterable[_Union[Job, _Mapping]]] = ..., git_commit: _Optional[str] = ...) -> None: ...
 
-class ListLaunchesWithCommandStatusesResponse(_message.Message):
-    __slots__ = ("launches",)
-    LAUNCHES_FIELD_NUMBER: _ClassVar[int]
-    launches: _containers.RepeatedCompositeFieldContainer[LaunchWithCommandStatuses]
-    def __init__(self, launches: _Optional[_Iterable[_Union[LaunchWithCommandStatuses, _Mapping]]] = ...) -> None: ...
-
-class LaunchWithCommandStatuses(_message.Message):
-    __slots__ = ("launch", "commands_unknown_count", "commands_unacknowledged_count", "commands_acknowledged_count", "commands_running_count", "commands_succeeded_count", "commands_failed_count", "commands_killed_count", "commands_cancelled_count", "commands_total_count")
-    LAUNCH_FIELD_NUMBER: _ClassVar[int]
-    COMMANDS_UNKNOWN_COUNT_FIELD_NUMBER: _ClassVar[int]
-    COMMANDS_UNACKNOWLEDGED_COUNT_FIELD_NUMBER: _ClassVar[int]
-    COMMANDS_ACKNOWLEDGED_COUNT_FIELD_NUMBER: _ClassVar[int]
-    COMMANDS_RUNNING_COUNT_FIELD_NUMBER: _ClassVar[int]
-    COMMANDS_SUCCEEDED_COUNT_FIELD_NUMBER: _ClassVar[int]
-    COMMANDS_FAILED_COUNT_FIELD_NUMBER: _ClassVar[int]
-    COMMANDS_KILLED_COUNT_FIELD_NUMBER: _ClassVar[int]
-    COMMANDS_CANCELLED_COUNT_FIELD_NUMBER: _ClassVar[int]
-    COMMANDS_TOTAL_COUNT_FIELD_NUMBER: _ClassVar[int]
-    launch: Launch
-    commands_unknown_count: int
-    commands_unacknowledged_count: int
-    commands_acknowledged_count: int
-    commands_running_count: int
-    commands_succeeded_count: int
-    commands_failed_count: int
-    commands_killed_count: int
-    commands_cancelled_count: int
-    commands_total_count: int
-    def __init__(self, launch: _Optional[_Union[Launch, _Mapping]] = ..., commands_unknown_count: _Optional[int] = ..., commands_unacknowledged_count: _Optional[int] = ..., commands_acknowledged_count: _Optional[int] = ..., commands_running_count: _Optional[int] = ..., commands_succeeded_count: _Optional[int] = ..., commands_failed_count: _Optional[int] = ..., commands_killed_count: _Optional[int] = ..., commands_cancelled_count: _Optional[int] = ..., commands_total_count: _Optional[int] = ...) -> None: ...
-
 class RerunLaunchRequest(_message.Message):
     __slots__ = ("launch_id",)
     LAUNCH_ID_FIELD_NUMBER: _ClassVar[int]
@@ -223,18 +206,20 @@ class RerunLaunchResponse(_message.Message):
     def __init__(self, launch: _Optional[_Union[Launch, _Mapping]] = ...) -> None: ...
 
 class LaunchDetails(_message.Message):
-    __slots__ = ("launch", "commands", "xids", "logs", "important_logs")
+    __slots__ = ("launch", "commands", "xids", "logs", "important_logs", "status_counts")
     LAUNCH_FIELD_NUMBER: _ClassVar[int]
     COMMANDS_FIELD_NUMBER: _ClassVar[int]
     XIDS_FIELD_NUMBER: _ClassVar[int]
     LOGS_FIELD_NUMBER: _ClassVar[int]
     IMPORTANT_LOGS_FIELD_NUMBER: _ClassVar[int]
+    STATUS_COUNTS_FIELD_NUMBER: _ClassVar[int]
     launch: Launch
     commands: _containers.RepeatedCompositeFieldContainer[_exec_pb2.Command]
     xids: _containers.RepeatedCompositeFieldContainer[Xid]
     logs: _containers.RepeatedCompositeFieldContainer[_logs_pb2.Log]
     important_logs: _containers.RepeatedCompositeFieldContainer[ImportantLog]
-    def __init__(self, launch: _Optional[_Union[Launch, _Mapping]] = ..., commands: _Optional[_Iterable[_Union[_exec_pb2.Command, _Mapping]]] = ..., xids: _Optional[_Iterable[_Union[Xid, _Mapping]]] = ..., logs: _Optional[_Iterable[_Union[_logs_pb2.Log, _Mapping]]] = ..., important_logs: _Optional[_Iterable[_Union[ImportantLog, _Mapping]]] = ...) -> None: ...
+    status_counts: LaunchStatusCounts
+    def __init__(self, launch: _Optional[_Union[Launch, _Mapping]] = ..., commands: _Optional[_Iterable[_Union[_exec_pb2.Command, _Mapping]]] = ..., xids: _Optional[_Iterable[_Union[Xid, _Mapping]]] = ..., logs: _Optional[_Iterable[_Union[_logs_pb2.Log, _Mapping]]] = ..., important_logs: _Optional[_Iterable[_Union[ImportantLog, _Mapping]]] = ..., status_counts: _Optional[_Union[LaunchStatusCounts, _Mapping]] = ...) -> None: ...
 
 class ImportantLog(_message.Message):
     __slots__ = ("id", "hostname", "occurred_at", "launch_id", "exec_command_id", "text_payload")
@@ -357,3 +342,53 @@ class Zip(_message.Message):
     id: str
     contents: bytes
     def __init__(self, tenant_id: _Optional[str] = ..., launch_id: _Optional[str] = ..., id: _Optional[str] = ..., contents: _Optional[bytes] = ...) -> None: ...
+
+class LaunchStatusCounts(_message.Message):
+    __slots__ = ("id", "jobs", "processes")
+    ID_FIELD_NUMBER: _ClassVar[int]
+    JOBS_FIELD_NUMBER: _ClassVar[int]
+    PROCESSES_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    jobs: _containers.RepeatedCompositeFieldContainer[JobStatusCounts]
+    processes: StatusCounts
+    def __init__(self, id: _Optional[str] = ..., jobs: _Optional[_Iterable[_Union[JobStatusCounts, _Mapping]]] = ..., processes: _Optional[_Union[StatusCounts, _Mapping]] = ...) -> None: ...
+
+class JobStatusCounts(_message.Message):
+    __slots__ = ("job_name", "replicas")
+    JOB_NAME_FIELD_NUMBER: _ClassVar[int]
+    REPLICAS_FIELD_NUMBER: _ClassVar[int]
+    job_name: str
+    replicas: StatusCounts
+    def __init__(self, job_name: _Optional[str] = ..., replicas: _Optional[_Union[StatusCounts, _Mapping]] = ...) -> None: ...
+
+class StatusCounts(_message.Message):
+    __slots__ = ("pending", "running", "succeeded", "failed", "stopped", "total")
+    PENDING_FIELD_NUMBER: _ClassVar[int]
+    RUNNING_FIELD_NUMBER: _ClassVar[int]
+    SUCCEEDED_FIELD_NUMBER: _ClassVar[int]
+    FAILED_FIELD_NUMBER: _ClassVar[int]
+    STOPPED_FIELD_NUMBER: _ClassVar[int]
+    TOTAL_FIELD_NUMBER: _ClassVar[int]
+    pending: int
+    running: int
+    succeeded: int
+    failed: int
+    stopped: int
+    total: int
+    def __init__(self, pending: _Optional[int] = ..., running: _Optional[int] = ..., succeeded: _Optional[int] = ..., failed: _Optional[int] = ..., stopped: _Optional[int] = ..., total: _Optional[int] = ...) -> None: ...
+
+class LaunchJupyterNotebookRequest(_message.Message):
+    __slots__ = ("resource_requirements", "cluster", "shard")
+    RESOURCE_REQUIREMENTS_FIELD_NUMBER: _ClassVar[int]
+    CLUSTER_FIELD_NUMBER: _ClassVar[int]
+    SHARD_FIELD_NUMBER: _ClassVar[int]
+    resource_requirements: _resources_pb2.Resources
+    cluster: str
+    shard: str
+    def __init__(self, resource_requirements: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., cluster: _Optional[str] = ..., shard: _Optional[str] = ...) -> None: ...
+
+class LaunchJupyterNotebookResponse(_message.Message):
+    __slots__ = ("launch",)
+    LAUNCH_FIELD_NUMBER: _ClassVar[int]
+    launch: Launch
+    def __init__(self, launch: _Optional[_Union[Launch, _Mapping]] = ...) -> None: ...

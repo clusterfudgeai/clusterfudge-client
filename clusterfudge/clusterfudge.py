@@ -54,7 +54,7 @@ class LocalDir:
 class GitRepo:
     repo: str
     branch: str
-    commit: Optional[str] | None = None
+    commit: Optional[str] = None
 
 
 @dataclasses.dataclass()
@@ -97,6 +97,12 @@ class CreateLaunchRequest:
 def _validate_create_launch_request_v2(
     create_launch_request: CreateLaunchRequest,
 ) -> None:
+    if create_launch_request.deployment is not None:
+        if not isinstance(create_launch_request.deployment, LocalDir) and not isinstance(
+            create_launch_request.deployment, GitRepo
+        ):
+            raise ValueError("deployment must be a LocalDir or GitRepo")
+            
     if not create_launch_request.jobs:
         raise ValueError("jobs must be non-empty")
 
@@ -194,7 +200,7 @@ def _proto_req_from_create_launch_request_v2(
 
         jobs.append(job_pb)
 
-    return launches_pb2.CreateLaunchRequest(
+    proto_launch_request = launches_pb2.CreateLaunchRequest(
         title=create_launch_request.name,
         description=create_launch_request.description,
         cluster=create_launch_request.cluster,
@@ -202,6 +208,14 @@ def _proto_req_from_create_launch_request_v2(
         hostnames=create_launch_request.hostnames,
         jobs=jobs,
     )
+
+    if isinstance(create_launch_request.deployment, GitRepo):
+        proto_launch_request.git_repo = create_launch_request.deployment.repo
+        proto_launch_request.git_branch = create_launch_request.deployment.branch
+        if create_launch_request.deployment.commit is not None:
+            proto_launch_request.git_commit = create_launch_request.deployment.commit
+
+    return proto_launch_request
 
 
 class Client:
@@ -258,15 +272,6 @@ class Client:
             if isinstance(create_launch_request.deployment, LocalDir):
                 zipped_directory = _create_zip_file_of_project_contents_in_memory()
                 protoReq.zip_file_contents = zipped_directory.getvalue()
-            elif isinstance(create_launch_request.deployment, GitRepo):
-                protoReq.git_repo = create_launch_request.deployment.repo
-                protoReq.git_branch = create_launch_request.deployment.branch
-                if create_launch_request.deployment.commit is not None:
-                    protoReq.git_commit = create_launch_request.deployment.commit
-            else:
-                raise ValueError(
-                    f"Unknown deployment type: {create_launch_request.deployment}"
-                )
 
         try:
             return self.launches_stub.CreateLaunch(protoReq)

@@ -16,6 +16,7 @@ class CommandType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     COMMAND_TYPE_NVIDIA_BUG_REPORT: _ClassVar[CommandType]
     COMMAND_TYPE_LAUNCH: _ClassVar[CommandType]
     COMMAND_TYPE_KILL: _ClassVar[CommandType]
+    COMMAND_TYPE_STREAM_LOGS: _ClassVar[CommandType]
 
 class CommandState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -33,6 +34,7 @@ COMMAND_TYPE_AGENT_UPDATE: CommandType
 COMMAND_TYPE_NVIDIA_BUG_REPORT: CommandType
 COMMAND_TYPE_LAUNCH: CommandType
 COMMAND_TYPE_KILL: CommandType
+COMMAND_TYPE_STREAM_LOGS: CommandType
 COMMAND_STATE_UNKNOWN: CommandState
 COMMAND_STATE_UNACKNOWLEDGED: CommandState
 COMMAND_STATE_ACKNOWLEDGED: CommandState
