@@ -1,5 +1,4 @@
 import clusterfudge
-from clusterfudge.clusterfudge import _proto_req_from_create_launch_request_v2
 from clusterfudge_proto.launches import launches_pb2
 from clusterfudge_proto.resources import resources_pb2
 import pytest
@@ -145,6 +144,51 @@ def test_launch_without_jobs_throws_error():
         assert False, "empty jobs array should have thrown an exception"
     except ValueError as e:
         assert str(e) == "jobs must be non-empty"
+
+def test_all_gpus_are_available_and_properly_mapped():
+    # First assertion is that the number of gpu fields on our Resources class
+    # is the same as the number of gpu fields on the Resources proto.
+    num_proto_gpu_fields = sum(1 for field in resources_pb2.Resources().DESCRIPTOR.fields if field.name.startswith('gpu_'))
+    num_gpu_fields = len(vars(clusterfudge.Resources())) - 2 # cpus and memory_mb are not gpus
+    assert num_proto_gpu_fields == num_gpu_fields
+
+    # Then we create a launch requesting a unique value of each resource so we 
+    # can assert each is correctly mapped.
+    resources = clusterfudge.Resources()
+
+    i = 1
+    for attr, val in vars(resources).items():
+        if isinstance(val, int):
+            setattr(resources, attr, i)
+            i+1
+
+    client = clusterfudge.Client(api_key="skip_loading_config_file")
+    client.launches_stub = MockLaunchesStub()
+
+    clr = clusterfudge.CreateLaunchRequest(
+        name="launch_with_lots_of_resources",
+        jobs=[
+            clusterfudge.Job(
+                short_name="python",
+                replicas=1,
+                processes=[
+                    clusterfudge.Process(
+                        command=[""],
+                        resource_requirements=resources,
+                    ),
+                ],
+            ),
+        ],
+    )
+
+    client.create_launch(clr)
+    result = client.launches_stub.latest_launch.jobs[0].processes[0].resource_requirements
+    
+    for field in result.DESCRIPTOR.fields:
+        if field.type == field.TYPE_INT32:
+            actual_value = getattr(result, field.name)
+            exp_value = getattr(resources, field.name.replace('gpu_', ''))
+            assert actual_value == exp_value, f"Expected {field.name} to be {exp_value}, got {actual_value}"
 
 
 class MockLaunchesStub:

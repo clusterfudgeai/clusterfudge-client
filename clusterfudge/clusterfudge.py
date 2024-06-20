@@ -36,6 +36,7 @@ class Resources:
     a100_40gb: int = 0
     a100_80gb: int = 0
     h100: int = 0
+    rtx3080: int = 0
     rtx3090: int = 0
     rtx6000: int = 0
     t4: int = 0
@@ -329,6 +330,7 @@ def _resources_to_proto(r: Resources | None) -> resources_pb2.Resources:
         gpu_a100_40gb=r.a100_40gb,
         gpu_a100_80gb=r.a100_80gb,
         gpu_h100=r.h100,
+        gpu_rtx3080=r.rtx3080,
         gpu_rtx3090=r.rtx3090,
         gpu_rtx6000=r.rtx6000,
         gpu_t4=r.t4,
