@@ -44,6 +44,8 @@ class Resources:
     v100: int = 0
     p100: int = 0
     p4: int = 0
+    rtx4090: int = 0
+    rtx4080: int = 0
 
 
 @dataclasses.dataclass()
@@ -338,6 +340,8 @@ def _resources_to_proto(r: Resources | None) -> resources_pb2.Resources:
         gpu_v100=r.v100,
         gpu_p4=r.p4,
         gpu_p100=r.p100,
+        gpu_rtx4090=r.rtx4090,
+        gpu_rtx4080=r.rtx4080,
     )
 
 
