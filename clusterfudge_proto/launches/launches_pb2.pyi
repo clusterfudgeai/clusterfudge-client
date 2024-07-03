@@ -381,6 +381,20 @@ class StatusCounts(_message.Message):
     total: int
     def __init__(self, pending: _Optional[int] = ..., running: _Optional[int] = ..., succeeded: _Optional[int] = ..., failed: _Optional[int] = ..., stopped: _Optional[int] = ..., total: _Optional[int] = ...) -> None: ...
 
+class LaunchHelloWorldRequest(_message.Message):
+    __slots__ = ("cluster", "shard")
+    CLUSTER_FIELD_NUMBER: _ClassVar[int]
+    SHARD_FIELD_NUMBER: _ClassVar[int]
+    cluster: str
+    shard: str
+    def __init__(self, cluster: _Optional[str] = ..., shard: _Optional[str] = ...) -> None: ...
+
+class LaunchHelloWorldResponse(_message.Message):
+    __slots__ = ("launch",)
+    LAUNCH_FIELD_NUMBER: _ClassVar[int]
+    launch: Launch
+    def __init__(self, launch: _Optional[_Union[Launch, _Mapping]] = ...) -> None: ...
+
 class LaunchJupyterNotebookRequest(_message.Message):
     __slots__ = ("resource_requirements", "cluster", "shard")
     RESOURCE_REQUIREMENTS_FIELD_NUMBER: _ClassVar[int]
