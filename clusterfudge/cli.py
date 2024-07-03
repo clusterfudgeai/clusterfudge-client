@@ -2,12 +2,19 @@ import asyncio
 import contextlib
 import json
 import os
+import shutil
+import sys
 import webbrowser
+from pathlib import Path
 from typing import Optional
 
+import grpc
 import typer
 from aiohttp import web
+from clusterfudge_proto.tunnelpb import tunnel_pb2
 from typing_extensions import Annotated
+
+from clusterfudge import Client
 
 app = typer.Typer(
     name="clusterfudge",
@@ -15,6 +22,105 @@ app = typer.Typer(
     invoke_without_command=True,
     add_completion=False,
 )
+
+
+def _parse_host(host: str) -> str:
+    """Hosts are of the form <exec-command-id>.ssh.clusterfudge.com"""
+    split_host = host.split(".")
+    if len(split_host) != 4:
+        raise ValueError(
+            f"Invalid host format: {host}. Expected <exec-command-id>.ssh.clusterfudge.com"
+        )
+    return split_host[0]
+
+
+def _get_clusterfudge_path() -> str:
+    """Get the path to the clusterfudge binary."""
+    return shutil.which("clusterfudge") or "clusterfudge"
+
+
+@app.command()
+def configure_ssh(
+    config_file: Path = typer.Option(
+        Path.home() / ".ssh" / "config",
+        help="Path to the SSH config file",
+        exists=False,
+        file_okay=True,
+        dir_okay=False,
+        writable=True,
+        readable=True,
+    ),
+):
+    """
+    Configure SSH to use Clusterfudge as a ProxyCommand for *.ssh.clusterfudge.com.
+    """
+    clusterfudge_path = _get_clusterfudge_path()
+
+    config_content = f"""
+Host *.ssh.clusterfudge.com
+    ProxyCommand {clusterfudge_path} ssh %h
+"""
+
+    if config_file.exists():
+        with config_file.open("r") as f:
+            existing_content = f.read()
+        if "*.ssh.clusterfudge.com" in existing_content:
+            typer.echo("✅ Clusterfudge SSH configuration already exists.")
+            return
+
+        config_content = f"{existing_content}\n{config_content}"
+
+    with config_file.open("w") as f:
+        f.write(config_content)
+
+    typer.echo(f"✅ Clusterfudge SSH configuration has been added to {config_file}")
+    typer.echo("You can now connect using: ssh <exec-command-id>.ssh.clusterfudge.com")
+
+
+@app.command()
+def ssh(
+    host: str,
+    verbose: bool = typer.Option(
+        False, "--verbose", "-v", help="Enable verbose logging"
+    ),
+):
+    """
+    Act as an SSH ProxyCommand, tunneling SSH traffic through a gRPC stream.
+    """
+    exec_command_id = _parse_host(host)
+
+    def run_tunnel():
+        client = Client()
+
+        def generate_requests():
+            yield tunnel_pb2.TunnelRequest(
+                initialise=tunnel_pb2.InitialiseRequest(exec_command_id=exec_command_id)
+            )
+
+            while True:
+                try:
+                    data = sys.stdin.buffer.read(4096)
+                    if not data:
+                        break
+                    yield tunnel_pb2.TunnelRequest(data=tunnel_pb2.Data(data=data))
+                except IOError:
+                    break
+
+        try:
+            for response in client.tunnel_stub.Tunnel(generate_requests()):
+                sys.stdout.buffer.write(response.data)
+                sys.stdout.buffer.flush()
+        except grpc.RpcError as e:
+            print(e, file=sys.stderr)
+            raise e
+        finally:
+            sys.stdin.close()
+            sys.stdout.close()
+            client.channel.close()
+
+    if verbose:
+        print(f"Starting SSH tunnel for {host}", file=sys.stderr)
+    run_tunnel()
 
 
 async def _login(tenant_id: Optional[str] = None):
@@ -63,7 +169,7 @@ async def _login(tenant_id: Optional[str] = None):
             </body>
             </html>
             """
-        return web.Response(body=html_content, content_type='text/html')
+        return web.Response(body=html_content, content_type="text/html")
 
     @contextlib.asynccontextmanager
     async def _run_local_server():
@@ -93,7 +199,9 @@ async def _login(tenant_id: Optional[str] = None):
 
     _save_token_to_file(token)
     typer.echo("")
-    typer.echo("If you have not already installed the fudgelet on your nodes, please follow the instructions at https://docs.clusterfudge.com/quickstart#2-install-the-fudgelet-on-a-linux-node")
+    typer.echo(
+        "If you have not already installed the fudgelet on your nodes, please follow the instructions at https://docs.clusterfudge.com/quickstart#2-install-the-fudgelet-on-a-linux-node"
+    )
     typer.echo("")
     typer.echo("Otherwise, you're ready to start launching with Clusterfudge")
     typer.echo("")

@@ -11,6 +11,7 @@ import dataclasses_json
 import grpc
 from clusterfudge_proto.launches import launches_pb2, launches_pb2_grpc
 from clusterfudge_proto.resources import resources_pb2
+from clusterfudge_proto.tunnelpb import tunnel_pb2, tunnel_pb2_grpc
 from grpc import ssl_channel_credentials
 
 
@@ -101,11 +102,11 @@ def _validate_create_launch_request_v2(
     create_launch_request: CreateLaunchRequest,
 ) -> None:
     if create_launch_request.deployment is not None:
-        if not isinstance(create_launch_request.deployment, LocalDir) and not isinstance(
-            create_launch_request.deployment, GitRepo
-        ):
+        if not isinstance(
+            create_launch_request.deployment, LocalDir
+        ) and not isinstance(create_launch_request.deployment, GitRepo):
             raise ValueError("deployment must be a LocalDir or GitRepo")
-            
+
     if not create_launch_request.jobs:
         raise ValueError("jobs must be non-empty")
 
@@ -232,6 +233,7 @@ class Client:
         )
         self.channel = grpc.secure_channel(self.base_url, self.credentials)
         self.launches_stub = launches_pb2_grpc.LaunchesStub(self.channel)
+        self.tunnel_stub = tunnel_pb2_grpc.TunnelStub(self.channel)
 
     def _load_config_from_file(self) -> ClusterfudgeConfig:
         config_path = os.path.join(
