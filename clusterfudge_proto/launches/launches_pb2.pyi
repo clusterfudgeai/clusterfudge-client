@@ -11,6 +11,29 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class LaunchType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    LAUNCH_TYPE_UNKNOWN: _ClassVar[LaunchType]
+    LAUNCH_TYPE_COMMAND: _ClassVar[LaunchType]
+    LAUNCH_TYPE_JUPYTER_NOTEBOOK: _ClassVar[LaunchType]
+    LAUNCH_TYPE_WORKSTATION: _ClassVar[LaunchType]
+LAUNCH_TYPE_UNKNOWN: LaunchType
+LAUNCH_TYPE_COMMAND: LaunchType
+LAUNCH_TYPE_JUPYTER_NOTEBOOK: LaunchType
+LAUNCH_TYPE_WORKSTATION: LaunchType
+
+class LaunchWorkstationRequest(_message.Message):
+    __slots__ = ("port",)
+    PORT_FIELD_NUMBER: _ClassVar[int]
+    port: int
+    def __init__(self, port: _Optional[int] = ...) -> None: ...
+
+class LaunchWorkstationResponse(_message.Message):
+    __slots__ = ("id",)
+    ID_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    def __init__(self, id: _Optional[str] = ...) -> None: ...
+
 class ListResourcesRequest(_message.Message):
     __slots__ = ()
     def __init__(self) -> None: ...
@@ -136,7 +159,7 @@ class StopLaunchResponse(_message.Message):
     def __init__(self) -> None: ...
 
 class Launch(_message.Message):
-    __slots__ = ("launch_id", "launched_by", "submitted_at", "command_to_run", "command", "hostnames", "status", "id", "title", "description", "replicas", "replica_resources", "launch_script_body", "scheduling_log", "zip_id", "git_repo", "git_branch", "shard", "cluster", "jobs", "git_commit")
+    __slots__ = ("launch_id", "launched_by", "submitted_at", "command_to_run", "command", "launch_type", "hostnames", "status", "id", "title", "description", "replicas", "replica_resources", "launch_script_body", "scheduling_log", "zip_id", "git_repo", "git_branch", "shard", "cluster", "jobs", "git_commit")
     class Status(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
         __slots__ = ()
         LAUNCH_STATUS_UNKNOWN: _ClassVar[Launch.Status]
@@ -158,6 +181,7 @@ class Launch(_message.Message):
     SUBMITTED_AT_FIELD_NUMBER: _ClassVar[int]
     COMMAND_TO_RUN_FIELD_NUMBER: _ClassVar[int]
     COMMAND_FIELD_NUMBER: _ClassVar[int]
+    LAUNCH_TYPE_FIELD_NUMBER: _ClassVar[int]
     HOSTNAMES_FIELD_NUMBER: _ClassVar[int]
     STATUS_FIELD_NUMBER: _ClassVar[int]
     ID_FIELD_NUMBER: _ClassVar[int]
@@ -179,6 +203,7 @@ class Launch(_message.Message):
     submitted_at: _timestamp_pb2.Timestamp
     command_to_run: str
     command: _containers.RepeatedScalarFieldContainer[str]
+    launch_type: LaunchType
     hostnames: _containers.RepeatedScalarFieldContainer[str]
     status: Launch.Status
     id: str
@@ -195,7 +220,7 @@ class Launch(_message.Message):
     cluster: str
     jobs: _containers.RepeatedCompositeFieldContainer[Job]
     git_commit: str
-    def __init__(self, launch_id: _Optional[int] = ..., launched_by: _Optional[str] = ..., submitted_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., command_to_run: _Optional[str] = ..., command: _Optional[_Iterable[str]] = ..., hostnames: _Optional[_Iterable[str]] = ..., status: _Optional[_Union[Launch.Status, str]] = ..., id: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., replicas: _Optional[int] = ..., replica_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., launch_script_body: _Optional[str] = ..., scheduling_log: _Optional[_Iterable[str]] = ..., zip_id: _Optional[str] = ..., git_repo: _Optional[str] = ..., git_branch: _Optional[str] = ..., shard: _Optional[str] = ..., cluster: _Optional[str] = ..., jobs: _Optional[_Iterable[_Union[Job, _Mapping]]] = ..., git_commit: _Optional[str] = ...) -> None: ...
+    def __init__(self, launch_id: _Optional[int] = ..., launched_by: _Optional[str] = ..., submitted_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., command_to_run: _Optional[str] = ..., command: _Optional[_Iterable[str]] = ..., launch_type: _Optional[_Union[LaunchType, str]] = ..., hostnames: _Optional[_Iterable[str]] = ..., status: _Optional[_Union[Launch.Status, str]] = ..., id: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., replicas: _Optional[int] = ..., replica_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., launch_script_body: _Optional[str] = ..., scheduling_log: _Optional[_Iterable[str]] = ..., zip_id: _Optional[str] = ..., git_repo: _Optional[str] = ..., git_branch: _Optional[str] = ..., shard: _Optional[str] = ..., cluster: _Optional[str] = ..., jobs: _Optional[_Iterable[_Union[Job, _Mapping]]] = ..., git_commit: _Optional[str] = ...) -> None: ...
 
 class RerunLaunchRequest(_message.Message):
     __slots__ = ("launch_id",)
@@ -256,11 +281,12 @@ class Xid(_message.Message):
     def __init__(self, hostname: _Optional[str] = ..., gpu_uuid: _Optional[str] = ..., pci_id: _Optional[str] = ..., xid: _Optional[int] = ..., occurred_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class CreateLaunchRequest(_message.Message):
-    __slots__ = ("launched_by", "command", "command_to_run", "hostnames", "replicas", "replica_resources", "title", "description", "launch_script_body", "zip_file_contents", "git_repo", "git_branch", "shard", "cluster", "jobs", "zip_file_id", "git_commit")
+    __slots__ = ("launched_by", "command", "command_to_run", "hostnames", "launch_type", "replicas", "replica_resources", "title", "description", "launch_script_body", "zip_file_contents", "git_repo", "git_branch", "shard", "cluster", "jobs", "zip_file_id", "git_commit")
     LAUNCHED_BY_FIELD_NUMBER: _ClassVar[int]
     COMMAND_FIELD_NUMBER: _ClassVar[int]
     COMMAND_TO_RUN_FIELD_NUMBER: _ClassVar[int]
     HOSTNAMES_FIELD_NUMBER: _ClassVar[int]
+    LAUNCH_TYPE_FIELD_NUMBER: _ClassVar[int]
     REPLICAS_FIELD_NUMBER: _ClassVar[int]
     REPLICA_RESOURCES_FIELD_NUMBER: _ClassVar[int]
     TITLE_FIELD_NUMBER: _ClassVar[int]
@@ -278,6 +304,7 @@ class CreateLaunchRequest(_message.Message):
     command: _containers.RepeatedScalarFieldContainer[str]
     command_to_run: str
     hostnames: _containers.RepeatedScalarFieldContainer[str]
+    launch_type: LaunchType
     replicas: int
     replica_resources: _resources_pb2.Resources
     title: str
@@ -291,7 +318,7 @@ class CreateLaunchRequest(_message.Message):
     jobs: _containers.RepeatedCompositeFieldContainer[Job]
     zip_file_id: str
     git_commit: str
-    def __init__(self, launched_by: _Optional[str] = ..., command: _Optional[_Iterable[str]] = ..., command_to_run: _Optional[str] = ..., hostnames: _Optional[_Iterable[str]] = ..., replicas: _Optional[int] = ..., replica_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., launch_script_body: _Optional[str] = ..., zip_file_contents: _Optional[bytes] = ..., git_repo: _Optional[str] = ..., git_branch: _Optional[str] = ..., shard: _Optional[str] = ..., cluster: _Optional[str] = ..., jobs: _Optional[_Iterable[_Union[Job, _Mapping]]] = ..., zip_file_id: _Optional[str] = ..., git_commit: _Optional[str] = ...) -> None: ...
+    def __init__(self, launched_by: _Optional[str] = ..., command: _Optional[_Iterable[str]] = ..., command_to_run: _Optional[str] = ..., hostnames: _Optional[_Iterable[str]] = ..., launch_type: _Optional[_Union[LaunchType, str]] = ..., replicas: _Optional[int] = ..., replica_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., launch_script_body: _Optional[str] = ..., zip_file_contents: _Optional[bytes] = ..., git_repo: _Optional[str] = ..., git_branch: _Optional[str] = ..., shard: _Optional[str] = ..., cluster: _Optional[str] = ..., jobs: _Optional[_Iterable[_Union[Job, _Mapping]]] = ..., zip_file_id: _Optional[str] = ..., git_commit: _Optional[str] = ...) -> None: ...
 
 class Job(_message.Message):
     __slots__ = ("short_name", "replicas", "processes", "on_replica_failure_other_replicas_continue", "on_replica_failure_other_replicas_are_stopped")

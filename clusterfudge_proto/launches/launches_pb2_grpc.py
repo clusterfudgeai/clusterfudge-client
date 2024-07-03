@@ -79,6 +79,11 @@ class LaunchesStub(object):
                 request_serializer=launches_dot_launches__pb2.LaunchJupyterNotebookRequest.SerializeToString,
                 response_deserializer=launches_dot_launches__pb2.LaunchJupyterNotebookResponse.FromString,
                 _registered_method=True)
+        self.LaunchWorkstation = channel.unary_unary(
+                '/clusterfudge.Launches/LaunchWorkstation',
+                request_serializer=launches_dot_launches__pb2.LaunchWorkstationRequest.SerializeToString,
+                response_deserializer=launches_dot_launches__pb2.LaunchWorkstationResponse.FromString,
+                _registered_method=True)
         self.ListResources = channel.unary_unary(
                 '/clusterfudge.Launches/ListResources',
                 request_serializer=launches_dot_launches__pb2.ListResourcesRequest.SerializeToString,
@@ -142,6 +147,12 @@ class LaunchesServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def LaunchWorkstation(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def ListResources(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -196,6 +207,11 @@ def add_LaunchesServicer_to_server(servicer, server):
                     servicer.LaunchJupyterNotebook,
                     request_deserializer=launches_dot_launches__pb2.LaunchJupyterNotebookRequest.FromString,
                     response_serializer=launches_dot_launches__pb2.LaunchJupyterNotebookResponse.SerializeToString,
+            ),
+            'LaunchWorkstation': grpc.unary_unary_rpc_method_handler(
+                    servicer.LaunchWorkstation,
+                    request_deserializer=launches_dot_launches__pb2.LaunchWorkstationRequest.FromString,
+                    response_serializer=launches_dot_launches__pb2.LaunchWorkstationResponse.SerializeToString,
             ),
             'ListResources': grpc.unary_unary_rpc_method_handler(
                     servicer.ListResources,
@@ -424,6 +440,33 @@ class Launches(object):
             '/clusterfudge.Launches/LaunchJupyterNotebook',
             launches_dot_launches__pb2.LaunchJupyterNotebookRequest.SerializeToString,
             launches_dot_launches__pb2.LaunchJupyterNotebookResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def LaunchWorkstation(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/clusterfudge.Launches/LaunchWorkstation',
+            launches_dot_launches__pb2.LaunchWorkstationRequest.SerializeToString,
+            launches_dot_launches__pb2.LaunchWorkstationResponse.FromString,
             options,
             channel_credentials,
             insecure,
