@@ -88,39 +88,54 @@ def ssh(
     Act as an SSH ProxyCommand, tunneling SSH traffic through a gRPC stream.
     """
     exec_command_id = _parse_host(host)
+    asyncio.run(_run_tunnel(exec_command_id, verbose))
 
-    def run_tunnel():
-        client = Client()
 
-        def generate_requests():
-            yield tunnel_pb2.TunnelRequest(
-                initialise=tunnel_pb2.InitialiseRequest(exec_command_id=exec_command_id)
-            )
+async def _connect_stdin_stdout():
+    loop = asyncio.get_event_loop()
+    reader = asyncio.StreamReader()
+    protocol = asyncio.StreamReaderProtocol(reader)
+    await loop.connect_read_pipe(lambda: protocol, sys.stdin)
+    w_transport, w_protocol = await loop.connect_write_pipe(
+        asyncio.streams.FlowControlMixin, sys.stdout
+    )
+    writer = asyncio.StreamWriter(w_transport, w_protocol, reader, loop)
+    return reader, writer
 
-            while True:
-                try:
-                    data = sys.stdin.buffer.read(4096)
-                    if not data:
-                        break
-                    yield tunnel_pb2.TunnelRequest(data=tunnel_pb2.Data(data=data))
-                except IOError:
+
+async def _run_tunnel(exec_command_id: str, verbose: bool):
+    client = Client()
+    reader, writer = await _connect_stdin_stdout()
+
+    async def generate_requests():
+        yield tunnel_pb2.TunnelRequest(
+            initialise=tunnel_pb2.InitialiseRequest(exec_command_id=exec_command_id)
+        )
+
+        while True:
+            try:
+                data = await reader.read(4096)
+                if not data:
                     break
-
-        try:
-            for response in client.tunnel_stub.Tunnel(generate_requests()):
-                sys.stdout.buffer.write(response.data)
-                sys.stdout.buffer.flush()
-        except grpc.RpcError as e:
-            print(e, file=sys.stderr)
-            raise e
-        finally:
-            sys.stdin.close()
-            sys.stdout.close()
-            client.channel.close()
+                yield tunnel_pb2.TunnelRequest(data=tunnel_pb2.Data(data=data))
+            except IOError:
+                break
 
     if verbose:
-        print(f"Starting SSH tunnel for {host}", file=sys.stderr)
-    run_tunnel()
+        print(
+            f"Starting SSH tunnel for {exec_command_id}.ssh.clusterfudge.com",
+            file=sys.stderr,
+        )
+
+    try:
+        async for response in client.tunnel_stub.Tunnel(generate_requests()):
+            writer.write(response.data)
+            await writer.drain()
+    except grpc.RpcError as e:
+        print(e, file=sys.stderr)
+        raise e
+    finally:
+        await client.channel.close()
 
 
 async def _login(tenant_id: Optional[str] = None):

@@ -9,10 +9,13 @@ from typing import Optional
 
 import dataclasses_json
 import grpc
+import grpc.aio
 from clusterfudge_proto.launches import launches_pb2, launches_pb2_grpc
 from clusterfudge_proto.resources import resources_pb2
-from clusterfudge_proto.tunnelpb import tunnel_pb2, tunnel_pb2_grpc
+from clusterfudge_proto.tunnelpb import tunnel_pb2_grpc
 from grpc import ssl_channel_credentials
+
+LaunchStatus = launches_pb2.Launch.Status
 
 
 @dataclasses_json.dataclass_json(letter_case=dataclasses_json.LetterCase.CAMEL)
@@ -232,8 +235,9 @@ class Client:
             grpc.metadata_call_credentials(APIKeyCallCredentials(self.api_key)),
         )
         self.channel = grpc.secure_channel(self.base_url, self.credentials)
+        self.async_channel = grpc.aio.secure_channel(self.base_url, self.credentials)
         self.launches_stub = launches_pb2_grpc.LaunchesStub(self.channel)
-        self.tunnel_stub = tunnel_pb2_grpc.TunnelStub(self.channel)
+        self.tunnel_stub = tunnel_pb2_grpc.TunnelStub(self.async_channel)
 
     def _load_config_from_file(self) -> ClusterfudgeConfig:
         config_path = os.path.join(
@@ -289,6 +293,21 @@ class Client:
                 ) from None
             if _is_scheduling_error(e):
                 raise _grpc_error_to_clusterfudge_error(e) from None
+
+    def launch_workstation(self) -> launches_pb2.LaunchWorkstationResponse:
+        return self.launches_stub.LaunchWorkstation(
+            launches_pb2.LaunchWorkstationRequest(
+                port=22,
+            )
+        )
+
+    def stop_launch(self, launch_id: str) -> None:
+        self.launches_stub.StopLaunch(launches_pb2.StopLaunchRequest(id=launch_id))
+
+    def get_launch_details(self, launch_id: str) -> launches_pb2.LaunchDetails:
+        return self.launches_stub.GetLaunchDetails(
+            launches_pb2.GetLaunchDetailsRequest(id=launch_id)
+        )
 
 
 def _create_zip_file_of_project_contents_in_memory() -> io.BytesIO:
