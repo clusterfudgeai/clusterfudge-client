@@ -44,81 +44,11 @@ class ListResourcesResponse(_message.Message):
     RESOURCE_CONSUMERS_FIELD_NUMBER: _ClassVar[int]
     TOTAL_FIELD_NUMBER: _ClassVar[int]
     AVAILABLE_FIELD_NUMBER: _ClassVar[int]
-    clusters: _containers.RepeatedCompositeFieldContainer[ClusterResources]
+    clusters: _containers.RepeatedCompositeFieldContainer[_resources_pb2.ClusterResources]
     resource_consumers: _containers.RepeatedCompositeFieldContainer[_exec_pb2.Command]
     total: _resources_pb2.Resources
     available: _resources_pb2.Resources
-    def __init__(self, clusters: _Optional[_Iterable[_Union[ClusterResources, _Mapping]]] = ..., resource_consumers: _Optional[_Iterable[_Union[_exec_pb2.Command, _Mapping]]] = ..., total: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., available: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ...) -> None: ...
-
-class ClusterResources(_message.Message):
-    __slots__ = ("name", "total_resources", "used_resources", "used_non_clusterfudge", "available_resources", "cordoned_resources", "offline_resources", "shard_resources", "gpu_rtx3090", "gpu_a100_40gb", "gpu_a100_80gb", "gpu_h100", "gpu_t4", "gpu_rtx6000", "gpu_l4", "gpu_p4", "gpu_p100", "gpu_v100", "gpu_rtx3080", "gpu_rtx4090", "gpu_rtx4080")
-    NAME_FIELD_NUMBER: _ClassVar[int]
-    TOTAL_RESOURCES_FIELD_NUMBER: _ClassVar[int]
-    USED_RESOURCES_FIELD_NUMBER: _ClassVar[int]
-    USED_NON_CLUSTERFUDGE_FIELD_NUMBER: _ClassVar[int]
-    AVAILABLE_RESOURCES_FIELD_NUMBER: _ClassVar[int]
-    CORDONED_RESOURCES_FIELD_NUMBER: _ClassVar[int]
-    OFFLINE_RESOURCES_FIELD_NUMBER: _ClassVar[int]
-    SHARD_RESOURCES_FIELD_NUMBER: _ClassVar[int]
-    GPU_RTX3090_FIELD_NUMBER: _ClassVar[int]
-    GPU_A100_40GB_FIELD_NUMBER: _ClassVar[int]
-    GPU_A100_80GB_FIELD_NUMBER: _ClassVar[int]
-    GPU_H100_FIELD_NUMBER: _ClassVar[int]
-    GPU_T4_FIELD_NUMBER: _ClassVar[int]
-    GPU_RTX6000_FIELD_NUMBER: _ClassVar[int]
-    GPU_L4_FIELD_NUMBER: _ClassVar[int]
-    GPU_P4_FIELD_NUMBER: _ClassVar[int]
-    GPU_P100_FIELD_NUMBER: _ClassVar[int]
-    GPU_V100_FIELD_NUMBER: _ClassVar[int]
-    GPU_RTX3080_FIELD_NUMBER: _ClassVar[int]
-    GPU_RTX4090_FIELD_NUMBER: _ClassVar[int]
-    GPU_RTX4080_FIELD_NUMBER: _ClassVar[int]
-    name: str
-    total_resources: _resources_pb2.Resources
-    used_resources: _resources_pb2.Resources
-    used_non_clusterfudge: _resources_pb2.Resources
-    available_resources: _resources_pb2.Resources
-    cordoned_resources: _resources_pb2.Resources
-    offline_resources: _resources_pb2.Resources
-    shard_resources: _containers.RepeatedCompositeFieldContainer[ClusterResources]
-    gpu_rtx3090: ResourceStatuses
-    gpu_a100_40gb: ResourceStatuses
-    gpu_a100_80gb: ResourceStatuses
-    gpu_h100: ResourceStatuses
-    gpu_t4: ResourceStatuses
-    gpu_rtx6000: ResourceStatuses
-    gpu_l4: ResourceStatuses
-    gpu_p4: ResourceStatuses
-    gpu_p100: ResourceStatuses
-    gpu_v100: ResourceStatuses
-    gpu_rtx3080: ResourceStatuses
-    gpu_rtx4090: ResourceStatuses
-    gpu_rtx4080: ResourceStatuses
-    def __init__(self, name: _Optional[str] = ..., total_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., used_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., used_non_clusterfudge: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., available_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., cordoned_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., offline_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., shard_resources: _Optional[_Iterable[_Union[ClusterResources, _Mapping]]] = ..., gpu_rtx3090: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_a100_40gb: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_a100_80gb: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_h100: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_t4: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_rtx6000: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_l4: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_p4: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_p100: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_v100: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_rtx3080: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_rtx4090: _Optional[_Union[ResourceStatuses, _Mapping]] = ..., gpu_rtx4080: _Optional[_Union[ResourceStatuses, _Mapping]] = ...) -> None: ...
-
-class ResourceStatuses(_message.Message):
-    __slots__ = ("total", "used", "used_non_clusterfudge", "available", "cordoned", "offline")
-    TOTAL_FIELD_NUMBER: _ClassVar[int]
-    USED_FIELD_NUMBER: _ClassVar[int]
-    USED_NON_CLUSTERFUDGE_FIELD_NUMBER: _ClassVar[int]
-    AVAILABLE_FIELD_NUMBER: _ClassVar[int]
-    CORDONED_FIELD_NUMBER: _ClassVar[int]
-    OFFLINE_FIELD_NUMBER: _ClassVar[int]
-    total: ResourceCountWithHostnames
-    used: ResourceCountWithHostnames
-    used_non_clusterfudge: ResourceCountWithHostnames
-    available: ResourceCountWithHostnames
-    cordoned: ResourceCountWithHostnames
-    offline: ResourceCountWithHostnames
-    def __init__(self, total: _Optional[_Union[ResourceCountWithHostnames, _Mapping]] = ..., used: _Optional[_Union[ResourceCountWithHostnames, _Mapping]] = ..., used_non_clusterfudge: _Optional[_Union[ResourceCountWithHostnames, _Mapping]] = ..., available: _Optional[_Union[ResourceCountWithHostnames, _Mapping]] = ..., cordoned: _Optional[_Union[ResourceCountWithHostnames, _Mapping]] = ..., offline: _Optional[_Union[ResourceCountWithHostnames, _Mapping]] = ...) -> None: ...
-
-class ResourceCountWithHostnames(_message.Message):
-    __slots__ = ("count", "hostnames")
-    COUNT_FIELD_NUMBER: _ClassVar[int]
-    HOSTNAMES_FIELD_NUMBER: _ClassVar[int]
-    count: int
-    hostnames: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, count: _Optional[int] = ..., hostnames: _Optional[_Iterable[str]] = ...) -> None: ...
+    def __init__(self, clusters: _Optional[_Iterable[_Union[_resources_pb2.ClusterResources, _Mapping]]] = ..., resource_consumers: _Optional[_Iterable[_Union[_exec_pb2.Command, _Mapping]]] = ..., total: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., available: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ...) -> None: ...
 
 class GetLaunchRequest(_message.Message):
     __slots__ = ("id",)
@@ -409,14 +339,32 @@ class StatusCounts(_message.Message):
     def __init__(self, pending: _Optional[int] = ..., running: _Optional[int] = ..., succeeded: _Optional[int] = ..., failed: _Optional[int] = ..., stopped: _Optional[int] = ..., total: _Optional[int] = ...) -> None: ...
 
 class LaunchHelloWorldRequest(_message.Message):
-    __slots__ = ("cluster", "shard")
+    __slots__ = ("cluster", "shard", "hostnames")
     CLUSTER_FIELD_NUMBER: _ClassVar[int]
     SHARD_FIELD_NUMBER: _ClassVar[int]
+    HOSTNAMES_FIELD_NUMBER: _ClassVar[int]
     cluster: str
     shard: str
-    def __init__(self, cluster: _Optional[str] = ..., shard: _Optional[str] = ...) -> None: ...
+    hostnames: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, cluster: _Optional[str] = ..., shard: _Optional[str] = ..., hostnames: _Optional[_Iterable[str]] = ...) -> None: ...
 
 class LaunchHelloWorldResponse(_message.Message):
+    __slots__ = ("launch",)
+    LAUNCH_FIELD_NUMBER: _ClassVar[int]
+    launch: Launch
+    def __init__(self, launch: _Optional[_Union[Launch, _Mapping]] = ...) -> None: ...
+
+class LaunchGpuBurnRequest(_message.Message):
+    __slots__ = ("cluster", "shard", "hostnames")
+    CLUSTER_FIELD_NUMBER: _ClassVar[int]
+    SHARD_FIELD_NUMBER: _ClassVar[int]
+    HOSTNAMES_FIELD_NUMBER: _ClassVar[int]
+    cluster: str
+    shard: str
+    hostnames: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, cluster: _Optional[str] = ..., shard: _Optional[str] = ..., hostnames: _Optional[_Iterable[str]] = ...) -> None: ...
+
+class LaunchGpuBurnResponse(_message.Message):
     __slots__ = ("launch",)
     LAUNCH_FIELD_NUMBER: _ClassVar[int]
     launch: Launch
