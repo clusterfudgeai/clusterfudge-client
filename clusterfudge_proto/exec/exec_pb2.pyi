@@ -30,6 +30,12 @@ class CommandState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     COMMAND_STATE_KILLED: _ClassVar[CommandState]
     COMMAND_STATE_CANCELLED: _ClassVar[CommandState]
     COMMAND_STATE_TIMED_OUT: _ClassVar[CommandState]
+
+class NodeExclusivity(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    NODE_EXCLUSIVITY_UNKNOWN: _ClassVar[NodeExclusivity]
+    NODE_EXCLUSIVITY_SHARE_NODE: _ClassVar[NodeExclusivity]
+    NODE_EXCLUSIVITY_REQUIRE_ENTIRE_NODE: _ClassVar[NodeExclusivity]
 COMMAND_TYPE_UNKNOWN: CommandType
 COMMAND_TYPE_AGENT_UPDATE: CommandType
 COMMAND_TYPE_NVIDIA_BUG_REPORT: CommandType
@@ -46,6 +52,9 @@ COMMAND_STATE_FAILED: CommandState
 COMMAND_STATE_KILLED: CommandState
 COMMAND_STATE_CANCELLED: CommandState
 COMMAND_STATE_TIMED_OUT: CommandState
+NODE_EXCLUSIVITY_UNKNOWN: NodeExclusivity
+NODE_EXCLUSIVITY_SHARE_NODE: NodeExclusivity
+NODE_EXCLUSIVITY_REQUIRE_ENTIRE_NODE: NodeExclusivity
 
 class CommandResponse(_message.Message):
     __slots__ = ("id", "requested_at", "command", "reference_id")
@@ -122,7 +131,7 @@ class UpdateCommandRequest(_message.Message):
     def __init__(self, command: _Optional[_Union[Command, _Mapping]] = ...) -> None: ...
 
 class Command(_message.Message):
-    __slots__ = ("tenant_id", "hostname", "id", "requested_by", "requested_at", "acknowledged_at", "command", "reference_id", "execution_started_at", "execution_completed_at", "exec_err", "exit_code", "state", "env", "pid", "cmd_line", "resource_request", "zip_id", "git_repo", "git_branch", "job_name", "server_state", "git_commit")
+    __slots__ = ("tenant_id", "hostname", "id", "requested_by", "requested_at", "acknowledged_at", "command", "reference_id", "execution_started_at", "execution_completed_at", "exec_err", "exit_code", "state", "env", "pid", "cmd_line", "resource_request", "zip_id", "git_repo", "git_branch", "job_name", "server_state", "git_commit", "node_exclusivity")
     TENANT_ID_FIELD_NUMBER: _ClassVar[int]
     HOSTNAME_FIELD_NUMBER: _ClassVar[int]
     ID_FIELD_NUMBER: _ClassVar[int]
@@ -146,6 +155,7 @@ class Command(_message.Message):
     JOB_NAME_FIELD_NUMBER: _ClassVar[int]
     SERVER_STATE_FIELD_NUMBER: _ClassVar[int]
     GIT_COMMIT_FIELD_NUMBER: _ClassVar[int]
+    NODE_EXCLUSIVITY_FIELD_NUMBER: _ClassVar[int]
     tenant_id: str
     hostname: str
     id: str
@@ -169,4 +179,5 @@ class Command(_message.Message):
     job_name: str
     server_state: CommandState
     git_commit: str
-    def __init__(self, tenant_id: _Optional[str] = ..., hostname: _Optional[str] = ..., id: _Optional[str] = ..., requested_by: _Optional[str] = ..., requested_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., acknowledged_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., command: _Optional[_Union[CommandType, str]] = ..., reference_id: _Optional[str] = ..., execution_started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., execution_completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., exec_err: _Optional[str] = ..., exit_code: _Optional[_Union[_wrappers_pb2.Int32Value, _Mapping]] = ..., state: _Optional[_Union[CommandState, str]] = ..., env: _Optional[_Iterable[str]] = ..., pid: _Optional[_Union[_wrappers_pb2.Int32Value, _Mapping]] = ..., cmd_line: _Optional[_Iterable[str]] = ..., resource_request: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., zip_id: _Optional[str] = ..., git_repo: _Optional[str] = ..., git_branch: _Optional[str] = ..., job_name: _Optional[str] = ..., server_state: _Optional[_Union[CommandState, str]] = ..., git_commit: _Optional[str] = ...) -> None: ...
+    node_exclusivity: NodeExclusivity
+    def __init__(self, tenant_id: _Optional[str] = ..., hostname: _Optional[str] = ..., id: _Optional[str] = ..., requested_by: _Optional[str] = ..., requested_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., acknowledged_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., command: _Optional[_Union[CommandType, str]] = ..., reference_id: _Optional[str] = ..., execution_started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., execution_completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., exec_err: _Optional[str] = ..., exit_code: _Optional[_Union[_wrappers_pb2.Int32Value, _Mapping]] = ..., state: _Optional[_Union[CommandState, str]] = ..., env: _Optional[_Iterable[str]] = ..., pid: _Optional[_Union[_wrappers_pb2.Int32Value, _Mapping]] = ..., cmd_line: _Optional[_Iterable[str]] = ..., resource_request: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., zip_id: _Optional[str] = ..., git_repo: _Optional[str] = ..., git_branch: _Optional[str] = ..., job_name: _Optional[str] = ..., server_state: _Optional[_Union[CommandState, str]] = ..., git_commit: _Optional[str] = ..., node_exclusivity: _Optional[_Union[NodeExclusivity, str]] = ...) -> None: ...
