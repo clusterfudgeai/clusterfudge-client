@@ -23,10 +23,16 @@ LAUNCH_TYPE_JUPYTER_NOTEBOOK: LaunchType
 LAUNCH_TYPE_WORKSTATION: LaunchType
 
 class LaunchWorkstationRequest(_message.Message):
-    __slots__ = ("port",)
+    __slots__ = ("port", "resource_requirements", "shard", "cluster")
     PORT_FIELD_NUMBER: _ClassVar[int]
+    RESOURCE_REQUIREMENTS_FIELD_NUMBER: _ClassVar[int]
+    SHARD_FIELD_NUMBER: _ClassVar[int]
+    CLUSTER_FIELD_NUMBER: _ClassVar[int]
     port: int
-    def __init__(self, port: _Optional[int] = ...) -> None: ...
+    resource_requirements: _resources_pb2.Resources
+    shard: str
+    cluster: str
+    def __init__(self, port: _Optional[int] = ..., resource_requirements: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., shard: _Optional[str] = ..., cluster: _Optional[str] = ...) -> None: ...
 
 class LaunchWorkstationResponse(_message.Message):
     __slots__ = ("id",)
