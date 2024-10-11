@@ -95,7 +95,7 @@ class StopLaunchResponse(_message.Message):
     def __init__(self) -> None: ...
 
 class Launch(_message.Message):
-    __slots__ = ("launch_id", "launched_by", "submitted_at", "command_to_run", "command", "launch_type", "hostnames", "status", "id", "title", "description", "replicas", "replica_resources", "launch_script_body", "scheduling_log", "zip_id", "git_repo", "git_branch", "shard", "cluster", "jobs", "git_commit", "node_exclusivity")
+    __slots__ = ("launch_id", "launched_by", "submitted_at", "command_to_run", "command", "launch_type", "hostnames", "status", "id", "title", "description", "replicas", "replica_resources", "launch_script_body", "scheduling_log", "zip_id", "git_repo", "git_branch", "shard", "cluster", "jobs", "git_commit", "node_exclusivity", "queueing_behaviour")
     class Status(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
         __slots__ = ()
         LAUNCH_STATUS_UNKNOWN: _ClassVar[Launch.Status]
@@ -105,6 +105,7 @@ class Launch(_message.Message):
         LAUNCH_STATUS_FAILED: _ClassVar[Launch.Status]
         LAUNCH_STATUS_UNMANAGED: _ClassVar[Launch.Status]
         LAUNCH_STATUS_STOPPED: _ClassVar[Launch.Status]
+        LAUNCH_STATUS_QUEUED: _ClassVar[Launch.Status]
     LAUNCH_STATUS_UNKNOWN: Launch.Status
     LAUNCH_STATUS_PENDING: Launch.Status
     LAUNCH_STATUS_RUNNING: Launch.Status
@@ -112,6 +113,7 @@ class Launch(_message.Message):
     LAUNCH_STATUS_FAILED: Launch.Status
     LAUNCH_STATUS_UNMANAGED: Launch.Status
     LAUNCH_STATUS_STOPPED: Launch.Status
+    LAUNCH_STATUS_QUEUED: Launch.Status
     LAUNCH_ID_FIELD_NUMBER: _ClassVar[int]
     LAUNCHED_BY_FIELD_NUMBER: _ClassVar[int]
     SUBMITTED_AT_FIELD_NUMBER: _ClassVar[int]
@@ -135,6 +137,7 @@ class Launch(_message.Message):
     JOBS_FIELD_NUMBER: _ClassVar[int]
     GIT_COMMIT_FIELD_NUMBER: _ClassVar[int]
     NODE_EXCLUSIVITY_FIELD_NUMBER: _ClassVar[int]
+    QUEUEING_BEHAVIOUR_FIELD_NUMBER: _ClassVar[int]
     launch_id: int
     launched_by: str
     submitted_at: _timestamp_pb2.Timestamp
@@ -158,7 +161,14 @@ class Launch(_message.Message):
     jobs: _containers.RepeatedCompositeFieldContainer[Job]
     git_commit: str
     node_exclusivity: _exec_pb2.NodeExclusivity
-    def __init__(self, launch_id: _Optional[int] = ..., launched_by: _Optional[str] = ..., submitted_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., command_to_run: _Optional[str] = ..., command: _Optional[_Iterable[str]] = ..., launch_type: _Optional[_Union[LaunchType, str]] = ..., hostnames: _Optional[_Iterable[str]] = ..., status: _Optional[_Union[Launch.Status, str]] = ..., id: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., replicas: _Optional[int] = ..., replica_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., launch_script_body: _Optional[str] = ..., scheduling_log: _Optional[_Iterable[str]] = ..., zip_id: _Optional[str] = ..., git_repo: _Optional[str] = ..., git_branch: _Optional[str] = ..., shard: _Optional[str] = ..., cluster: _Optional[str] = ..., jobs: _Optional[_Iterable[_Union[Job, _Mapping]]] = ..., git_commit: _Optional[str] = ..., node_exclusivity: _Optional[_Union[_exec_pb2.NodeExclusivity, str]] = ...) -> None: ...
+    queueing_behaviour: QueueingBehaviour
+    def __init__(self, launch_id: _Optional[int] = ..., launched_by: _Optional[str] = ..., submitted_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., command_to_run: _Optional[str] = ..., command: _Optional[_Iterable[str]] = ..., launch_type: _Optional[_Union[LaunchType, str]] = ..., hostnames: _Optional[_Iterable[str]] = ..., status: _Optional[_Union[Launch.Status, str]] = ..., id: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., replicas: _Optional[int] = ..., replica_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., launch_script_body: _Optional[str] = ..., scheduling_log: _Optional[_Iterable[str]] = ..., zip_id: _Optional[str] = ..., git_repo: _Optional[str] = ..., git_branch: _Optional[str] = ..., shard: _Optional[str] = ..., cluster: _Optional[str] = ..., jobs: _Optional[_Iterable[_Union[Job, _Mapping]]] = ..., git_commit: _Optional[str] = ..., node_exclusivity: _Optional[_Union[_exec_pb2.NodeExclusivity, str]] = ..., queueing_behaviour: _Optional[_Union[QueueingBehaviour, _Mapping]] = ...) -> None: ...
+
+class QueueingBehaviour(_message.Message):
+    __slots__ = ("queue_launch",)
+    QUEUE_LAUNCH_FIELD_NUMBER: _ClassVar[int]
+    queue_launch: bool
+    def __init__(self, queue_launch: bool = ...) -> None: ...
 
 class RerunLaunchRequest(_message.Message):
     __slots__ = ("launch_id",)
@@ -219,7 +229,7 @@ class Xid(_message.Message):
     def __init__(self, hostname: _Optional[str] = ..., gpu_uuid: _Optional[str] = ..., pci_id: _Optional[str] = ..., xid: _Optional[int] = ..., occurred_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class CreateLaunchRequest(_message.Message):
-    __slots__ = ("launched_by", "command", "command_to_run", "hostnames", "launch_type", "replicas", "replica_resources", "title", "description", "launch_script_body", "zip_file_contents", "git_repo", "git_branch", "shard", "cluster", "jobs", "zip_file_id", "git_commit", "node_exclusivity")
+    __slots__ = ("launched_by", "command", "command_to_run", "hostnames", "launch_type", "replicas", "replica_resources", "title", "description", "launch_script_body", "zip_file_contents", "git_repo", "git_branch", "shard", "cluster", "jobs", "zip_file_id", "git_commit", "node_exclusivity", "queueing_behaviour")
     LAUNCHED_BY_FIELD_NUMBER: _ClassVar[int]
     COMMAND_FIELD_NUMBER: _ClassVar[int]
     COMMAND_TO_RUN_FIELD_NUMBER: _ClassVar[int]
@@ -239,6 +249,7 @@ class CreateLaunchRequest(_message.Message):
     ZIP_FILE_ID_FIELD_NUMBER: _ClassVar[int]
     GIT_COMMIT_FIELD_NUMBER: _ClassVar[int]
     NODE_EXCLUSIVITY_FIELD_NUMBER: _ClassVar[int]
+    QUEUEING_BEHAVIOUR_FIELD_NUMBER: _ClassVar[int]
     launched_by: str
     command: _containers.RepeatedScalarFieldContainer[str]
     command_to_run: str
@@ -258,7 +269,8 @@ class CreateLaunchRequest(_message.Message):
     zip_file_id: str
     git_commit: str
     node_exclusivity: _exec_pb2.NodeExclusivity
-    def __init__(self, launched_by: _Optional[str] = ..., command: _Optional[_Iterable[str]] = ..., command_to_run: _Optional[str] = ..., hostnames: _Optional[_Iterable[str]] = ..., launch_type: _Optional[_Union[LaunchType, str]] = ..., replicas: _Optional[int] = ..., replica_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., launch_script_body: _Optional[str] = ..., zip_file_contents: _Optional[bytes] = ..., git_repo: _Optional[str] = ..., git_branch: _Optional[str] = ..., shard: _Optional[str] = ..., cluster: _Optional[str] = ..., jobs: _Optional[_Iterable[_Union[Job, _Mapping]]] = ..., zip_file_id: _Optional[str] = ..., git_commit: _Optional[str] = ..., node_exclusivity: _Optional[_Union[_exec_pb2.NodeExclusivity, str]] = ...) -> None: ...
+    queueing_behaviour: QueueingBehaviour
+    def __init__(self, launched_by: _Optional[str] = ..., command: _Optional[_Iterable[str]] = ..., command_to_run: _Optional[str] = ..., hostnames: _Optional[_Iterable[str]] = ..., launch_type: _Optional[_Union[LaunchType, str]] = ..., replicas: _Optional[int] = ..., replica_resources: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., launch_script_body: _Optional[str] = ..., zip_file_contents: _Optional[bytes] = ..., git_repo: _Optional[str] = ..., git_branch: _Optional[str] = ..., shard: _Optional[str] = ..., cluster: _Optional[str] = ..., jobs: _Optional[_Iterable[_Union[Job, _Mapping]]] = ..., zip_file_id: _Optional[str] = ..., git_commit: _Optional[str] = ..., node_exclusivity: _Optional[_Union[_exec_pb2.NodeExclusivity, str]] = ..., queueing_behaviour: _Optional[_Union[QueueingBehaviour, _Mapping]] = ...) -> None: ...
 
 class Job(_message.Message):
     __slots__ = ("short_name", "replicas", "processes", "on_replica_failure_other_replicas_continue", "on_replica_failure_other_replicas_are_stopped")

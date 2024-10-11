@@ -10,6 +10,7 @@ from .clusterfudge import (
     OnReplicaFailureOtherReplicasContinue,
     Process,
     Resources,
+    QueueingBehaviour,
     SchedulingError,
 )
 
@@ -24,6 +25,7 @@ __all__ = [
     "OnReplicaFailureOtherReplicasAreStopped",
     "OnReplicaFailureOtherReplicasContinue",
     "Process",
+    "QueueingBehaviour",
     "Resources",
     "SchedulingError",
 ]

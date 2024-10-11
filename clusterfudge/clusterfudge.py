@@ -56,6 +56,7 @@ class Resources:
     rtx4060: int = 0
     rtx3050: int = 0
     gtx1050: int = 0
+    h200: int = 0
 
 
 @dataclasses.dataclass()
@@ -97,6 +98,11 @@ class Job:
 
 
 @dataclasses.dataclass()
+class QueueingBehaviour:
+    enqueue_if_cluster_busy: Optional[bool] = True
+
+
+@dataclasses.dataclass()
 class CreateLaunchRequest:
     jobs: Sequence[Job]
     name: Optional[str] = None
@@ -105,6 +111,7 @@ class CreateLaunchRequest:
     cluster: Optional[str] = None
     shard: Optional[str] = None
     hostnames: Optional[Sequence[str]] = None
+    queueing_behaviour: Optional[QueueingBehaviour] = None
 
 
 def _validate_create_launch_request_v2(
@@ -227,6 +234,15 @@ def _proto_req_from_create_launch_request_v2(
         proto_launch_request.git_branch = create_launch_request.deployment.branch
         if create_launch_request.deployment.commit is not None:
             proto_launch_request.git_commit = create_launch_request.deployment.commit
+
+    if create_launch_request.queueing_behaviour is not None:
+        proto_launch_request.MergeFrom(
+            launches_pb2.CreateLaunchRequest(
+                queueing_behaviour=launches_pb2.QueueingBehaviour(
+                    queue_launch=create_launch_request.queueing_behaviour.enqueue_if_cluster_busy
+                )
+            )
+        )
 
     return proto_launch_request
 
@@ -375,6 +391,7 @@ def _resources_to_proto(r: Resources | None) -> resources_pb2.Resources:
         gpu_rtx4060=r.rtx4060,
         gpu_rtx3050=r.rtx3050,
         gpu_gtx1050=r.gtx1050,
+        gpu_h200=r.h200,
     )
 
 

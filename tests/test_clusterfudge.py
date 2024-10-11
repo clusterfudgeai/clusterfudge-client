@@ -54,7 +54,7 @@ def test_launch_with_git_branch():
     assert result.git_repo == clr.deployment.repo
     assert result.git_branch == clr.deployment.branch
     assert result.git_commit == ""
-
+    assert result.queueing_behaviour.queue_launch == False
 
 def test_launch_with_git_commit():
     client = clusterfudge.Client(api_key="skip_loading_config_file")
@@ -108,7 +108,7 @@ def test_launch_with_git_commit():
     assert result.git_repo == clr.deployment.repo
     assert result.git_branch == clr.deployment.branch
     assert result.git_commit == clr.deployment.commit
-
+    assert result.queueing_behaviour.queue_launch == False
 
 def test_launch_with_invalid_deployment_throws_error():
     client = clusterfudge.Client(api_key="skip_loading_config_file")
@@ -190,6 +190,35 @@ def test_all_gpus_are_available_and_properly_mapped():
             exp_value = getattr(resources, field.name.replace('gpu_', ''))
             assert actual_value == exp_value, f"Expected {field.name} to be {exp_value}, got {actual_value}"
 
+
+def test_launch_with_queueing_behaviour():
+    client = clusterfudge.Client(api_key="skip_loading_config_file")
+    client.launches_stub = MockLaunchesStub()
+
+    clr = clusterfudge.CreateLaunchRequest(
+        name="launch_with_queueing_behaviour",
+        description="unit test",
+        queueing_behaviour=clusterfudge.QueueingBehaviour(
+            enqueue_if_cluster_busy=True,
+        ),
+        jobs=[
+            clusterfudge.Job(
+                short_name="python",
+                replicas=3,
+                processes=[
+                    clusterfudge.Process(
+                        command=["python3", "app.py"],
+                    ),
+                ],
+            ),
+        ],
+    )
+
+    client.create_launch(clr)
+
+    result = client.launches_stub.latest_launch 
+
+    assert result.queueing_behaviour.queue_launch == True
 
 class MockLaunchesStub:
 
