@@ -298,10 +298,18 @@ class Client:
         _validate_create_launch_request_v2(clr_v2)
         protoReq = _proto_req_from_create_launch_request_v2(clr_v2)
         protoReq.launch_script_body = launch_script_body
-
         if create_launch_request.deployment is not None:
             if isinstance(create_launch_request.deployment, LocalDir):
                 zipped_directory = _create_zip_file_of_project_contents_in_memory()
+                zip_size = len(zipped_directory.getvalue())
+                if zip_size > 50 * 1024 * 1024:
+                    root = _project_root()
+                    raise ValueError(
+                        f"Launch specifies LocalDir deployment but project directory {root} is too large "
+                        f"({zip_size / (1024*1024):.1f}MB). Maximum size is 50MB. "
+                        "Ensure you have no large files (e.g. .venv, model weights, etc.) in your working directory. "
+                        "You can also use a Git repository instead of a local directory."
+                    )
                 protoReq.zip_file_contents = zipped_directory.getvalue()
 
         try:
@@ -315,6 +323,7 @@ class Client:
                 ) from None
             if _is_scheduling_error(e):
                 raise _grpc_error_to_clusterfudge_error(e) from None
+            raise e
 
     def launch_workstation(self) -> launches_pb2.LaunchWorkstationResponse:
         return self.launches_stub.LaunchWorkstation(
