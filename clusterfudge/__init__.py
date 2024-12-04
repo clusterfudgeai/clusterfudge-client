@@ -1,4 +1,5 @@
 from .clusterfudge import (
+    BetaClient,
     Client,
     ClusterfudgeConfig,
     CreateLaunchRequest,
@@ -9,12 +10,13 @@ from .clusterfudge import (
     OnReplicaFailureOtherReplicasAreStopped,
     OnReplicaFailureOtherReplicasContinue,
     Process,
-    Resources,
     QueueingBehaviour,
+    Resources,
     SchedulingError,
 )
 
 __all__ = [
+    "BetaClient",
     "Client",
     "ClusterfudgeConfig",
     "CreateLaunchRequest",

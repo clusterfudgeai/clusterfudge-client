@@ -10,8 +10,10 @@ from typing import Optional
 import dataclasses_json
 import grpc
 import grpc.aio
+from clusterfudge_proto.fudgelet import fudgelet_pb2
 from clusterfudge_proto.launches import launches_pb2, launches_pb2_grpc
 from clusterfudge_proto.resources import resources_pb2
+from clusterfudge_proto.slurmpb import slurm_pb2, slurm_pb2_grpc
 from clusterfudge_proto.tunnelpb import tunnel_pb2_grpc
 from grpc import ssl_channel_credentials
 
@@ -247,6 +249,16 @@ def _proto_req_from_create_launch_request_v2(
     return proto_launch_request
 
 
+class BetaClient:
+    def __init__(self, channel: grpc.Channel):
+        self.slurm_stub = slurm_pb2_grpc.SlurmStub(channel)
+
+    def list_slurm_jobs(
+        self, req: slurm_pb2.ListSlurmJobsRequest
+    ) -> slurm_pb2.ListSlurmJobsResponse:
+        return self.slurm_stub.ListSlurmJobs(req)
+
+
 class Client:
     def __init__(self, base_url: str | None = None, api_key: str | None = None):
         self.base_url = base_url or "api.clusterfudge.com:443"
@@ -260,6 +272,7 @@ class Client:
         self.async_channel = grpc.aio.secure_channel(self.base_url, self.credentials)
         self.launches_stub = launches_pb2_grpc.LaunchesStub(self.channel)
         self.tunnel_stub = tunnel_pb2_grpc.TunnelStub(self.async_channel)
+        self.beta = BetaClient(self.channel)
 
     def _load_config_from_file(self) -> ClusterfudgeConfig:
         config_path = os.path.join(
