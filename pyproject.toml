@@ -1,6 +1,6 @@
 [project]
 name = "clusterfudge"
-version = "0.47.0"
+version = "0.48.0"
 description = "SDK for the Clusterfudge platform"
 requires-python = ">=3.10"
 readme = "readme.md"
@@ -26,3 +26,6 @@ Homepage = "https://clusterfudge.com"
 
 [project.scripts]
 clusterfudge = "clusterfudge.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = [ "clusterfudge", "clusterfudge_proto",]
