@@ -1,12 +1,12 @@
 [project]
 name = "clusterfudge"
-version = "0.48.0"
+version = "0.49.0"
 description = "SDK for the Clusterfudge platform"
 requires-python = ">=3.10"
 readme = "readme.md"
 keywords = [ "clusterfudge", "client", "infrastructure", "hpc", "supercomputer", "scheduler", "slurm",]
 classifiers = [ "License :: OSI Approved :: Apache Software License", "Programming Language :: Python :: 3",]
-dependencies = [ "dataclasses-json>=0.6.4", "aiohttp>=3.9.3", "typer>=0.9.0", "protobuf>=4.25.3", "aiofiles>=23.2.1", "anthropic==0.44.0", "grpcio>=1.69.0", "toml>=0.10.2",]
+dependencies = [ "dataclasses-json>=0.6.4", "aiohttp>=3.9.3", "typer>=0.9.0", "protobuf>=4.25.3", "aiofiles>=23.2.1", "anthropic>=0.44.0", "grpcio>=1.69.0", "toml>=0.10.2",]
 [[project.authors]]
 name = "Clusterfudge"
 email = "support@clusterfudge.com"
