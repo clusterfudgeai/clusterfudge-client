@@ -14,6 +14,7 @@ from .clusterfudge import (
     Resources,
     SchedulingError,
 )
+from .sandboxes import SandboxClient
 
 __all__ = [
     "BetaClient",
@@ -30,4 +31,5 @@ __all__ = [
     "QueueingBehaviour",
     "Resources",
     "SchedulingError",
+    "SandboxClient",
 ]

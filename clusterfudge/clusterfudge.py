@@ -1,35 +1,30 @@
+import asyncio
 import dataclasses
-import dataclasses_json
 import inspect
 import io
 import json
 import os
-import zipfile
-import os
-import grpc
-import time
-import json
-import asyncio
-import aiofiles
 import re
-import grpc.aio
-
+import time
+import zipfile
 from collections.abc import Sequence
 from typing import Optional
 
-from clusterfudge_proto.fudgelet import fudgelet_pb2
-from clusterfudge_proto.launches import launches_pb2, launches_pb2_grpc
-from clusterfudge_proto.resources import resources_pb2
-from clusterfudge_proto.slurmpb import slurm_pb2, slurm_pb2_grpc
-from clusterfudge_proto.tunnelpb import tunnel_pb2_grpc
-from clusterfudge_proto.sandboxespb import sandboxes_pb2, sandboxes_pb2_grpc
-from grpc import ssl_channel_credentials
-
+import aiofiles
+import dataclasses_json
+import grpc
+import grpc.aio
 from anthropic.types.beta import (
     BetaMessageParam,
     BetaToolResultBlockParam,
     BetaToolUseBlockParam,
 )
+from clusterfudge_proto.launches import launches_pb2, launches_pb2_grpc
+from clusterfudge_proto.resources import resources_pb2
+from clusterfudge_proto.sandboxespb import sandboxes_pb2, sandboxes_pb2_grpc
+from clusterfudge_proto.slurmpb import slurm_pb2, slurm_pb2_grpc
+from clusterfudge_proto.tunnelpb import tunnel_pb2_grpc
+from grpc import ssl_channel_credentials
 
 LaunchStatus = launches_pb2.Launch.Status
 
@@ -261,7 +256,9 @@ def _proto_req_from_create_launch_request_v2(
         proto_launch_request.MergeFrom(
             launches_pb2.CreateLaunchRequest(
                 queueing_behaviour=launches_pb2.QueueingBehaviour(
-                    queue_launch=create_launch_request.queueing_behaviour.enqueue_if_cluster_busy
+                    queue_launch=bool(
+                        create_launch_request.queueing_behaviour.enqueue_if_cluster_busy
+                    )
                 )
             )
         )
@@ -340,7 +337,7 @@ class Client:
                     root = _project_root()
                     raise ValueError(
                         f"Launch specifies LocalDir deployment but project directory {root} is too large "
-                        f"({zip_size / (1024*1024):.1f}MB). Maximum size is 50MB. "
+                        f"({zip_size / (1024 * 1024):.1f}MB). Maximum size is 50MB. "
                         "Ensure you have no large files (e.g. .venv, model weights, etc.) in your working directory. "
                         "You can also use a Git repository instead of a local directory."
                     )
@@ -373,44 +370,43 @@ class Client:
         return self.launches_stub.GetLaunchDetails(
             launches_pb2.GetLaunchDetailsRequest(id=launch_id)
         )
-    
+
     async def create_sandbox(self, params: Optional[SandboxParams] = None) -> str:
         """
         Create a new sandbox and wait for it to be ready.
-        
+
         Args:
             sidecar_pod_definitions: Optional list of sidecar pod definitions
             image_tag: Optional custom image tag to use
 
         Returns:
             str: The ID of the created and ready-to-use sandbox
-            
+
         Raises:
             TimeoutError: If the sandbox doesn't become ready within timeout
             Exception: If creation fails or sandbox enters failed state
         """
-        
+
         sidecar_pod_definitions = []
-        image_tag = ''
+        image_tag = ""
         if params:
             # Load the sidecar pod files if any are present
-            sidecar_file_paths = params.get('sidecar_file_paths', [])
-            if sidecar_file_paths:
-                for sidecar_file_path in sidecar_file_paths:
-                    async with aiofiles.open(sidecar_file_path, "r") as f:
-                        sidecar_pod_definitions.append(await f.read())
-            image_tag = params.get('image_tag', '')
+            sidecar_file_paths = params.sidecar_file_paths
+            for sidecar_file_path in sidecar_file_paths or []:
+                async with aiofiles.open(sidecar_file_path, "r") as f:
+                    sidecar_pod_definitions.append(await f.read())
+            image_tag = params.image_tag
 
         request = sandboxes_pb2.CreateSandboxRequest(
             sidecar_pod_definitions=sidecar_pod_definitions,
             image_tag=image_tag,
         )
-        
+
         try:
             response = await self.sandbox_stub.CreateSandbox(request)
             if not response:
                 raise Exception("failed to create sandbox - received empty response")
-            
+
             sandbox_id = response.sandbox.id
             start_time = time.time()
             timeout = 360
@@ -419,32 +415,43 @@ class Client:
             # Wait for the sandbox to be ready
             while True:
                 if (time.time() - start_time) > timeout:
-                    raise TimeoutError(f"sandbox failed to start within {timeout} seconds")
-                
+                    raise TimeoutError(
+                        f"sandbox failed to start within {timeout} seconds"
+                    )
+
                 try:
-                    response = await self.sandbox_stub.ListSandboxes(sandboxes_pb2.ListSandboxesRequest())
+                    response = await self.sandbox_stub.ListSandboxes(
+                        sandboxes_pb2.ListSandboxesRequest()
+                    )
                     for sandbox in response.sandboxes:
                         if sandbox.id == sandbox_id:
-                            if sandbox.state == sandboxes_pb2.Sandbox.STATE_RUNNING_HAPPILY:
+                            if (
+                                sandbox.state
+                                == sandboxes_pb2.Sandbox.STATE_RUNNING_HAPPILY
+                            ):
                                 return sandbox_id
                     await asyncio.sleep(poll_interval)
                 except grpc.RpcError as e:
-                    raise Exception(f"failed to verify sandbox creation was successful: {e.details()}")
-                    
+                    raise Exception(
+                        f"failed to verify sandbox creation was successful: {e.details()}"
+                    )
+
         except grpc.RpcError as e:
             raise Exception(f"failed to create sandbox: {e.details()}")
-    
-    async def claude_computer_use(self, sandbox_id: str, messages: list[BetaMessageParam]) -> list[BetaMessageParam]:
+
+    async def claude_computer_use(
+        self, sandbox_id: str, messages: list[BetaMessageParam]
+    ) -> list[BetaMessageParam]:
         """
         Execute a Claude Computer Use operation.
-        
+
         Args:
             sandbox_id: The ID of the Clusterfudge sandbox compute instance
             messages: All messages in the current Claude conversation
-            
+
         Returns:
             list[BetaMessageParam]: All messages in the current Claude conversation, with any computer use actions performed appended
-            
+
         Raises:
             Exception: If the operation fails
         """
@@ -455,18 +462,26 @@ class Client:
 
         tool_use_requests: list[BetaToolUseBlockParam] = []
         for block in last_message.get("content"):
-            if block['type'] == "tool_use":
+            if block["type"] == "tool_use":
                 tool_use_requests.append(block)
 
         tool_use_results: list[BetaToolResultBlockParam] = []
         for block in tool_use_requests:
             try:
-                response = await self.sandbox_stub.ClaudeComputerUse(sandboxes_pb2.ClaudeComputerUseRequest(
-                    machine_id=sandbox_id,
-                    raw_anthropic_beta_content_block=json.dumps(block).encode('utf-8'),
-                ))
-                computer_use_result = response.raw_anthropic_beta_tool_result_block.decode('utf-8')
-                tool_result = BetaToolResultBlockParam(self._robust_json_decode(computer_use_result))
+                response = await self.sandbox_stub.ClaudeComputerUse(
+                    sandboxes_pb2.ClaudeComputerUseRequest(
+                        machine_id=sandbox_id,
+                        raw_anthropic_beta_content_block=json.dumps(block).encode(
+                            "utf-8"
+                        ),
+                    )
+                )
+                computer_use_result = (
+                    response.raw_anthropic_beta_tool_result_block.decode("utf-8")
+                )
+                tool_result = BetaToolResultBlockParam(
+                    self._robust_json_decode(computer_use_result)
+                )
                 tool_use_results.append(tool_result)
             except grpc.RpcError as e:
                 raise Exception(f"Failed to execute ClaudeComputerUse: {e.details()}")
@@ -476,22 +491,24 @@ class Client:
             return messages
 
         messages.append(BetaMessageParam(role="user", content=tool_use_results))
- 
+
         return messages
 
     async def delete_sandbox(self, sandbox_id: str) -> None:
         """
         Delete a Clusterfudge sandbox instance.
-        
+
         Args:
             sandbox_id: The ID of the Clusterfudge sandbox instance to delete
-            
+
         Raises:
             Exception: If the deletion fails
         """
-        
+
         try:
-            await self.sandbox_stub.DeleteSandbox(sandboxes_pb2.DeleteSandboxRequest(machine_id=sandbox_id))
+            await self.sandbox_stub.DeleteSandbox(
+                sandboxes_pb2.DeleteSandboxRequest(machine_id=sandbox_id)
+            )
         except grpc.RpcError as e:
             raise Exception(f"Failed to delete sandbox: {e.details()}")
 
@@ -499,19 +516,19 @@ class Client:
     def _robust_json_decode(s: str) -> dict:
         """
         Robustly decode a JSON string that may contain invalid escape sequences.
-        
+
         This function attempts multiple strategies:
         1. Direct JSON decoding
         2. Fixing common escape sequence issues
         3. Raw string interpretation
         4. Aggressive escape sequence cleaning
-        
+
         Args:
             s: The string to decode
-            
+
         Returns:
             The decoded JSON object
-            
+
         Raises:
             JSONDecodeError: If all decoding attempts fail
         """
@@ -520,15 +537,15 @@ class Client:
             return json.loads(s)
         except json.JSONDecodeError:
             pass
-        
+
         # Second try: fix common escape sequence issues
         try:
             # Replace invalid escapes with proper ones
-            fixed = re.sub(r'(?<!\\)\\(?!["\\/bfnrt])', r'\\\\', s)
+            fixed = re.sub(r'(?<!\\)\\(?!["\\/bfnrt])', r"\\\\", s)
             return json.loads(fixed)
         except json.JSONDecodeError:
             pass
-        
+
         # Third try: treat as raw string
         try:
             # Convert to raw string representation
@@ -536,17 +553,15 @@ class Client:
             return json.loads(raw_str)
         except json.JSONDecodeError:
             pass
-        
+
         # Fourth try: aggressive cleanup
         try:
             # Remove all unescaped backslashes
-            cleaned = re.sub(r'\\(?!["\\/bfnrt])', '', s)
+            cleaned = re.sub(r'\\(?!["\\/bfnrt])', "", s)
             return json.loads(cleaned)
         except json.JSONDecodeError as e:
             raise json.JSONDecodeError(
-                f"All decoding attempts failed. Final error: {str(e)}", 
-                s, 
-                e.pos
+                f"All decoding attempts failed. Final error: {str(e)}", s, e.pos
             )
 
 
