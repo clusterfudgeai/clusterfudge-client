@@ -438,7 +438,17 @@ class BasherClient:
         self.sandbox_id = sandbox_id
         self.clusterfudge_client = clusterfudge_client
 
-    def run(self, command: str) -> dict:
+    async def _do_action(
+        self, d: dict
+    ) -> Union[BetaTextBlockParam, BetaImageBlockParam]:
+        return await _do_with_anthropic_shim(
+            self.clusterfudge_client,
+            self.sandbox_id,
+            TOOL_NAME_BASH,
+            d,
+        )
+
+    async def run(self, command: str) -> dict:
         """Run a command in the sandbox.
 
         Args:
@@ -448,11 +458,36 @@ class BasherClient:
             A dictionary containing stdout, stderr, error info, and whether the
             command is still running
         """
-        raise NotImplementedError()
+        tool_result = await self._do_action({"command": command})
 
-    def restart(self) -> None:
+        output = _text_result_or_raise(tool_result)
+
+        # Parse the result to determine success/failure
+        is_error = tool_result.get("is_error", False)
+
+        if is_error:
+            # Try to extract stderr and stdout from error message
+            parts = output.split("\n", 1)
+            stderr = parts[0] if len(parts) > 0 else output
+            stdout = parts[1] if len(parts) > 1 else ""
+
+            return {
+                "stdout": stdout,
+                "stderr": stderr,
+                "error": stderr,
+                "still_running": False,
+            }
+        else:
+            return {
+                "stdout": output,
+                "stderr": "",
+                "error": None,
+                "still_running": "still running" in output.lower(),
+            }
+
+    async def restart(self) -> None:
         """Restart the bash session, killing any running processes."""
-        raise NotImplementedError()
+        await self._do_action({"restart": True})
 
 
 class FileEditorClient:
@@ -462,7 +497,17 @@ class FileEditorClient:
         self.sandbox_id = sandbox_id
         self.clusterfudge_client = clusterfudge_client
 
-    def view(self, path: str, view_range: list[int] | None = None) -> str:
+    async def _do_action(
+        self, d: dict
+    ) -> Union[BetaTextBlockParam, BetaImageBlockParam]:
+        return await _do_with_anthropic_shim(
+            self.clusterfudge_client,
+            self.sandbox_id,
+            TOOL_NAME_STR_REPLACE_EDITOR,
+            d,
+        )
+
+    async def view(self, path: str, view_range: list[int] | None = None) -> str:
         """View file contents.
 
         Args:
@@ -472,9 +517,18 @@ class FileEditorClient:
         Returns:
             File contents
         """
-        raise NotImplementedError()
+        params = {
+            "command": "view",
+            "path": path,
+        }
 
-    def str_replace(self, path: str, old_str: str, new_str: str) -> str:
+        if view_range:
+            params["view_range"] = view_range
+
+        tool_result = await self._do_action(params)
+        return _text_result_or_raise(tool_result)
+
+    async def str_replace(self, path: str, old_str: str, new_str: str) -> str:
         """Replace a string in a file.
 
         Args:
@@ -485,9 +539,18 @@ class FileEditorClient:
         Returns:
             Result message
         """
-        raise NotImplementedError()
+        tool_result = await self._do_action(
+            {
+                "command": "str_replace",
+                "path": path,
+                "old_str": old_str,
+                "new_str": new_str,
+            }
+        )
 
-    def insert(self, path: str, insert_line: int, new_str: str) -> str:
+        return _text_result_or_raise(tool_result)
+
+    async def insert(self, path: str, insert_line: int, new_str: str) -> str:
         """Insert a string at a specific line in a file.
 
         Args:
@@ -498,9 +561,18 @@ class FileEditorClient:
         Returns:
             Result message
         """
-        raise NotImplementedError()
+        tool_result = await self._do_action(
+            {
+                "command": "insert",
+                "path": path,
+                "insert_line": insert_line,
+                "new_str": new_str,
+            }
+        )
 
-    def undo_edit(self, path: str) -> str:
+        return _text_result_or_raise(tool_result)
+
+    async def undo_edit(self, path: str) -> str:
         """Undo the last edit to a file.
 
         Args:
@@ -509,9 +581,11 @@ class FileEditorClient:
         Returns:
             Result message
         """
-        raise NotImplementedError()
+        tool_result = await self._do_action({"command": "undo_edit", "path": path})
 
-    def create(self, path: str, file_text: str) -> str:
+        return _text_result_or_raise(tool_result)
+
+    async def create(self, path: str, file_text: str) -> str:
         """Create a new file.
 
         Args:
@@ -521,18 +595,34 @@ class FileEditorClient:
         Returns:
             Result message
         """
-        raise NotImplementedError()
+        tool_result = await self._do_action(
+            {"command": "create", "path": path, "file_text": file_text}
+        )
+
+        return _text_result_or_raise(tool_result)
 
 
 class SandboxClient:
+    """Main client for interacting with a Clusterfudge Sandbox.
+
+    This client provides access to various tools for interacting with the sandbox:
+    - Computer: UI interactions like screenshots, mouse, keyboard
+    - Basher: Command execution
+    - FileEditor: File operations
+    """
+
     def __init__(self, sandbox_id: str, clusterfudge_client: Client):
+        """Initialize a SandboxClient.
+
+        Args:
+            sandbox_id: The ID of the sandbox to interact with
+            clusterfudge_client: An initialized Clusterfudge Client
+        """
         self.sandbox_id = sandbox_id
+        self.clusterfudge_client = clusterfudge_client
         self._computer = ComputerClient(self.sandbox_id, clusterfudge_client)
         self._basher = BasherClient(self.sandbox_id, clusterfudge_client)
         self._file_editor = FileEditorClient(self.sandbox_id, clusterfudge_client)
-
-    def get_sandbox(self):
-        pass
 
     def computer(self) -> ComputerClient:
         """Get the computer interface client.
