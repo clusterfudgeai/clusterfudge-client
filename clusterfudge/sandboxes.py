@@ -180,6 +180,8 @@ BASH_INPUT_SCHEMA = {
 async def _do_with_anthropic_shim(
     clusterfudge_client: Client, sandbox_id: str, name: ToolName, d: dict
 ) -> Union[BetaTextBlockParam, BetaImageBlockParam]:
+    tool_use_id = str(uuid.uuid4())
+
     response = await clusterfudge_client.claude_computer_use(
         sandbox_id,
         [
@@ -189,7 +191,7 @@ async def _do_with_anthropic_shim(
                     BetaToolUseBlockParam(
                         type="tool_use",
                         name=name,
-                        id=str(uuid.uuid4()),
+                        id=tool_use_id,
                         input=d,
                     ),
                 ],
@@ -197,14 +199,73 @@ async def _do_with_anthropic_shim(
         ],
     )
 
+    empty_response = BetaTextBlockParam(
+        type="text",
+        text="",
+    )
+
     try:
         first_message: BetaMessageParam = response[-1]
+
         first_tool_use: BetaToolResultBlockParam = first_message["content"][0]  # type: ignore
+
+        if "is_error" in first_tool_use and first_tool_use["is_error"]:
+            error_message = "unknown error"
+
+            if "content" not in first_tool_use:
+                raise RuntimeError(
+                    f"Tool {name} ({tool_use_id}) returned an error with no content"
+                )
+
+            error_message = first_tool_use["content"][0]["text"]  # type: ignore
+
+            raise RuntimeError(
+                f"Tool {name} ({tool_use_id}) returned an error: {error_message}"
+            )
+
         first_tool_use_content = first_tool_use["content"][0]  # type: ignore
 
         return first_tool_use_content  # type: ignore
+    except KeyError:
+        return empty_response
+    except IndexError:
+        return empty_response
     except Exception as e:
         raise RuntimeError(f"Error calling sandbox for tool {name}: {e}") from e
+
+
+def _get_error(r: BetaToolResultBlockParam) -> str:
+    # Error responses look like this:
+    #     {
+    #   "content": [
+    #     {
+    #       "text": "failed to get cursor position: \"X\" coordinate prefix not found in: x:921 y:691 screen:0 window:6291469",
+    #       "type": "text"
+    #     }
+    #   ],
+    #   "is_error": true,
+    #   "tool_use_id": "c92d350a-0d18-4dd1-a2e3-d4b77a20c999",
+    #   "type": "tool_result"
+    # }
+    if "content" not in r:
+        return "unknown error"
+
+    if isinstance(r["content"], str):
+        return r["content"]
+
+    if not isinstance(r["content"], list):
+        return "unknown error"
+
+    if len(r["content"]) == 0:
+        return "unknown error"
+
+    if not isinstance(r["content"][0], dict):
+        return "unknown error"
+
+    if "text" not in r["content"][0]:
+        return "unknown error"
+
+    return r["content"][0]["text"]
 
 
 def _text_result_or_raise(
@@ -300,8 +361,15 @@ class ComputerClient:
             },
         )
 
+        text_result = _text_result_or_raise(tool_result)
+
         # Text contains a JSON object with x and y keys.
-        as_dict = json.loads(_text_result_or_raise(tool_result))
+        try:
+            as_dict = json.loads(text_result)
+        except json.JSONDecodeError as e:
+            raise RuntimeError(
+                f"Cursor position returned non-JSON data: {e} (text: {text_result})"
+            ) from e
 
         return as_dict["x"], as_dict["y"]
 
