@@ -15,7 +15,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1bsandboxespb/sandboxes.proto\x12\x0bsandboxespb\x1a\x1fgoogle/protobuf/timestamp.proto\"J\n\x14\x43reateSandboxRequest\x12\x11\n\timage_tag\x18\x01 \x01(\t\x12\x1f\n\x17sidecar_pod_definitions\x18\x02 \x03(\t\">\n\x15\x43reateSandboxResponse\x12%\n\x07sandbox\x18\x01 \x01(\x0b\x32\x14.sandboxespb.Sandbox\"\x16\n\x14ListSandboxesRequest\"@\n\x15ListSandboxesResponse\x12\'\n\tsandboxes\x18\x01 \x03(\x0b\x32\x14.sandboxespb.Sandbox\"*\n\x14\x44\x65leteSandboxRequest\x12\x12\n\nmachine_id\x18\x01 \x01(\t\"\x17\n\x15\x44\x65leteSandboxResponse\"\xd7\x01\n\x07Sandbox\x12\n\n\x02id\x18\x01 \x01(\t\x12.\n\ncreated_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12)\n\x05state\x18\x03 \x01(\x0e\x32\x1a.sandboxespb.Sandbox.State\"e\n\x05State\x12\x15\n\x11STATE_UNSPECIFIED\x10\x00\x12\x11\n\rSTATE_PENDING\x10\x01\x12\x19\n\x15STATE_RUNNING_HAPPILY\x10\x02\x12\x17\n\x13STATE_RUNNING_SADLY\x10\x03\"X\n\x18\x43laudeComputerUseRequest\x12\x12\n\nmachine_id\x18\x01 \x01(\t\x12(\n raw_anthropic_beta_content_block\x18\x02 \x01(\x0c\"I\n\x19\x43laudeComputerUseResponse\x12,\n$raw_anthropic_beta_tool_result_block\x18\x01 \x01(\x0c\"\xa1\x02\n ClaudeComputerUseRequestResponse\x12\x11\n\ttenant_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x12\n\nmachine_id\x18\x03 \x01(\t\x12\x35\n\x11request_timestamp\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12(\n raw_anthropic_beta_content_block\x18\x05 \x01(\x0c\x12\x36\n\x12response_timestamp\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12,\n$raw_anthropic_beta_tool_result_block\x18\x07 \x01(\x0c\x32\xff\x02\n\tSandboxes\x12X\n\rCreateSandbox\x12!.sandboxespb.CreateSandboxRequest\x1a\".sandboxespb.CreateSandboxResponse\"\x00\x12X\n\rListSandboxes\x12!.sandboxespb.ListSandboxesRequest\x1a\".sandboxespb.ListSandboxesResponse\"\x00\x12X\n\rDeleteSandbox\x12!.sandboxespb.DeleteSandboxRequest\x1a\".sandboxespb.DeleteSandboxResponse\"\x00\x12\x64\n\x11\x43laudeComputerUse\x12%.sandboxespb.ClaudeComputerUseRequest\x1a&.sandboxespb.ClaudeComputerUseResponse\"\x00\x42\x33Z1github.com/clusterfudgeai/fudge/proto/sandboxespbb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1bsandboxespb/sandboxes.proto\x12\x0bsandboxespb\x1a\x1fgoogle/protobuf/timestamp.proto\"`\n\x14\x43reateSandboxRequest\x12\x11\n\timage_tag\x18\x01 \x01(\t\x12\x1f\n\x17sidecar_pod_definitions\x18\x02 \x03(\t\x12\x14\n\x0c\x64isplay_name\x18\x03 \x01(\t\">\n\x15\x43reateSandboxResponse\x12%\n\x07sandbox\x18\x01 \x01(\x0b\x32\x14.sandboxespb.Sandbox\"\x16\n\x14ListSandboxesRequest\"@\n\x15ListSandboxesResponse\x12\'\n\tsandboxes\x18\x01 \x03(\x0b\x32\x14.sandboxespb.Sandbox\"*\n\x14\x44\x65leteSandboxRequest\x12\x12\n\nmachine_id\x18\x01 \x01(\t\"\x17\n\x15\x44\x65leteSandboxResponse\"\'\n\x11GetSandboxRequest\x12\x12\n\nmachine_id\x18\x01 \x01(\t\";\n\x12GetSandboxResponse\x12%\n\x07sandbox\x18\x01 \x01(\x0b\x32\x14.sandboxespb.Sandbox\"\x94\x02\n\x07Sandbox\x12\n\n\x02id\x18\x01 \x01(\t\x12.\n\ncreated_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12)\n\x05state\x18\x03 \x01(\x0e\x32\x1a.sandboxespb.Sandbox.State\x12\x14\n\x0c\x64isplay_name\x18\x04 \x01(\t\x12\x12\n\ncreated_by\x18\x05 \x01(\t\"x\n\x05State\x12\x15\n\x11STATE_UNSPECIFIED\x10\x00\x12\x11\n\rSTATE_PENDING\x10\x01\x12\x19\n\x15STATE_RUNNING_HAPPILY\x10\x02\x12\x17\n\x13STATE_RUNNING_SADLY\x10\x03\x12\x11\n\rSTATE_DELETED\x10\x04\"(\n\x12\x43omputerUseRequest\x12\x12\n\nmachine_id\x18\x01 \x01(\t\"\x15\n\x13\x43omputerUseResponse\"X\n\x18\x43laudeComputerUseRequest\x12\x12\n\nmachine_id\x18\x01 \x01(\t\x12(\n raw_anthropic_beta_content_block\x18\x02 \x01(\x0c\"I\n\x19\x43laudeComputerUseResponse\x12,\n$raw_anthropic_beta_tool_result_block\x18\x01 \x01(\x0c\"\x80\x02\n\x1a\x43omputerUseRequestResponse\x12\x11\n\ttenant_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x12\n\nmachine_id\x18\x03 \x01(\t\x12\x35\n\x11request_timestamp\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x1c\n\x14raw_request_contents\x18\x05 \x01(\x0c\x12\x36\n\x12response_timestamp\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x1d\n\x15raw_response_contents\x18\x07 \x01(\x0c\"\xa1\x02\n ClaudeComputerUseRequestResponse\x12\x11\n\ttenant_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x12\n\nmachine_id\x18\x03 \x01(\t\x12\x35\n\x11request_timestamp\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12(\n raw_anthropic_beta_content_block\x18\x05 \x01(\x0c\x12\x36\n\x12response_timestamp\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12,\n$raw_anthropic_beta_tool_result_block\x18\x07 \x01(\x0c\"6\n GetComputerUseRequestLogsRequest\x12\x12\n\nmachine_id\x18\x01 \x01(\t\"U\n!GetComputerUseRequestLogsResponse\x12\x30\n\x04logs\x18\x01 \x03(\x0b\x32\".sandboxespb.ComputerUseRequestLog\"\xc3\x01\n\x15\x43omputerUseRequestLog\x12\x35\n\x11request_timestamp\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x1c\n\x14raw_request_contents\x18\x02 \x01(\x0c\x12\x36\n\x12response_timestamp\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x1d\n\x15raw_response_contents\x18\x04 \x01(\x0c\x32\xa2\x05\n\tSandboxes\x12X\n\rCreateSandbox\x12!.sandboxespb.CreateSandboxRequest\x1a\".sandboxespb.CreateSandboxResponse\"\x00\x12X\n\rListSandboxes\x12!.sandboxespb.ListSandboxesRequest\x1a\".sandboxespb.ListSandboxesResponse\"\x00\x12X\n\rDeleteSandbox\x12!.sandboxespb.DeleteSandboxRequest\x1a\".sandboxespb.DeleteSandboxResponse\"\x00\x12O\n\nGetSandbox\x12\x1e.sandboxespb.GetSandboxRequest\x1a\x1f.sandboxespb.GetSandboxResponse\"\x00\x12R\n\x0b\x43omputerUse\x12\x1f.sandboxespb.ComputerUseRequest\x1a .sandboxespb.ComputerUseResponse\"\x00\x12\x64\n\x11\x43laudeComputerUse\x12%.sandboxespb.ClaudeComputerUseRequest\x1a&.sandboxespb.ClaudeComputerUseResponse\"\x00\x12|\n\x19GetComputerUseRequestLogs\x12-.sandboxespb.GetComputerUseRequestLogsRequest\x1a..sandboxespb.GetComputerUseRequestLogsResponse\"\x00\x42\x33Z1github.com/clusterfudgeai/fudge/proto/sandboxespbb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -24,27 +24,43 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z1github.com/clusterfudgeai/fudge/proto/sandboxespb'
   _globals['_CREATESANDBOXREQUEST']._serialized_start=77
-  _globals['_CREATESANDBOXREQUEST']._serialized_end=151
-  _globals['_CREATESANDBOXRESPONSE']._serialized_start=153
-  _globals['_CREATESANDBOXRESPONSE']._serialized_end=215
-  _globals['_LISTSANDBOXESREQUEST']._serialized_start=217
-  _globals['_LISTSANDBOXESREQUEST']._serialized_end=239
-  _globals['_LISTSANDBOXESRESPONSE']._serialized_start=241
-  _globals['_LISTSANDBOXESRESPONSE']._serialized_end=305
-  _globals['_DELETESANDBOXREQUEST']._serialized_start=307
-  _globals['_DELETESANDBOXREQUEST']._serialized_end=349
-  _globals['_DELETESANDBOXRESPONSE']._serialized_start=351
-  _globals['_DELETESANDBOXRESPONSE']._serialized_end=374
-  _globals['_SANDBOX']._serialized_start=377
-  _globals['_SANDBOX']._serialized_end=592
-  _globals['_SANDBOX_STATE']._serialized_start=491
-  _globals['_SANDBOX_STATE']._serialized_end=592
-  _globals['_CLAUDECOMPUTERUSEREQUEST']._serialized_start=594
-  _globals['_CLAUDECOMPUTERUSEREQUEST']._serialized_end=682
-  _globals['_CLAUDECOMPUTERUSERESPONSE']._serialized_start=684
-  _globals['_CLAUDECOMPUTERUSERESPONSE']._serialized_end=757
-  _globals['_CLAUDECOMPUTERUSEREQUESTRESPONSE']._serialized_start=760
-  _globals['_CLAUDECOMPUTERUSEREQUESTRESPONSE']._serialized_end=1049
-  _globals['_SANDBOXES']._serialized_start=1052
-  _globals['_SANDBOXES']._serialized_end=1435
+  _globals['_CREATESANDBOXREQUEST']._serialized_end=173
+  _globals['_CREATESANDBOXRESPONSE']._serialized_start=175
+  _globals['_CREATESANDBOXRESPONSE']._serialized_end=237
+  _globals['_LISTSANDBOXESREQUEST']._serialized_start=239
+  _globals['_LISTSANDBOXESREQUEST']._serialized_end=261
+  _globals['_LISTSANDBOXESRESPONSE']._serialized_start=263
+  _globals['_LISTSANDBOXESRESPONSE']._serialized_end=327
+  _globals['_DELETESANDBOXREQUEST']._serialized_start=329
+  _globals['_DELETESANDBOXREQUEST']._serialized_end=371
+  _globals['_DELETESANDBOXRESPONSE']._serialized_start=373
+  _globals['_DELETESANDBOXRESPONSE']._serialized_end=396
+  _globals['_GETSANDBOXREQUEST']._serialized_start=398
+  _globals['_GETSANDBOXREQUEST']._serialized_end=437
+  _globals['_GETSANDBOXRESPONSE']._serialized_start=439
+  _globals['_GETSANDBOXRESPONSE']._serialized_end=498
+  _globals['_SANDBOX']._serialized_start=501
+  _globals['_SANDBOX']._serialized_end=777
+  _globals['_SANDBOX_STATE']._serialized_start=657
+  _globals['_SANDBOX_STATE']._serialized_end=777
+  _globals['_COMPUTERUSEREQUEST']._serialized_start=779
+  _globals['_COMPUTERUSEREQUEST']._serialized_end=819
+  _globals['_COMPUTERUSERESPONSE']._serialized_start=821
+  _globals['_COMPUTERUSERESPONSE']._serialized_end=842
+  _globals['_CLAUDECOMPUTERUSEREQUEST']._serialized_start=844
+  _globals['_CLAUDECOMPUTERUSEREQUEST']._serialized_end=932
+  _globals['_CLAUDECOMPUTERUSERESPONSE']._serialized_start=934
+  _globals['_CLAUDECOMPUTERUSERESPONSE']._serialized_end=1007
+  _globals['_COMPUTERUSEREQUESTRESPONSE']._serialized_start=1010
+  _globals['_COMPUTERUSEREQUESTRESPONSE']._serialized_end=1266
+  _globals['_CLAUDECOMPUTERUSEREQUESTRESPONSE']._serialized_start=1269
+  _globals['_CLAUDECOMPUTERUSEREQUESTRESPONSE']._serialized_end=1558
+  _globals['_GETCOMPUTERUSEREQUESTLOGSREQUEST']._serialized_start=1560
+  _globals['_GETCOMPUTERUSEREQUESTLOGSREQUEST']._serialized_end=1614
+  _globals['_GETCOMPUTERUSEREQUESTLOGSRESPONSE']._serialized_start=1616
+  _globals['_GETCOMPUTERUSEREQUESTLOGSRESPONSE']._serialized_end=1701
+  _globals['_COMPUTERUSEREQUESTLOG']._serialized_start=1704
+  _globals['_COMPUTERUSEREQUESTLOG']._serialized_end=1899
+  _globals['_SANDBOXES']._serialized_start=1902
+  _globals['_SANDBOXES']._serialized_end=2576
 # @@protoc_insertion_point(module_scope)

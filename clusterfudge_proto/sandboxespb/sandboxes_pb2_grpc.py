@@ -54,10 +54,25 @@ class SandboxesStub(object):
                 request_serializer=sandboxespb_dot_sandboxes__pb2.DeleteSandboxRequest.SerializeToString,
                 response_deserializer=sandboxespb_dot_sandboxes__pb2.DeleteSandboxResponse.FromString,
                 _registered_method=True)
+        self.GetSandbox = channel.unary_unary(
+                '/sandboxespb.Sandboxes/GetSandbox',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.GetSandboxRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.GetSandboxResponse.FromString,
+                _registered_method=True)
+        self.ComputerUse = channel.unary_unary(
+                '/sandboxespb.Sandboxes/ComputerUse',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.ComputerUseRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.ComputerUseResponse.FromString,
+                _registered_method=True)
         self.ClaudeComputerUse = channel.unary_unary(
                 '/sandboxespb.Sandboxes/ClaudeComputerUse',
                 request_serializer=sandboxespb_dot_sandboxes__pb2.ClaudeComputerUseRequest.SerializeToString,
                 response_deserializer=sandboxespb_dot_sandboxes__pb2.ClaudeComputerUseResponse.FromString,
+                _registered_method=True)
+        self.GetComputerUseRequestLogs = channel.unary_unary(
+                '/sandboxespb.Sandboxes/GetComputerUseRequestLogs',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.GetComputerUseRequestLogsRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.GetComputerUseRequestLogsResponse.FromString,
                 _registered_method=True)
 
 
@@ -82,7 +97,25 @@ class SandboxesServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetSandbox(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ComputerUse(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def ClaudeComputerUse(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetComputerUseRequestLogs(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -106,10 +139,25 @@ def add_SandboxesServicer_to_server(servicer, server):
                     request_deserializer=sandboxespb_dot_sandboxes__pb2.DeleteSandboxRequest.FromString,
                     response_serializer=sandboxespb_dot_sandboxes__pb2.DeleteSandboxResponse.SerializeToString,
             ),
+            'GetSandbox': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetSandbox,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.GetSandboxRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.GetSandboxResponse.SerializeToString,
+            ),
+            'ComputerUse': grpc.unary_unary_rpc_method_handler(
+                    servicer.ComputerUse,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.ComputerUseRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.ComputerUseResponse.SerializeToString,
+            ),
             'ClaudeComputerUse': grpc.unary_unary_rpc_method_handler(
                     servicer.ClaudeComputerUse,
                     request_deserializer=sandboxespb_dot_sandboxes__pb2.ClaudeComputerUseRequest.FromString,
                     response_serializer=sandboxespb_dot_sandboxes__pb2.ClaudeComputerUseResponse.SerializeToString,
+            ),
+            'GetComputerUseRequestLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetComputerUseRequestLogs,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.GetComputerUseRequestLogsRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.GetComputerUseRequestLogsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -204,6 +252,60 @@ class Sandboxes(object):
             _registered_method=True)
 
     @staticmethod
+    def GetSandbox(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/GetSandbox',
+            sandboxespb_dot_sandboxes__pb2.GetSandboxRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.GetSandboxResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ComputerUse(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/ComputerUse',
+            sandboxespb_dot_sandboxes__pb2.ComputerUseRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.ComputerUseResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
     def ClaudeComputerUse(request,
             target,
             options=(),
@@ -220,6 +322,33 @@ class Sandboxes(object):
             '/sandboxespb.Sandboxes/ClaudeComputerUse',
             sandboxespb_dot_sandboxes__pb2.ClaudeComputerUseRequest.SerializeToString,
             sandboxespb_dot_sandboxes__pb2.ClaudeComputerUseResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetComputerUseRequestLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/GetComputerUseRequestLogs',
+            sandboxespb_dot_sandboxes__pb2.GetComputerUseRequestLogsRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.GetComputerUseRequestLogsResponse.FromString,
             options,
             channel_credentials,
             insecure,

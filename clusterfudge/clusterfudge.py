@@ -117,6 +117,7 @@ class QueueingBehaviour:
 class SandboxParams:
     sidecar_file_paths: Optional[list[str]] = None
     image_tag: Optional[str] = None
+    display_name: Optional[str] = None
 
 
 @dataclasses.dataclass()
@@ -390,7 +391,6 @@ class Client:
         sidecar_pod_definitions = []
         image_tag = ""
         if params:
-            # Load the sidecar pod files if any are present
             sidecar_file_paths = params.sidecar_file_paths
             for sidecar_file_path in sidecar_file_paths or []:
                 async with aiofiles.open(sidecar_file_path, "r") as f:
@@ -400,6 +400,7 @@ class Client:
         request = sandboxes_pb2.CreateSandboxRequest(
             sidecar_pod_definitions=sidecar_pod_definitions,
             image_tag=image_tag,
+            display_name=params.display_name if params else None,
         )
 
         try:
