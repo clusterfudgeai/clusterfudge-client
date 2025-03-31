@@ -164,3 +164,87 @@ class ComputerUseRequestLog(_message.Message):
     response_timestamp: _timestamp_pb2.Timestamp
     raw_response_contents: bytes
     def __init__(self, request_timestamp: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., raw_request_contents: _Optional[bytes] = ..., response_timestamp: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., raw_response_contents: _Optional[bytes] = ...) -> None: ...
+
+class WriteToTerminalRequest(_message.Message):
+    __slots__ = ("machine_id", "terminal_id", "input", "wait_for_response_ms")
+    MACHINE_ID_FIELD_NUMBER: _ClassVar[int]
+    TERMINAL_ID_FIELD_NUMBER: _ClassVar[int]
+    INPUT_FIELD_NUMBER: _ClassVar[int]
+    WAIT_FOR_RESPONSE_MS_FIELD_NUMBER: _ClassVar[int]
+    machine_id: str
+    terminal_id: str
+    input: bytes
+    wait_for_response_ms: int
+    def __init__(self, machine_id: _Optional[str] = ..., terminal_id: _Optional[str] = ..., input: _Optional[bytes] = ..., wait_for_response_ms: _Optional[int] = ...) -> None: ...
+
+class WriteToTerminalResponse(_message.Message):
+    __slots__ = ("stdout", "stderr", "exec_error")
+    STDOUT_FIELD_NUMBER: _ClassVar[int]
+    STDERR_FIELD_NUMBER: _ClassVar[int]
+    EXEC_ERROR_FIELD_NUMBER: _ClassVar[int]
+    stdout: bytes
+    stderr: bytes
+    exec_error: str
+    def __init__(self, stdout: _Optional[bytes] = ..., stderr: _Optional[bytes] = ..., exec_error: _Optional[str] = ...) -> None: ...
+
+class KillTerminalRequest(_message.Message):
+    __slots__ = ("machine_id", "terminal_id")
+    MACHINE_ID_FIELD_NUMBER: _ClassVar[int]
+    TERMINAL_ID_FIELD_NUMBER: _ClassVar[int]
+    machine_id: str
+    terminal_id: str
+    def __init__(self, machine_id: _Optional[str] = ..., terminal_id: _Optional[str] = ...) -> None: ...
+
+class KillTerminalResponse(_message.Message):
+    __slots__ = ("success", "error")
+    SUCCESS_FIELD_NUMBER: _ClassVar[int]
+    ERROR_FIELD_NUMBER: _ClassVar[int]
+    success: bool
+    error: str
+    def __init__(self, success: bool = ..., error: _Optional[str] = ...) -> None: ...
+
+class ResetTerminalRequest(_message.Message):
+    __slots__ = ("machine_id", "terminal_id")
+    MACHINE_ID_FIELD_NUMBER: _ClassVar[int]
+    TERMINAL_ID_FIELD_NUMBER: _ClassVar[int]
+    machine_id: str
+    terminal_id: str
+    def __init__(self, machine_id: _Optional[str] = ..., terminal_id: _Optional[str] = ...) -> None: ...
+
+class ResetTerminalResponse(_message.Message):
+    __slots__ = ("success", "error")
+    SUCCESS_FIELD_NUMBER: _ClassVar[int]
+    ERROR_FIELD_NUMBER: _ClassVar[int]
+    success: bool
+    error: str
+    def __init__(self, success: bool = ..., error: _Optional[str] = ...) -> None: ...
+
+class ResetAllTerminalsRequest(_message.Message):
+    __slots__ = ("machine_id",)
+    MACHINE_ID_FIELD_NUMBER: _ClassVar[int]
+    machine_id: str
+    def __init__(self, machine_id: _Optional[str] = ...) -> None: ...
+
+class ResetAllTerminalsResponse(_message.Message):
+    __slots__ = ("success", "error")
+    SUCCESS_FIELD_NUMBER: _ClassVar[int]
+    ERROR_FIELD_NUMBER: _ClassVar[int]
+    success: bool
+    error: str
+    def __init__(self, success: bool = ..., error: _Optional[str] = ...) -> None: ...
+
+class GetTerminalHistoryRequest(_message.Message):
+    __slots__ = ("machine_id", "terminal_id")
+    MACHINE_ID_FIELD_NUMBER: _ClassVar[int]
+    TERMINAL_ID_FIELD_NUMBER: _ClassVar[int]
+    machine_id: str
+    terminal_id: str
+    def __init__(self, machine_id: _Optional[str] = ..., terminal_id: _Optional[str] = ...) -> None: ...
+
+class GetTerminalHistoryResponse(_message.Message):
+    __slots__ = ("commands", "error")
+    COMMANDS_FIELD_NUMBER: _ClassVar[int]
+    ERROR_FIELD_NUMBER: _ClassVar[int]
+    commands: _containers.RepeatedScalarFieldContainer[str]
+    error: str
+    def __init__(self, commands: _Optional[_Iterable[str]] = ..., error: _Optional[str] = ...) -> None: ...

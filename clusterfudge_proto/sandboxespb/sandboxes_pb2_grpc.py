@@ -74,6 +74,31 @@ class SandboxesStub(object):
                 request_serializer=sandboxespb_dot_sandboxes__pb2.GetComputerUseRequestLogsRequest.SerializeToString,
                 response_deserializer=sandboxespb_dot_sandboxes__pb2.GetComputerUseRequestLogsResponse.FromString,
                 _registered_method=True)
+        self.WriteToTerminal = channel.unary_unary(
+                '/sandboxespb.Sandboxes/WriteToTerminal',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.WriteToTerminalRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.WriteToTerminalResponse.FromString,
+                _registered_method=True)
+        self.KillTerminal = channel.unary_unary(
+                '/sandboxespb.Sandboxes/KillTerminal',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.KillTerminalRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.KillTerminalResponse.FromString,
+                _registered_method=True)
+        self.ResetTerminal = channel.unary_unary(
+                '/sandboxespb.Sandboxes/ResetTerminal',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.ResetTerminalRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.ResetTerminalResponse.FromString,
+                _registered_method=True)
+        self.ResetAllTerminals = channel.unary_unary(
+                '/sandboxespb.Sandboxes/ResetAllTerminals',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.ResetAllTerminalsRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.ResetAllTerminalsResponse.FromString,
+                _registered_method=True)
+        self.GetTerminalHistory = channel.unary_unary(
+                '/sandboxespb.Sandboxes/GetTerminalHistory',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.GetTerminalHistoryRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.GetTerminalHistoryResponse.FromString,
+                _registered_method=True)
 
 
 class SandboxesServicer(object):
@@ -121,6 +146,36 @@ class SandboxesServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def WriteToTerminal(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def KillTerminal(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ResetTerminal(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ResetAllTerminals(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetTerminalHistory(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SandboxesServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -158,6 +213,31 @@ def add_SandboxesServicer_to_server(servicer, server):
                     servicer.GetComputerUseRequestLogs,
                     request_deserializer=sandboxespb_dot_sandboxes__pb2.GetComputerUseRequestLogsRequest.FromString,
                     response_serializer=sandboxespb_dot_sandboxes__pb2.GetComputerUseRequestLogsResponse.SerializeToString,
+            ),
+            'WriteToTerminal': grpc.unary_unary_rpc_method_handler(
+                    servicer.WriteToTerminal,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.WriteToTerminalRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.WriteToTerminalResponse.SerializeToString,
+            ),
+            'KillTerminal': grpc.unary_unary_rpc_method_handler(
+                    servicer.KillTerminal,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.KillTerminalRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.KillTerminalResponse.SerializeToString,
+            ),
+            'ResetTerminal': grpc.unary_unary_rpc_method_handler(
+                    servicer.ResetTerminal,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.ResetTerminalRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.ResetTerminalResponse.SerializeToString,
+            ),
+            'ResetAllTerminals': grpc.unary_unary_rpc_method_handler(
+                    servicer.ResetAllTerminals,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.ResetAllTerminalsRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.ResetAllTerminalsResponse.SerializeToString,
+            ),
+            'GetTerminalHistory': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetTerminalHistory,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.GetTerminalHistoryRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.GetTerminalHistoryResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -349,6 +429,141 @@ class Sandboxes(object):
             '/sandboxespb.Sandboxes/GetComputerUseRequestLogs',
             sandboxespb_dot_sandboxes__pb2.GetComputerUseRequestLogsRequest.SerializeToString,
             sandboxespb_dot_sandboxes__pb2.GetComputerUseRequestLogsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def WriteToTerminal(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/WriteToTerminal',
+            sandboxespb_dot_sandboxes__pb2.WriteToTerminalRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.WriteToTerminalResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def KillTerminal(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/KillTerminal',
+            sandboxespb_dot_sandboxes__pb2.KillTerminalRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.KillTerminalResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ResetTerminal(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/ResetTerminal',
+            sandboxespb_dot_sandboxes__pb2.ResetTerminalRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.ResetTerminalResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ResetAllTerminals(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/ResetAllTerminals',
+            sandboxespb_dot_sandboxes__pb2.ResetAllTerminalsRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.ResetAllTerminalsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetTerminalHistory(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/GetTerminalHistory',
+            sandboxespb_dot_sandboxes__pb2.GetTerminalHistoryRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.GetTerminalHistoryResponse.FromString,
             options,
             channel_credentials,
             insecure,

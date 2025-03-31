@@ -512,6 +512,156 @@ class Client:
             )
         except grpc.RpcError as e:
             raise Exception(f"Failed to delete sandbox: {e.details()}")
+    
+    async def write_to_terminal(
+        self, sandbox_id: str, terminal_id: str, input_text: str, wait_for_response_ms: int = 500
+    ) -> dict:
+        """
+        Write text to a terminal and wait for a response.
+
+        Args:
+            sandbox_id: The ID of the sandbox
+            terminal_id: The ID of the terminal to write to
+            input_text: The text to write to the terminal
+            wait_for_response_ms: Time to wait for a response in milliseconds
+
+        Returns:
+            A dictionary containing stdout, stderr, and any error information
+
+        Raises:
+            Exception: If the operation fails
+        """
+        try:
+            response = await self.sandbox_stub.WriteToTerminal(
+                sandboxes_pb2.WriteToTerminalRequest(
+                    machine_id=sandbox_id,
+                    terminal_id=terminal_id,
+                    input=input_text.encode('utf-8'),
+                    wait_for_response_ms=wait_for_response_ms
+                )
+            )
+            
+            return {
+                "stdout": response.stdout.decode('utf-8') if response.stdout else "",
+                "stderr": response.stderr.decode('utf-8') if response.stderr else "",
+                "exec_error": response.exec_error if response.exec_error else None
+            }
+        except grpc.RpcError as e:
+            raise Exception(f"Failed to write to terminal: {e.details()}")
+
+    async def kill_terminal(self, sandbox_id: str, terminal_id: str) -> dict:
+        """
+        Kill a terminal.
+
+        Args:
+            sandbox_id: The ID of the sandbox
+            terminal_id: The ID of the terminal to kill
+
+        Returns:
+            A dictionary containing success status and any error information
+
+        Raises:
+            Exception: If the operation fails
+        """
+        try:
+            response = await self.sandbox_stub.KillTerminal(
+                sandboxes_pb2.KillTerminalRequest(
+                    machine_id=sandbox_id,
+                    terminal_id=terminal_id
+                )
+            )
+            
+            return {
+                "success": response.success,
+                "error": response.error if response.error else None
+            }
+        except grpc.RpcError as e:
+            raise Exception(f"Failed to kill terminal: {e.details()}")
+
+    async def reset_terminal(self, sandbox_id: str, terminal_id: str) -> dict:
+        """
+        Reset a terminal.
+
+        Args:
+            sandbox_id: The ID of the sandbox
+            terminal_id: The ID of the terminal to reset
+
+        Returns:
+            A dictionary containing success status and any error information
+
+        Raises:
+            Exception: If the operation fails
+        """
+        try:
+            response = await self.sandbox_stub.ResetTerminal(
+                sandboxes_pb2.ResetTerminalRequest(
+                    machine_id=sandbox_id,
+                    terminal_id=terminal_id
+                )
+            )
+            
+            return {
+                "success": response.success,
+                "error": response.error if response.error else None
+            }
+        except grpc.RpcError as e:
+            raise Exception(f"Failed to reset terminal: {e.details()}")
+
+    async def reset_all_terminals(self, sandbox_id: str) -> dict:
+        """
+        Reset all terminals in a sandbox.
+
+        Args:
+            sandbox_id: The ID of the sandbox
+
+        Returns:
+            A dictionary containing success status and any error information
+
+        Raises:
+            Exception: If the operation fails
+        """
+        try:
+            response = await self.sandbox_stub.ResetAllTerminals(
+                sandboxes_pb2.ResetAllTerminalsRequest(
+                    machine_id=sandbox_id
+                )
+            )
+            
+            return {
+                "success": response.success,
+                "error": response.error if response.error else None
+            }
+        except grpc.RpcError as e:
+            raise Exception(f"Failed to reset all terminals: {e.details()}")
+
+    async def get_terminal_history(self, sandbox_id: str, terminal_id: str) -> dict:
+        """
+        Get command history from a terminal.
+
+        Args:
+            sandbox_id: The ID of the sandbox
+            terminal_id: The ID of the terminal to get history from
+
+        Returns:
+            A dictionary containing command history and any error information
+
+        Raises:
+            Exception: If the operation fails
+        """
+        try:
+            response = await self.sandbox_stub.GetTerminalHistory(
+                sandboxes_pb2.GetTerminalHistoryRequest(
+                    machine_id=sandbox_id,
+                    terminal_id=terminal_id
+                )
+            )
+            
+            return {
+                "commands": list(response.commands),
+                "error": response.error if response.error else None
+            }
+        except grpc.RpcError as e:
+            raise Exception(f"Failed to get terminal history: {e.details()}")
 
     @staticmethod
     def _robust_json_decode(s: str) -> dict:

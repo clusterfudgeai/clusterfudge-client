@@ -670,6 +670,104 @@ class FileEditorClient:
         return _text_result_or_raise(tool_result)
 
 
+class TerminalClient:
+    """Client for interacting with the sandbox's terminal interface."""
+
+    def __init__(self, sandbox_id: str, clusterfudge_client: Client):
+        self.sandbox_id = sandbox_id
+        self.clusterfudge_client = clusterfudge_client
+
+    async def write_to_terminal(
+        self, terminal_id: str, input_text: str, wait_for_response_ms: int = 500
+    ) -> dict:
+        """Write text to a terminal and wait for a response.
+
+        Args:
+            terminal_id: The ID of the terminal to write to
+            input_text: The text to write to the terminal
+            wait_for_response_ms: Time to wait for a response in milliseconds
+
+        Returns:
+            A dictionary containing stdout, stderr, and any error information
+        """
+        response = await self.clusterfudge_client.write_to_terminal(
+            self.sandbox_id, terminal_id, input_text, wait_for_response_ms
+        )
+
+        return {
+            "stdout": response.get("stdout", ""),
+            "stderr": response.get("stderr", ""),
+            "error": response.get("exec_error", None),
+        }
+
+    async def kill_terminal(self, terminal_id: str) -> dict:
+        """Kill a terminal.
+
+        Args:
+            terminal_id: The ID of the terminal to kill
+
+        Returns:
+            A dictionary containing success status and any error information
+        """
+        response = await self.clusterfudge_client.kill_terminal(
+            self.sandbox_id, terminal_id
+        )
+
+        return {
+            "success": response.get("success", False),
+            "error": response.get("error", None),
+        }
+
+    async def reset_terminal(self, terminal_id: str) -> dict:
+        """Reset a terminal.
+
+        Args:
+            terminal_id: The ID of the terminal to reset
+
+        Returns:
+            A dictionary containing success status and any error information
+        """
+        response = await self.clusterfudge_client.reset_terminal(
+            self.sandbox_id, terminal_id
+        )
+
+        return {
+            "success": response.get("success", False),
+            "error": response.get("error", None),
+        }
+
+    async def reset_all_terminals(self) -> dict:
+        """Reset all terminals in the sandbox.
+
+        Returns:
+            A dictionary containing success status and any error information
+        """
+        response = await self.clusterfudge_client.reset_all_terminals(self.sandbox_id)
+
+        return {
+            "success": response.get("success", False),
+            "error": response.get("error", None),
+        }
+
+    async def get_terminal_history(self, terminal_id: str) -> dict:
+        """Get command history from a terminal.
+
+        Args:
+            terminal_id: The ID of the terminal to get history from
+
+        Returns:
+            A dictionary containing command history and any error information
+        """
+        response = await self.clusterfudge_client.get_terminal_history(
+            self.sandbox_id, terminal_id
+        )
+
+        return {
+            "commands": response.get("commands", []),
+            "error": response.get("error", None),
+        }
+
+
 class SandboxClient:
     """Main client for interacting with a Clusterfudge Sandbox.
 
@@ -677,6 +775,7 @@ class SandboxClient:
     - Computer: UI interactions like screenshots, mouse, keyboard
     - Basher: Command execution
     - FileEditor: File operations
+    - Terminal: Direct terminal interaction
     """
 
     def __init__(self, sandbox_id: str, clusterfudge_client: Client):
@@ -691,6 +790,7 @@ class SandboxClient:
         self._computer = ComputerClient(self.sandbox_id, clusterfudge_client)
         self._basher = BasherClient(self.sandbox_id, clusterfudge_client)
         self._file_editor = FileEditorClient(self.sandbox_id, clusterfudge_client)
+        self._terminal = TerminalClient(self.sandbox_id, clusterfudge_client)
 
     def computer(self) -> ComputerClient:
         """Get the computer interface client.
@@ -715,3 +815,11 @@ class SandboxClient:
             FileEditorClient instance
         """
         return self._file_editor
+
+    def terminal(self) -> TerminalClient:
+        """Get the terminal client.
+
+        Returns:
+            TerminalClient instance
+        """
+        return self._terminal
