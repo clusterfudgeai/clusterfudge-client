@@ -248,3 +248,35 @@ class GetTerminalHistoryResponse(_message.Message):
     commands: _containers.RepeatedScalarFieldContainer[str]
     error: str
     def __init__(self, commands: _Optional[_Iterable[str]] = ..., error: _Optional[str] = ...) -> None: ...
+
+class DownloadFileRequest(_message.Message):
+    __slots__ = ("machine_id", "absolute_file_path")
+    MACHINE_ID_FIELD_NUMBER: _ClassVar[int]
+    ABSOLUTE_FILE_PATH_FIELD_NUMBER: _ClassVar[int]
+    machine_id: str
+    absolute_file_path: str
+    def __init__(self, machine_id: _Optional[str] = ..., absolute_file_path: _Optional[str] = ...) -> None: ...
+
+class DownloadFileResponse(_message.Message):
+    __slots__ = ("contents", "sandbox_error")
+    CONTENTS_FIELD_NUMBER: _ClassVar[int]
+    SANDBOX_ERROR_FIELD_NUMBER: _ClassVar[int]
+    contents: bytes
+    sandbox_error: str
+    def __init__(self, contents: _Optional[bytes] = ..., sandbox_error: _Optional[str] = ...) -> None: ...
+
+class DownloadFolderRequest(_message.Message):
+    __slots__ = ("machine_id", "absolute_folder_path")
+    MACHINE_ID_FIELD_NUMBER: _ClassVar[int]
+    ABSOLUTE_FOLDER_PATH_FIELD_NUMBER: _ClassVar[int]
+    machine_id: str
+    absolute_folder_path: str
+    def __init__(self, machine_id: _Optional[str] = ..., absolute_folder_path: _Optional[str] = ...) -> None: ...
+
+class DownloadFolderResponse(_message.Message):
+    __slots__ = ("zipped_contents", "sandbox_error")
+    ZIPPED_CONTENTS_FIELD_NUMBER: _ClassVar[int]
+    SANDBOX_ERROR_FIELD_NUMBER: _ClassVar[int]
+    zipped_contents: bytes
+    sandbox_error: str
+    def __init__(self, zipped_contents: _Optional[bytes] = ..., sandbox_error: _Optional[str] = ...) -> None: ...

@@ -20,6 +20,7 @@ class CommandType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     COMMAND_TYPE_STREAM_TCP: _ClassVar[CommandType]
     COMMAND_TYPE_SCANCEL: _ClassVar[CommandType]
     COMMAND_TYPE_JUPYTER_LAUNCH: _ClassVar[CommandType]
+    COMMAND_TYPE_SBATCH: _ClassVar[CommandType]
 
 class CommandState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -47,6 +48,7 @@ COMMAND_TYPE_STREAM_LOGS: CommandType
 COMMAND_TYPE_STREAM_TCP: CommandType
 COMMAND_TYPE_SCANCEL: CommandType
 COMMAND_TYPE_JUPYTER_LAUNCH: CommandType
+COMMAND_TYPE_SBATCH: CommandType
 COMMAND_STATE_UNKNOWN: CommandState
 COMMAND_STATE_UNACKNOWLEDGED: CommandState
 COMMAND_STATE_ACKNOWLEDGED: CommandState
@@ -189,12 +191,14 @@ class Command(_message.Message):
     def __init__(self, tenant_id: _Optional[str] = ..., hostname: _Optional[str] = ..., id: _Optional[str] = ..., requested_by: _Optional[str] = ..., requested_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., acknowledged_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., command: _Optional[_Union[CommandType, str]] = ..., reference_id: _Optional[str] = ..., execution_started_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., execution_completed_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., exec_err: _Optional[str] = ..., exit_code: _Optional[_Union[_wrappers_pb2.Int32Value, _Mapping]] = ..., state: _Optional[_Union[CommandState, str]] = ..., env: _Optional[_Iterable[str]] = ..., pid: _Optional[_Union[_wrappers_pb2.Int32Value, _Mapping]] = ..., cmd_line: _Optional[_Iterable[str]] = ..., resource_request: _Optional[_Union[_resources_pb2.Resources, _Mapping]] = ..., zip_id: _Optional[str] = ..., git_repo: _Optional[str] = ..., git_branch: _Optional[str] = ..., job_name: _Optional[str] = ..., server_state: _Optional[_Union[CommandState, str]] = ..., git_commit: _Optional[str] = ..., node_exclusivity: _Optional[_Union[NodeExclusivity, str]] = ..., command_options: _Optional[_Union[CommandOptions, _Mapping]] = ...) -> None: ...
 
 class CommandOptions(_message.Message):
-    __slots__ = ("scancel", "jupyter_launch")
+    __slots__ = ("scancel", "jupyter_launch", "sbatch")
     SCANCEL_FIELD_NUMBER: _ClassVar[int]
     JUPYTER_LAUNCH_FIELD_NUMBER: _ClassVar[int]
+    SBATCH_FIELD_NUMBER: _ClassVar[int]
     scancel: ScancelOptions
     jupyter_launch: JupyterLaunchOptions
-    def __init__(self, scancel: _Optional[_Union[ScancelOptions, _Mapping]] = ..., jupyter_launch: _Optional[_Union[JupyterLaunchOptions, _Mapping]] = ...) -> None: ...
+    sbatch: SbatchOptions
+    def __init__(self, scancel: _Optional[_Union[ScancelOptions, _Mapping]] = ..., jupyter_launch: _Optional[_Union[JupyterLaunchOptions, _Mapping]] = ..., sbatch: _Optional[_Union[SbatchOptions, _Mapping]] = ...) -> None: ...
 
 class ScancelOptions(_message.Message):
     __slots__ = ("job_id",)
@@ -213,6 +217,14 @@ class JupyterLaunchOptions(_message.Message):
     output_file: str
     nvidia_config: NvidiaConfig
     def __init__(self, virtual_env_path: _Optional[str] = ..., gpu_per_node: _Optional[int] = ..., output_file: _Optional[str] = ..., nvidia_config: _Optional[_Union[NvidiaConfig, _Mapping]] = ...) -> None: ...
+
+class SbatchOptions(_message.Message):
+    __slots__ = ("script_path", "unix_user")
+    SCRIPT_PATH_FIELD_NUMBER: _ClassVar[int]
+    UNIX_USER_FIELD_NUMBER: _ClassVar[int]
+    script_path: str
+    unix_user: str
+    def __init__(self, script_path: _Optional[str] = ..., unix_user: _Optional[str] = ...) -> None: ...
 
 class NvidiaConfig(_message.Message):
     __slots__ = ("nccl_socket_if_name", "nccl_ib_hca", "ucx_net_devices", "sharp_coll_enable_pci_relaxed_ordering", "nccl_collnet_enable", "ld_library_path")

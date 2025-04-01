@@ -663,6 +663,62 @@ class Client:
         except grpc.RpcError as e:
             raise Exception(f"Failed to get terminal history: {e.details()}")
 
+    async def download_file(self, sandbox_id: str, absolute_file_path: str) -> dict:
+        """Download a file from a sandbox.
+
+        Args:
+            sandbox_id: The ID of the sandbox
+            absolute_file_path: The absolute path to the file in the sandbox
+
+        Returns:
+            A dictionary containing file contents and any error information
+
+        Raises:
+            Exception: If the operation fails
+        """
+        try:
+            response = await self.sandbox_stub.DownloadFile(
+                sandboxes_pb2.DownloadFileRequest(
+                    machine_id=sandbox_id,
+                    absolute_file_path=absolute_file_path
+                )
+            )
+            
+            return {
+                "contents": response.contents,
+                "sandbox_error": response.sandbox_error if response.sandbox_error else None
+            }
+        except grpc.RpcError as e:
+            raise Exception(f"Failed to download file: {e.details()}")
+
+    async def download_folder(self, sandbox_id: str, absolute_folder_path: str) -> dict:
+        """Download a folder from a sandbox as a zip file.
+
+        Args:
+            sandbox_id: The ID of the sandbox
+            absolute_folder_path: The absolute path to the folder in the sandbox
+
+        Returns:
+            A dictionary containing zipped folder contents and any error information
+
+        Raises:
+            Exception: If the operation fails
+        """
+        try:
+            response = await self.sandbox_stub.DownloadFolder(
+                sandboxes_pb2.DownloadFolderRequest(
+                    machine_id=sandbox_id,
+                    absolute_folder_path=absolute_folder_path
+                )
+            )
+            
+            return {
+                "zipped_contents": response.zipped_contents,
+                "sandbox_error": response.sandbox_error if response.sandbox_error else None
+            }
+        except grpc.RpcError as e:
+            raise Exception(f"Failed to download folder: {e.details()}")
+
     @staticmethod
     def _robust_json_decode(s: str) -> dict:
         """

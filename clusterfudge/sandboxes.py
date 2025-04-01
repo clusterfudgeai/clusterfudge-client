@@ -768,6 +768,44 @@ class TerminalClient:
         }
 
 
+class FileManagerClient:
+    """Client for managing files in the sandbox."""
+
+    def __init__(self, sandbox_id: str, clusterfudge_client: Client):
+        self.sandbox_id = sandbox_id
+        self.clusterfudge_client = clusterfudge_client
+
+    async def download_file(self, absolute_file_path: str) -> tuple[bytes, str | None]:
+        """Download a file from the sandbox.
+
+        Args:
+            absolute_file_path: The absolute path to the file in the sandbox
+
+        Returns:
+            A tuple of (file contents as bytes, error message if any)
+        """
+        response = await self.clusterfudge_client.download_file(
+            self.sandbox_id, absolute_file_path
+        )
+
+        return response.get("contents", b""), response.get("sandbox_error")
+
+    async def download_folder(self, absolute_folder_path: str) -> tuple[bytes, str | None]:
+        """Download a folder from the sandbox as a zip file.
+
+        Args:
+            absolute_folder_path: The absolute path to the folder in the sandbox
+
+        Returns:
+            A tuple of (zipped folder contents as bytes, error message if any)
+        """
+        response = await self.clusterfudge_client.download_folder(
+            self.sandbox_id, absolute_folder_path
+        )
+
+        return response.get("zipped_contents", b""), response.get("sandbox_error")
+
+
 class SandboxClient:
     """Main client for interacting with a Clusterfudge Sandbox.
 
@@ -776,6 +814,7 @@ class SandboxClient:
     - Basher: Command execution
     - FileEditor: File operations
     - Terminal: Direct terminal interaction
+    - FileManager: File download operations
     """
 
     def __init__(self, sandbox_id: str, clusterfudge_client: Client):
@@ -791,6 +830,7 @@ class SandboxClient:
         self._basher = BasherClient(self.sandbox_id, clusterfudge_client)
         self._file_editor = FileEditorClient(self.sandbox_id, clusterfudge_client)
         self._terminal = TerminalClient(self.sandbox_id, clusterfudge_client)
+        self._file_manager = FileManagerClient(self.sandbox_id, clusterfudge_client)
 
     def computer(self) -> ComputerClient:
         """Get the computer interface client.
@@ -823,3 +863,11 @@ class SandboxClient:
             TerminalClient instance
         """
         return self._terminal
+
+    def file_manager(self) -> FileManagerClient:
+        """Get the file manager client.
+
+        Returns:
+            FileManagerClient instance
+        """
+        return self._file_manager
