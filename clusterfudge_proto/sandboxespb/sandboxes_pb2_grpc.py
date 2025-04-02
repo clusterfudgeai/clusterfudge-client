@@ -109,6 +109,11 @@ class SandboxesStub(object):
                 request_serializer=sandboxespb_dot_sandboxes__pb2.DownloadFolderRequest.SerializeToString,
                 response_deserializer=sandboxespb_dot_sandboxes__pb2.DownloadFolderResponse.FromString,
                 _registered_method=True)
+        self.CreateFile = channel.unary_unary(
+                '/sandboxespb.Sandboxes/CreateFile',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.CreateFileRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.CreateFileResponse.FromString,
+                _registered_method=True)
 
 
 class SandboxesServicer(object):
@@ -198,6 +203,12 @@ class SandboxesServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def CreateFile(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SandboxesServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -270,6 +281,11 @@ def add_SandboxesServicer_to_server(servicer, server):
                     servicer.DownloadFolder,
                     request_deserializer=sandboxespb_dot_sandboxes__pb2.DownloadFolderRequest.FromString,
                     response_serializer=sandboxespb_dot_sandboxes__pb2.DownloadFolderResponse.SerializeToString,
+            ),
+            'CreateFile': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateFile,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.CreateFileRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.CreateFileResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -650,6 +666,33 @@ class Sandboxes(object):
             '/sandboxespb.Sandboxes/DownloadFolder',
             sandboxespb_dot_sandboxes__pb2.DownloadFolderRequest.SerializeToString,
             sandboxespb_dot_sandboxes__pb2.DownloadFolderResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreateFile(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/CreateFile',
+            sandboxespb_dot_sandboxes__pb2.CreateFileRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.CreateFileResponse.FromString,
             options,
             channel_credentials,
             insecure,

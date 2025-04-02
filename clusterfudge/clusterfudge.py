@@ -726,6 +726,35 @@ class Client:
             }
         except grpc.RpcError as e:
             raise Exception(f"Failed to download folder: {e.details()}")
+    
+    async def create_file(self, sandbox_id: str, absolute_file_path: str, contents: bytes, overwrite_existing: bool = False) -> dict:
+        """Create a file in the sandbox.
+
+        Args:
+            sandbox_id: The ID of the sandbox
+            absolute_file_path: The absolute path to the file in the sandbox
+            contents: The contents to write into the file
+            overwrite_existing: Whether to overwrite the file if it already exists
+
+        Returns:
+            A dictionary containing the sandbox_error field
+        """
+        try:
+            response = await self.sandbox_stub.CreateFile(
+                sandboxes_pb2.CreateFileRequest(
+                    machine_id=sandbox_id,
+                    absolute_file_path=absolute_file_path,
+                    contents=contents,
+                    overwrite_existing=overwrite_existing
+                )
+            )
+            
+            return {
+                "sandbox_error": response.sandbox_error if response.sandbox_error else None
+            }
+        except grpc.RpcError as e:
+            raise Exception(f"Failed to create file: {e.details()}")
+
 
     @staticmethod
     def _robust_json_decode(s: str) -> dict:

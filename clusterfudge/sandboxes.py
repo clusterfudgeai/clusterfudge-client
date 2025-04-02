@@ -805,6 +805,27 @@ class FileManagerClient:
 
         return response.get("zipped_contents", b""), response.get("sandbox_error")
 
+    async def create_file(
+        self, absolute_file_path: str, contents: bytes, overwrite_existing: bool = False
+    ) -> dict:
+        """Create a file in the sandbox.
+
+        Args:
+            absolute_file_path: The absolute path of the file to create.
+            contents: The binary contents of the file.
+            overwrite_existing: Whether to overwrite the file if it already exists.
+
+        Returns:
+            A dictionary containing the response with sandbox_error field if there was an error.
+        """
+        response = await self.clusterfudge_client.create_file(
+            sandbox_id=self.sandbox_id,
+            absolute_file_path=absolute_file_path,
+            contents=contents,
+            overwrite_existing=overwrite_existing,
+        )
+        return response
+
 
 class SandboxClient:
     """Main client for interacting with a Clusterfudge Sandbox.

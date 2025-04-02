@@ -280,3 +280,21 @@ class DownloadFolderResponse(_message.Message):
     zipped_contents: bytes
     sandbox_error: str
     def __init__(self, zipped_contents: _Optional[bytes] = ..., sandbox_error: _Optional[str] = ...) -> None: ...
+
+class CreateFileRequest(_message.Message):
+    __slots__ = ("machine_id", "absolute_file_path", "contents", "overwrite_existing")
+    MACHINE_ID_FIELD_NUMBER: _ClassVar[int]
+    ABSOLUTE_FILE_PATH_FIELD_NUMBER: _ClassVar[int]
+    CONTENTS_FIELD_NUMBER: _ClassVar[int]
+    OVERWRITE_EXISTING_FIELD_NUMBER: _ClassVar[int]
+    machine_id: str
+    absolute_file_path: str
+    contents: bytes
+    overwrite_existing: bool
+    def __init__(self, machine_id: _Optional[str] = ..., absolute_file_path: _Optional[str] = ..., contents: _Optional[bytes] = ..., overwrite_existing: bool = ...) -> None: ...
+
+class CreateFileResponse(_message.Message):
+    __slots__ = ("sandbox_error",)
+    SANDBOX_ERROR_FIELD_NUMBER: _ClassVar[int]
+    sandbox_error: str
+    def __init__(self, sandbox_error: _Optional[str] = ...) -> None: ...
