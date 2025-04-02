@@ -282,12 +282,20 @@ class Client:
         self.base_url = base_url or "api.clusterfudge.com:443"
         self.api_key = api_key or self._load_config_from_file().token
 
-        self.credentials = grpc.composite_channel_credentials(
-            ssl_channel_credentials(),
-            grpc.metadata_call_credentials(APIKeyCallCredentials(self.api_key)),
-        )
-        self.channel = grpc.secure_channel(self.base_url, self.credentials)
-        self.async_channel = grpc.aio.secure_channel(self.base_url, self.credentials)
+        # Check if base_url starts with "localhost"
+        if self.base_url.startswith("localhost"):
+            # Create insecure channels for localhost
+            self.channel = grpc.insecure_channel(self.base_url)
+            self.async_channel = grpc.aio.insecure_channel(self.base_url)
+        else:
+            # Create secure channels with credentials for non-localhost
+            self.credentials = grpc.composite_channel_credentials(
+                ssl_channel_credentials(),
+                grpc.metadata_call_credentials(APIKeyCallCredentials(self.api_key)),
+            )
+            self.channel = grpc.secure_channel(self.base_url, self.credentials)
+            self.async_channel = grpc.aio.secure_channel(self.base_url, self.credentials)
+        
         self.launches_stub = launches_pb2_grpc.LaunchesStub(self.channel)
         self.tunnel_stub = tunnel_pb2_grpc.TunnelStub(self.async_channel)
         self.sandbox_stub = sandboxes_pb2_grpc.SandboxesStub(self.async_channel)
