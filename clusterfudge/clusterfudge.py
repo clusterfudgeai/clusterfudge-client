@@ -294,8 +294,10 @@ class Client:
                 grpc.metadata_call_credentials(APIKeyCallCredentials(self.api_key)),
             )
             self.channel = grpc.secure_channel(self.base_url, self.credentials)
-            self.async_channel = grpc.aio.secure_channel(self.base_url, self.credentials)
-        
+            self.async_channel = grpc.aio.secure_channel(
+                self.base_url, self.credentials
+            )
+
         self.launches_stub = launches_pb2_grpc.LaunchesStub(self.channel)
         self.tunnel_stub = tunnel_pb2_grpc.TunnelStub(self.async_channel)
         self.sandbox_stub = sandboxes_pb2_grpc.SandboxesStub(self.async_channel)
@@ -412,41 +414,42 @@ class Client:
         )
 
         try:
-            response = await self.sandbox_stub.CreateSandbox(request)
-            if not response:
+            create_sandbox_resp: sandboxes_pb2.CreateSandboxResponse = (
+                await self.sandbox_stub.CreateSandbox(request)
+            )
+            if not create_sandbox_resp:
                 raise Exception("failed to create sandbox - received empty response")
-
-            sandbox_id = response.sandbox.id
-            start_time = time.time()
-            timeout = 360
-            poll_interval = 1
-
-            # Wait for the sandbox to be ready
-            while True:
-                if (time.time() - start_time) > timeout:
-                    raise TimeoutError(
-                        f"sandbox failed to start within {timeout} seconds"
-                    )
-
-                try:
-                    response = await self.sandbox_stub.ListSandboxes(
-                        sandboxes_pb2.ListSandboxesRequest()
-                    )
-                    for sandbox in response.sandboxes:
-                        if sandbox.id == sandbox_id:
-                            if (
-                                sandbox.state
-                                == sandboxes_pb2.Sandbox.STATE_RUNNING_HAPPILY
-                            ):
-                                return sandbox_id
-                    await asyncio.sleep(poll_interval)
-                except grpc.RpcError as e:
-                    raise Exception(
-                        f"failed to verify sandbox creation was successful: {e.details()}"
-                    )
-
         except grpc.RpcError as e:
             raise Exception(f"failed to create sandbox: {e.details()}")
+
+        sandbox_id = create_sandbox_resp.sandbox.id
+        start_time = time.time()
+        timeout = 600
+        poll_interval = 5
+
+        # Wait for the sandbox to be ready
+        while True:
+            try:
+                get_sandbox_req: sandboxes_pb2.GetSandboxResponse = (
+                    await self.sandbox_stub.GetSandbox(
+                        sandboxes_pb2.GetSandboxRequest(machine_id=sandbox_id)
+                    )
+                )
+                if (
+                    get_sandbox_req.sandbox.state
+                    == sandboxes_pb2.Sandbox.State.STATE_RUNNING_HAPPILY
+                ):
+                    return sandbox_id
+                await asyncio.sleep(poll_interval)
+            except grpc.RpcError as e:
+                raise Exception(
+                    f"failed to verify sandbox creation was successful: {e.details()}"
+                )
+            finally:
+                if (time.time() - start_time) > timeout:
+                    raise TimeoutError(
+                        f"sandbox failed to start within {timeout} seconds. Sandbox is in state {get_sandbox_req.sandbox.state}"
+                    )
 
     async def claude_computer_use(
         self, sandbox_id: str, messages: list[BetaMessageParam]
@@ -520,9 +523,13 @@ class Client:
             )
         except grpc.RpcError as e:
             raise Exception(f"Failed to delete sandbox: {e.details()}")
-    
+
     async def write_to_terminal(
-        self, sandbox_id: str, terminal_id: str, input_text: str, wait_for_response_ms: int = 500
+        self,
+        sandbox_id: str,
+        terminal_id: str,
+        input_text: str,
+        wait_for_response_ms: int = 500,
     ) -> dict:
         """
         Write text to a terminal and wait for a response.
@@ -544,15 +551,15 @@ class Client:
                 sandboxes_pb2.WriteToTerminalRequest(
                     machine_id=sandbox_id,
                     terminal_id=terminal_id,
-                    input=input_text.encode('utf-8'),
-                    wait_for_response_ms=wait_for_response_ms
+                    input=input_text.encode("utf-8"),
+                    wait_for_response_ms=wait_for_response_ms,
                 )
             )
-            
+
             return {
-                "stdout": response.stdout.decode('utf-8') if response.stdout else "",
-                "stderr": response.stderr.decode('utf-8') if response.stderr else "",
-                "exec_error": response.exec_error if response.exec_error else None
+                "stdout": response.stdout.decode("utf-8") if response.stdout else "",
+                "stderr": response.stderr.decode("utf-8") if response.stderr else "",
+                "exec_error": response.exec_error if response.exec_error else None,
             }
         except grpc.RpcError as e:
             raise Exception(f"Failed to write to terminal: {e.details()}")
@@ -574,14 +581,13 @@ class Client:
         try:
             response = await self.sandbox_stub.KillTerminal(
                 sandboxes_pb2.KillTerminalRequest(
-                    machine_id=sandbox_id,
-                    terminal_id=terminal_id
+                    machine_id=sandbox_id, terminal_id=terminal_id
                 )
             )
-            
+
             return {
                 "success": response.success,
-                "error": response.error if response.error else None
+                "error": response.error if response.error else None,
             }
         except grpc.RpcError as e:
             raise Exception(f"Failed to kill terminal: {e.details()}")
@@ -603,14 +609,13 @@ class Client:
         try:
             response = await self.sandbox_stub.ResetTerminal(
                 sandboxes_pb2.ResetTerminalRequest(
-                    machine_id=sandbox_id,
-                    terminal_id=terminal_id
+                    machine_id=sandbox_id, terminal_id=terminal_id
                 )
             )
-            
+
             return {
                 "success": response.success,
-                "error": response.error if response.error else None
+                "error": response.error if response.error else None,
             }
         except grpc.RpcError as e:
             raise Exception(f"Failed to reset terminal: {e.details()}")
@@ -630,14 +635,12 @@ class Client:
         """
         try:
             response = await self.sandbox_stub.ResetAllTerminals(
-                sandboxes_pb2.ResetAllTerminalsRequest(
-                    machine_id=sandbox_id
-                )
+                sandboxes_pb2.ResetAllTerminalsRequest(machine_id=sandbox_id)
             )
-            
+
             return {
                 "success": response.success,
-                "error": response.error if response.error else None
+                "error": response.error if response.error else None,
             }
         except grpc.RpcError as e:
             raise Exception(f"Failed to reset all terminals: {e.details()}")
@@ -659,14 +662,13 @@ class Client:
         try:
             response = await self.sandbox_stub.GetTerminalHistory(
                 sandboxes_pb2.GetTerminalHistoryRequest(
-                    machine_id=sandbox_id,
-                    terminal_id=terminal_id
+                    machine_id=sandbox_id, terminal_id=terminal_id
                 )
             )
-            
+
             return {
                 "commands": list(response.commands),
-                "error": response.error if response.error else None
+                "error": response.error if response.error else None,
             }
         except grpc.RpcError as e:
             raise Exception(f"Failed to get terminal history: {e.details()}")
@@ -687,14 +689,15 @@ class Client:
         try:
             response = await self.sandbox_stub.DownloadFile(
                 sandboxes_pb2.DownloadFileRequest(
-                    machine_id=sandbox_id,
-                    absolute_file_path=absolute_file_path
+                    machine_id=sandbox_id, absolute_file_path=absolute_file_path
                 )
             )
-            
+
             return {
                 "contents": response.contents,
-                "sandbox_error": response.sandbox_error if response.sandbox_error else None
+                "sandbox_error": response.sandbox_error
+                if response.sandbox_error
+                else None,
             }
         except grpc.RpcError as e:
             raise Exception(f"Failed to download file: {e.details()}")
@@ -715,19 +718,26 @@ class Client:
         try:
             response = await self.sandbox_stub.DownloadFolder(
                 sandboxes_pb2.DownloadFolderRequest(
-                    machine_id=sandbox_id,
-                    absolute_folder_path=absolute_folder_path
+                    machine_id=sandbox_id, absolute_folder_path=absolute_folder_path
                 )
             )
-            
+
             return {
                 "zipped_contents": response.zipped_contents,
-                "sandbox_error": response.sandbox_error if response.sandbox_error else None
+                "sandbox_error": response.sandbox_error
+                if response.sandbox_error
+                else None,
             }
         except grpc.RpcError as e:
             raise Exception(f"Failed to download folder: {e.details()}")
-    
-    async def create_file(self, sandbox_id: str, absolute_file_path: str, contents: bytes, overwrite_existing: bool = False) -> dict:
+
+    async def create_file(
+        self,
+        sandbox_id: str,
+        absolute_file_path: str,
+        contents: bytes,
+        overwrite_existing: bool = False,
+    ) -> dict:
         """Create a file in the sandbox.
 
         Args:
@@ -745,16 +755,17 @@ class Client:
                     machine_id=sandbox_id,
                     absolute_file_path=absolute_file_path,
                     contents=contents,
-                    overwrite_existing=overwrite_existing
+                    overwrite_existing=overwrite_existing,
                 )
             )
-            
+
             return {
-                "sandbox_error": response.sandbox_error if response.sandbox_error else None
+                "sandbox_error": response.sandbox_error
+                if response.sandbox_error
+                else None
             }
         except grpc.RpcError as e:
             raise Exception(f"Failed to create file: {e.details()}")
-
 
     @staticmethod
     def _robust_json_decode(s: str) -> dict:
