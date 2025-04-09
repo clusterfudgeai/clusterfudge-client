@@ -219,12 +219,26 @@ class JupyterLaunchOptions(_message.Message):
     def __init__(self, virtual_env_path: _Optional[str] = ..., gpu_per_node: _Optional[int] = ..., output_file: _Optional[str] = ..., nvidia_config: _Optional[_Union[NvidiaConfig, _Mapping]] = ...) -> None: ...
 
 class SbatchOptions(_message.Message):
-    __slots__ = ("script_path", "unix_user")
+    __slots__ = ("script_path", "unix_user", "env_vars", "args", "sbatch_content")
     SCRIPT_PATH_FIELD_NUMBER: _ClassVar[int]
     UNIX_USER_FIELD_NUMBER: _ClassVar[int]
+    ENV_VARS_FIELD_NUMBER: _ClassVar[int]
+    ARGS_FIELD_NUMBER: _ClassVar[int]
+    SBATCH_CONTENT_FIELD_NUMBER: _ClassVar[int]
     script_path: str
     unix_user: str
-    def __init__(self, script_path: _Optional[str] = ..., unix_user: _Optional[str] = ...) -> None: ...
+    env_vars: _containers.RepeatedCompositeFieldContainer[EnvironmentVariable]
+    args: _containers.RepeatedScalarFieldContainer[str]
+    sbatch_content: str
+    def __init__(self, script_path: _Optional[str] = ..., unix_user: _Optional[str] = ..., env_vars: _Optional[_Iterable[_Union[EnvironmentVariable, _Mapping]]] = ..., args: _Optional[_Iterable[str]] = ..., sbatch_content: _Optional[str] = ...) -> None: ...
+
+class EnvironmentVariable(_message.Message):
+    __slots__ = ("name", "value")
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    VALUE_FIELD_NUMBER: _ClassVar[int]
+    name: str
+    value: str
+    def __init__(self, name: _Optional[str] = ..., value: _Optional[str] = ...) -> None: ...
 
 class NvidiaConfig(_message.Message):
     __slots__ = ("nccl_socket_if_name", "nccl_ib_hca", "ucx_net_devices", "sharp_coll_enable_pci_relaxed_ordering", "nccl_collnet_enable", "ld_library_path")

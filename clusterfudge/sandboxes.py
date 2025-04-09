@@ -768,6 +768,62 @@ class TerminalClient:
         }
 
 
+class ProcessClient:
+    """Client for interacting with processes in the sandbox."""
+
+    def __init__(self, sandbox_id: str, clusterfudge_client: Client):
+        self.sandbox_id = sandbox_id
+        self.clusterfudge_client = clusterfudge_client
+
+    async def write_to_process(
+        self, process_id: str, input_bytes: bytes, wait_for_response_ms: int = 300
+    ) -> dict:
+        """Write bytes to a process and wait for a response.
+
+        Args:
+            process_id: The ID of the process to write to
+            input_bytes: The bytes to write to the process stdin
+            wait_for_response_ms: Time to wait for a response in milliseconds
+
+        Returns:
+            A dictionary containing stdin, stdout, stderr, terminal output,
+            process error, exit code, and sandbox error information.
+        """
+        response = await self.clusterfudge_client.write_to_process(
+            self.sandbox_id, process_id, input_bytes, wait_for_response_ms
+        )
+        return response  # Return the full response dict
+
+    async def kill_process(self, process_id: str) -> dict:
+        """Kill a process.
+
+        Args:
+            process_id: The ID of the process to kill
+
+        Returns:
+            A dictionary containing success status and any error information.
+        """
+        response = await self.clusterfudge_client.kill_process(
+            self.sandbox_id, process_id
+        )
+        return response
+
+    async def get_process(self, process_id: str) -> dict:
+        """Get information about a process.
+
+        Args:
+            process_id: The ID of the process to get info for
+
+        Returns:
+            A dictionary containing stdin, stdout, stderr, terminal output,
+            process error, exit code, and sandbox error information.
+        """
+        response = await self.clusterfudge_client.get_process(
+            self.sandbox_id, process_id
+        )
+        return response
+
+
 class FileManagerClient:
     """Client for managing files in the sandbox."""
 
@@ -836,6 +892,7 @@ class SandboxClient:
     - FileEditor: File operations
     - Terminal: Direct terminal interaction
     - FileManager: File download operations
+    - Process: Process interaction (write, kill, get)
     """
 
     def __init__(self, sandbox_id: str, clusterfudge_client: Client):
@@ -852,6 +909,7 @@ class SandboxClient:
         self._file_editor = FileEditorClient(self.sandbox_id, clusterfudge_client)
         self._terminal = TerminalClient(self.sandbox_id, clusterfudge_client)
         self._file_manager = FileManagerClient(self.sandbox_id, clusterfudge_client)
+        self._process = ProcessClient(self.sandbox_id, clusterfudge_client)
 
     def computer(self) -> ComputerClient:
         """Get the computer interface client.
@@ -892,3 +950,11 @@ class SandboxClient:
             FileManagerClient instance
         """
         return self._file_manager
+
+    def process(self) -> ProcessClient:
+        """Get the process client.
+
+        Returns:
+            ProcessClient instance
+        """
+        return self._process

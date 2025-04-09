@@ -767,6 +767,128 @@ class Client:
         except grpc.RpcError as e:
             raise Exception(f"Failed to create file: {e.details()}")
 
+    async def write_to_process(
+        self,
+        sandbox_id: str,
+        process_id: str,
+        input_bytes: bytes,
+        wait_for_response_ms: int = 300,
+    ) -> dict:
+        """Write bytes to a process stdin and wait for a response.
+
+        Args:
+            sandbox_id: The ID of the sandbox
+            process_id: The ID of the process to write to
+            input_bytes: The bytes to write to the process stdin
+            wait_for_response_ms: Time to wait for a response in milliseconds
+
+        Returns:
+            A dictionary containing stdin, stdout, stderr, terminal output,
+            process error, exit code, and sandbox error information.
+
+        Raises:
+            Exception: If the operation fails
+        """
+        try:
+            response = await self.sandbox_stub.WriteToProcess(
+                sandboxes_pb2.WriteToProcessRequest(
+                    machine_id=sandbox_id,
+                    process_id=process_id,
+                    input=input_bytes,
+                    wait_for_response_ms=wait_for_response_ms,
+                )
+            )
+
+            return {
+                "stdin": [s.decode("utf-8") for s in response.stdin],
+                "stdout": response.stdout.decode("utf-8") if response.stdout else "",
+                "stderr": response.stderr.decode("utf-8") if response.stderr else "",
+                "terminal_output": response.terminal_output.decode("utf-8")
+                if response.terminal_output
+                else "",
+                "process_error": response.process_error
+                if response.process_error
+                else None,
+                "exit_code": response.exit_code.value
+                if response.HasField("exit_code")
+                else None,
+                "sandbox_error": response.sandbox_error
+                if response.sandbox_error
+                else None,
+            }
+        except grpc.RpcError as e:
+            raise Exception(f"Failed to write to process: {e.details()}")
+
+    async def kill_process(self, sandbox_id: str, process_id: str) -> dict:
+        """Kill a process.
+
+        Args:
+            sandbox_id: The ID of the sandbox
+            process_id: The ID of the process to kill
+
+        Returns:
+            A dictionary containing success status and any sandbox error information.
+
+        Raises:
+            Exception: If the operation fails
+        """
+        try:
+            response = await self.sandbox_stub.KillProcess(
+                sandboxes_pb2.KillProcessRequest(
+                    machine_id=sandbox_id, process_id=process_id
+                )
+            )
+
+            return {
+                "success": response.success,
+                "sandbox_error": response.sandbox_error
+                if response.sandbox_error
+                else None,
+            }
+        except grpc.RpcError as e:
+            raise Exception(f"Failed to kill process: {e.details()}")
+
+    async def get_process(self, sandbox_id: str, process_id: str) -> dict:
+        """Get information about a process.
+
+        Args:
+            sandbox_id: The ID of the sandbox
+            process_id: The ID of the process to get information for
+
+        Returns:
+            A dictionary containing stdin, stdout, stderr, terminal output,
+            process error, exit code, and sandbox error information.
+
+        Raises:
+            Exception: If the operation fails
+        """
+        try:
+            response = await self.sandbox_stub.GetProcess(
+                sandboxes_pb2.GetProcessRequest(
+                    machine_id=sandbox_id, process_id=process_id
+                )
+            )
+
+            return {
+                "stdin": [s.decode("utf-8") for s in response.stdin],
+                "stdout": response.stdout.decode("utf-8") if response.stdout else "",
+                "stderr": response.stderr.decode("utf-8") if response.stderr else "",
+                "terminal_output": response.terminal_output.decode("utf-8")
+                if response.terminal_output
+                else "",
+                "process_error": response.process_error
+                if response.process_error
+                else None,
+                "exit_code": response.exit_code.value
+                if response.HasField("exit_code")
+                else None,
+                "sandbox_error": response.sandbox_error
+                if response.sandbox_error
+                else None,
+            }
+        except grpc.RpcError as e:
+            raise Exception(f"Failed to get process info: {e.details()}")
+
     @staticmethod
     def _robust_json_decode(s: str) -> dict:
         """

@@ -1,4 +1,5 @@
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from google.protobuf import wrappers_pb2 as _wrappers_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
@@ -28,10 +29,22 @@ class ListSandboxesRequest(_message.Message):
     def __init__(self) -> None: ...
 
 class ListSandboxesResponse(_message.Message):
-    __slots__ = ("sandboxes",)
+    __slots__ = ("sandboxes", "aggregates")
     SANDBOXES_FIELD_NUMBER: _ClassVar[int]
+    AGGREGATES_FIELD_NUMBER: _ClassVar[int]
     sandboxes: _containers.RepeatedCompositeFieldContainer[Sandbox]
-    def __init__(self, sandboxes: _Optional[_Iterable[_Union[Sandbox, _Mapping]]] = ...) -> None: ...
+    aggregates: SandboxAggregates
+    def __init__(self, sandboxes: _Optional[_Iterable[_Union[Sandbox, _Mapping]]] = ..., aggregates: _Optional[_Union[SandboxAggregates, _Mapping]] = ...) -> None: ...
+
+class SandboxAggregates(_message.Message):
+    __slots__ = ("total_sandboxes", "total_running_sandboxes", "total_sandbox_seconds")
+    TOTAL_SANDBOXES_FIELD_NUMBER: _ClassVar[int]
+    TOTAL_RUNNING_SANDBOXES_FIELD_NUMBER: _ClassVar[int]
+    TOTAL_SANDBOX_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    total_sandboxes: int
+    total_running_sandboxes: int
+    total_sandbox_seconds: int
+    def __init__(self, total_sandboxes: _Optional[int] = ..., total_running_sandboxes: _Optional[int] = ..., total_sandbox_seconds: _Optional[int] = ...) -> None: ...
 
 class DeleteSandboxRequest(_message.Message):
     __slots__ = ("machine_id",)
@@ -56,7 +69,7 @@ class GetSandboxResponse(_message.Message):
     def __init__(self, sandbox: _Optional[_Union[Sandbox, _Mapping]] = ...) -> None: ...
 
 class Sandbox(_message.Message):
-    __slots__ = ("id", "created_at", "state", "display_name", "created_by")
+    __slots__ = ("id", "created_at", "state", "display_name", "created_by", "image_tag")
     class State(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
         __slots__ = ()
         STATE_UNSPECIFIED: _ClassVar[Sandbox.State]
@@ -74,12 +87,14 @@ class Sandbox(_message.Message):
     STATE_FIELD_NUMBER: _ClassVar[int]
     DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
     CREATED_BY_FIELD_NUMBER: _ClassVar[int]
+    IMAGE_TAG_FIELD_NUMBER: _ClassVar[int]
     id: str
     created_at: _timestamp_pb2.Timestamp
     state: Sandbox.State
     display_name: str
     created_by: str
-    def __init__(self, id: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., state: _Optional[_Union[Sandbox.State, str]] = ..., display_name: _Optional[str] = ..., created_by: _Optional[str] = ...) -> None: ...
+    image_tag: str
+    def __init__(self, id: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., state: _Optional[_Union[Sandbox.State, str]] = ..., display_name: _Optional[str] = ..., created_by: _Optional[str] = ..., image_tag: _Optional[str] = ...) -> None: ...
 
 class ComputerUseRequest(_message.Message):
     __slots__ = ("machine_id",)
@@ -298,3 +313,75 @@ class CreateFileResponse(_message.Message):
     SANDBOX_ERROR_FIELD_NUMBER: _ClassVar[int]
     sandbox_error: str
     def __init__(self, sandbox_error: _Optional[str] = ...) -> None: ...
+
+class WriteToProcessRequest(_message.Message):
+    __slots__ = ("machine_id", "process_id", "input", "wait_for_response_ms")
+    MACHINE_ID_FIELD_NUMBER: _ClassVar[int]
+    PROCESS_ID_FIELD_NUMBER: _ClassVar[int]
+    INPUT_FIELD_NUMBER: _ClassVar[int]
+    WAIT_FOR_RESPONSE_MS_FIELD_NUMBER: _ClassVar[int]
+    machine_id: str
+    process_id: str
+    input: bytes
+    wait_for_response_ms: int
+    def __init__(self, machine_id: _Optional[str] = ..., process_id: _Optional[str] = ..., input: _Optional[bytes] = ..., wait_for_response_ms: _Optional[int] = ...) -> None: ...
+
+class WriteToProcessResponse(_message.Message):
+    __slots__ = ("stdin", "stdout", "stderr", "terminal_output", "process_error", "exit_code", "sandbox_error")
+    STDIN_FIELD_NUMBER: _ClassVar[int]
+    STDOUT_FIELD_NUMBER: _ClassVar[int]
+    STDERR_FIELD_NUMBER: _ClassVar[int]
+    TERMINAL_OUTPUT_FIELD_NUMBER: _ClassVar[int]
+    PROCESS_ERROR_FIELD_NUMBER: _ClassVar[int]
+    EXIT_CODE_FIELD_NUMBER: _ClassVar[int]
+    SANDBOX_ERROR_FIELD_NUMBER: _ClassVar[int]
+    stdin: _containers.RepeatedScalarFieldContainer[bytes]
+    stdout: bytes
+    stderr: bytes
+    terminal_output: bytes
+    process_error: str
+    exit_code: _wrappers_pb2.Int32Value
+    sandbox_error: str
+    def __init__(self, stdin: _Optional[_Iterable[bytes]] = ..., stdout: _Optional[bytes] = ..., stderr: _Optional[bytes] = ..., terminal_output: _Optional[bytes] = ..., process_error: _Optional[str] = ..., exit_code: _Optional[_Union[_wrappers_pb2.Int32Value, _Mapping]] = ..., sandbox_error: _Optional[str] = ...) -> None: ...
+
+class KillProcessRequest(_message.Message):
+    __slots__ = ("machine_id", "process_id")
+    MACHINE_ID_FIELD_NUMBER: _ClassVar[int]
+    PROCESS_ID_FIELD_NUMBER: _ClassVar[int]
+    machine_id: str
+    process_id: str
+    def __init__(self, machine_id: _Optional[str] = ..., process_id: _Optional[str] = ...) -> None: ...
+
+class KillProcessResponse(_message.Message):
+    __slots__ = ("success", "sandbox_error")
+    SUCCESS_FIELD_NUMBER: _ClassVar[int]
+    SANDBOX_ERROR_FIELD_NUMBER: _ClassVar[int]
+    success: bool
+    sandbox_error: str
+    def __init__(self, success: bool = ..., sandbox_error: _Optional[str] = ...) -> None: ...
+
+class GetProcessRequest(_message.Message):
+    __slots__ = ("machine_id", "process_id")
+    MACHINE_ID_FIELD_NUMBER: _ClassVar[int]
+    PROCESS_ID_FIELD_NUMBER: _ClassVar[int]
+    machine_id: str
+    process_id: str
+    def __init__(self, machine_id: _Optional[str] = ..., process_id: _Optional[str] = ...) -> None: ...
+
+class GetProcessResponse(_message.Message):
+    __slots__ = ("stdin", "stdout", "stderr", "terminal_output", "process_error", "exit_code", "sandbox_error")
+    STDIN_FIELD_NUMBER: _ClassVar[int]
+    STDOUT_FIELD_NUMBER: _ClassVar[int]
+    STDERR_FIELD_NUMBER: _ClassVar[int]
+    TERMINAL_OUTPUT_FIELD_NUMBER: _ClassVar[int]
+    PROCESS_ERROR_FIELD_NUMBER: _ClassVar[int]
+    EXIT_CODE_FIELD_NUMBER: _ClassVar[int]
+    SANDBOX_ERROR_FIELD_NUMBER: _ClassVar[int]
+    stdin: _containers.RepeatedScalarFieldContainer[bytes]
+    stdout: bytes
+    stderr: bytes
+    terminal_output: bytes
+    process_error: str
+    exit_code: _wrappers_pb2.Int32Value
+    sandbox_error: str
+    def __init__(self, stdin: _Optional[_Iterable[bytes]] = ..., stdout: _Optional[bytes] = ..., stderr: _Optional[bytes] = ..., terminal_output: _Optional[bytes] = ..., process_error: _Optional[str] = ..., exit_code: _Optional[_Union[_wrappers_pb2.Int32Value, _Mapping]] = ..., sandbox_error: _Optional[str] = ...) -> None: ...
