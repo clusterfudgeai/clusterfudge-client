@@ -771,7 +771,7 @@ class Client:
         self,
         sandbox_id: str,
         process_id: str,
-        input_bytes: bytes,
+        input_bytes: bytes | str,
         wait_for_response_ms: int = 300,
     ) -> dict:
         """Write bytes to a process stdin and wait for a response.
@@ -789,6 +789,8 @@ class Client:
         Raises:
             Exception: If the operation fails
         """
+        if isinstance(input_bytes, str):
+            input_bytes = input_bytes.encode("utf-8")
         try:
             response = await self.sandbox_stub.WriteToProcess(
                 sandboxes_pb2.WriteToProcessRequest(

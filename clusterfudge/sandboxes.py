@@ -585,7 +585,7 @@ class FileEditorClient:
         Returns:
             File contents
         """
-        params = {
+        params: dict[str, Any] = {
             "command": "view",
             "path": path,
         }
@@ -776,7 +776,7 @@ class ProcessClient:
         self.clusterfudge_client = clusterfudge_client
 
     async def write_to_process(
-        self, process_id: str, input_bytes: bytes, wait_for_response_ms: int = 300
+        self, process_id: str, input_bytes: bytes | str, wait_for_response_ms: int = 300
     ) -> dict:
         """Write bytes to a process and wait for a response.
 
@@ -846,7 +846,9 @@ class FileManagerClient:
 
         return response.get("contents", b""), response.get("sandbox_error")
 
-    async def download_folder(self, absolute_folder_path: str) -> tuple[bytes, str | None]:
+    async def download_folder(
+        self, absolute_folder_path: str
+    ) -> tuple[bytes, str | None]:
         """Download a folder from the sandbox as a zip file.
 
         Args:
