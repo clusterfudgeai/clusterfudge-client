@@ -1,5 +1,6 @@
 import asyncio
 import dataclasses
+import getpass
 import inspect
 import io
 import json
@@ -281,6 +282,7 @@ class Client:
     def __init__(self, base_url: str | None = None, api_key: str | None = None):
         self.base_url = base_url or "api.clusterfudge.com:443"
         self.api_key = api_key or self._load_config_from_file().token
+        self.sandbox_display_name_increment = 0
 
         # Check if base_url starts with "localhost"
         if self.base_url.startswith("localhost"):
@@ -382,6 +384,18 @@ class Client:
             launches_pb2.GetLaunchDetailsRequest(id=launch_id)
         )
 
+    def _display_name_or_default(self, params: Optional[SandboxParams] = None) -> str:
+        if params and params.display_name:
+            return params.display_name
+
+        self.sandbox_display_name_increment += 1
+
+        username = getpass.getuser()
+        if username:
+            return f"{username}'s sandbox #{self.sandbox_display_name_increment}"
+
+        return f"Unnamed sandbox #{self.sandbox_display_name_increment}"
+
     async def create_sandbox(self, params: Optional[SandboxParams] = None) -> str:
         """
         Create a new sandbox and wait for it to be ready.
@@ -410,7 +424,7 @@ class Client:
         request = sandboxes_pb2.CreateSandboxRequest(
             sidecar_pod_definitions=sidecar_pod_definitions,
             image_tag=image_tag,
-            display_name=params.display_name if params else None,
+            display_name=self._display_name_or_default(params),
         )
 
         try:
