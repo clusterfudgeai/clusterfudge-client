@@ -169,7 +169,7 @@ class IngestLogResponse(_message.Message):
     def __init__(self) -> None: ...
 
 class IngestNodeRequest(_message.Message):
-    __slots__ = ("host_name", "ips", "architecture", "build", "agent_version", "family", "platform", "version", "boot_time", "cpu_throttled", "nvidia", "infiniband_devices", "devices_with_acs_enabled", "devices_with_acs_disabled", "partitions", "cpus_summary", "memory", "node", "fudgelet_version", "scraped_at", "fudgelet_config", "cluster", "shard")
+    __slots__ = ("host_name", "ips", "architecture", "build", "agent_version", "family", "platform", "version", "boot_time", "cpu_throttled", "nvidia", "infiniband_devices", "devices_with_acs_enabled", "devices_with_acs_disabled", "partitions", "cpus_summary", "memory", "node", "fudgelet_version", "scraped_at", "fudgelet_config", "cluster", "shard", "slurm_cluster")
     HOST_NAME_FIELD_NUMBER: _ClassVar[int]
     IPS_FIELD_NUMBER: _ClassVar[int]
     ARCHITECTURE_FIELD_NUMBER: _ClassVar[int]
@@ -193,6 +193,7 @@ class IngestNodeRequest(_message.Message):
     FUDGELET_CONFIG_FIELD_NUMBER: _ClassVar[int]
     CLUSTER_FIELD_NUMBER: _ClassVar[int]
     SHARD_FIELD_NUMBER: _ClassVar[int]
+    SLURM_CLUSTER_FIELD_NUMBER: _ClassVar[int]
     host_name: str
     ips: _containers.RepeatedScalarFieldContainer[str]
     architecture: str
@@ -216,7 +217,8 @@ class IngestNodeRequest(_message.Message):
     fudgelet_config: FudgeletConfig
     cluster: str
     shard: str
-    def __init__(self, host_name: _Optional[str] = ..., ips: _Optional[_Iterable[str]] = ..., architecture: _Optional[str] = ..., build: _Optional[str] = ..., agent_version: _Optional[str] = ..., family: _Optional[str] = ..., platform: _Optional[str] = ..., version: _Optional[str] = ..., boot_time: _Optional[str] = ..., cpu_throttled: bool = ..., nvidia: _Optional[_Union[Nvidia, _Mapping]] = ..., infiniband_devices: _Optional[_Iterable[_Union[InfinibandDevice, _Mapping]]] = ..., devices_with_acs_enabled: _Optional[int] = ..., devices_with_acs_disabled: _Optional[int] = ..., partitions: _Optional[_Iterable[_Union[DiskPartition, _Mapping]]] = ..., cpus_summary: _Optional[_Union[CpusSummary, _Mapping]] = ..., memory: _Optional[_Union[Memory, _Mapping]] = ..., node: _Optional[_Union[NodeV2, _Mapping]] = ..., fudgelet_version: _Optional[str] = ..., scraped_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., fudgelet_config: _Optional[_Union[FudgeletConfig, _Mapping]] = ..., cluster: _Optional[str] = ..., shard: _Optional[str] = ...) -> None: ...
+    slurm_cluster: str
+    def __init__(self, host_name: _Optional[str] = ..., ips: _Optional[_Iterable[str]] = ..., architecture: _Optional[str] = ..., build: _Optional[str] = ..., agent_version: _Optional[str] = ..., family: _Optional[str] = ..., platform: _Optional[str] = ..., version: _Optional[str] = ..., boot_time: _Optional[str] = ..., cpu_throttled: bool = ..., nvidia: _Optional[_Union[Nvidia, _Mapping]] = ..., infiniband_devices: _Optional[_Iterable[_Union[InfinibandDevice, _Mapping]]] = ..., devices_with_acs_enabled: _Optional[int] = ..., devices_with_acs_disabled: _Optional[int] = ..., partitions: _Optional[_Iterable[_Union[DiskPartition, _Mapping]]] = ..., cpus_summary: _Optional[_Union[CpusSummary, _Mapping]] = ..., memory: _Optional[_Union[Memory, _Mapping]] = ..., node: _Optional[_Union[NodeV2, _Mapping]] = ..., fudgelet_version: _Optional[str] = ..., scraped_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., fudgelet_config: _Optional[_Union[FudgeletConfig, _Mapping]] = ..., cluster: _Optional[str] = ..., shard: _Optional[str] = ..., slurm_cluster: _Optional[str] = ...) -> None: ...
 
 class NodeV2(_message.Message):
     __slots__ = ("hostname", "ips", "architecture", "build", "agent_version", "family", "platform", "version", "boot_time", "scraped_at", "cpu_throttled", "nvidia", "infiniband_devices", "devices_with_acs_enabled", "devices_with_acs_disabled", "partitions", "cpus_summary", "memory", "aws_instance_metadata", "system_configuration")
@@ -709,19 +711,47 @@ class IngestAgentStatsResponse(_message.Message):
     __slots__ = ()
     def __init__(self) -> None: ...
 
+class IngestNodeMetricsRequest(_message.Message):
+    __slots__ = ("hostname", "scraped_at_unix_seconds", "cpu_utilization", "gpu_metrics", "slurm_cluster")
+    HOSTNAME_FIELD_NUMBER: _ClassVar[int]
+    SCRAPED_AT_UNIX_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    CPU_UTILIZATION_FIELD_NUMBER: _ClassVar[int]
+    GPU_METRICS_FIELD_NUMBER: _ClassVar[int]
+    SLURM_CLUSTER_FIELD_NUMBER: _ClassVar[int]
+    hostname: str
+    scraped_at_unix_seconds: int
+    cpu_utilization: float
+    gpu_metrics: _containers.RepeatedCompositeFieldContainer[GPUMetrics]
+    slurm_cluster: str
+    def __init__(self, hostname: _Optional[str] = ..., scraped_at_unix_seconds: _Optional[int] = ..., cpu_utilization: _Optional[float] = ..., gpu_metrics: _Optional[_Iterable[_Union[GPUMetrics, _Mapping]]] = ..., slurm_cluster: _Optional[str] = ...) -> None: ...
+
+class IngestNodeMetricsResponse(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...
+
 class GPUMetrics(_message.Message):
-    __slots__ = ("power_usage", "temperature", "utilization", "memory_utilization", "gpu_processes")
-    POWER_USAGE_FIELD_NUMBER: _ClassVar[int]
-    TEMPERATURE_FIELD_NUMBER: _ClassVar[int]
-    UTILIZATION_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ("name", "uuid", "serial", "index", "memory_used", "memory_total", "memory_utilization", "utilization", "temperature_celsius", "power_draw_milliwatts")
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    UUID_FIELD_NUMBER: _ClassVar[int]
+    SERIAL_FIELD_NUMBER: _ClassVar[int]
+    INDEX_FIELD_NUMBER: _ClassVar[int]
+    MEMORY_USED_FIELD_NUMBER: _ClassVar[int]
+    MEMORY_TOTAL_FIELD_NUMBER: _ClassVar[int]
     MEMORY_UTILIZATION_FIELD_NUMBER: _ClassVar[int]
-    GPU_PROCESSES_FIELD_NUMBER: _ClassVar[int]
-    power_usage: int
-    temperature: int
-    utilization: int
+    UTILIZATION_FIELD_NUMBER: _ClassVar[int]
+    TEMPERATURE_CELSIUS_FIELD_NUMBER: _ClassVar[int]
+    POWER_DRAW_MILLIWATTS_FIELD_NUMBER: _ClassVar[int]
+    name: str
+    uuid: str
+    serial: str
+    index: int
+    memory_used: int
+    memory_total: int
     memory_utilization: int
-    gpu_processes: _containers.RepeatedCompositeFieldContainer[GPUProcessMetrics]
-    def __init__(self, power_usage: _Optional[int] = ..., temperature: _Optional[int] = ..., utilization: _Optional[int] = ..., memory_utilization: _Optional[int] = ..., gpu_processes: _Optional[_Iterable[_Union[GPUProcessMetrics, _Mapping]]] = ...) -> None: ...
+    utilization: int
+    temperature_celsius: int
+    power_draw_milliwatts: int
+    def __init__(self, name: _Optional[str] = ..., uuid: _Optional[str] = ..., serial: _Optional[str] = ..., index: _Optional[int] = ..., memory_used: _Optional[int] = ..., memory_total: _Optional[int] = ..., memory_utilization: _Optional[int] = ..., utilization: _Optional[int] = ..., temperature_celsius: _Optional[int] = ..., power_draw_milliwatts: _Optional[int] = ...) -> None: ...
 
 class GPUProcessMetrics(_message.Message):
     __slots__ = ("run_time", "file_descriptors", "resident_memory_bytes", "virtual_memory", "threads", "cpu_utilization", "memory_utilization", "gpu_memory_utilization")
@@ -943,7 +973,21 @@ class Link(_message.Message):
     def __init__(self, url: _Optional[str] = ...) -> None: ...
 
 class SlurmJob(_message.Message):
-    __slots__ = ("tenant_id", "cluster", "job_id", "job_name", "partition", "account", "user", "state", "exit_code", "submit", "start", "end", "nodes", "work_dir", "submit_line", "std_out", "std_err", "extra", "batch_script", "source_hostname", "log_files", "links", "alloc_cpus", "max_rss_bytes", "req_cpus", "req_mem_bytes", "alloc_tres", "req_tres", "alloc_gpus", "req_gpus", "array_job_master_id", "array_job_index")
+    __slots__ = ("tenant_id", "cluster", "job_id", "job_name", "partition", "account", "user", "state", "exit_code", "submit", "start", "end", "nodes", "work_dir", "submit_line", "std_out", "std_err", "extra", "batch_script", "source_hostname", "log_files", "links", "alloc_cpus", "max_rss_bytes", "req_cpus", "req_mem_bytes", "alloc_tres", "req_tres", "alloc_gpus", "req_gpus", "array_job_master_id", "array_job_index", "alloc_tres_parsed", "req_tres_parsed", "gres_detail")
+    class AllocTresParsedEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: int
+        def __init__(self, key: _Optional[str] = ..., value: _Optional[int] = ...) -> None: ...
+    class ReqTresParsedEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: int
+        def __init__(self, key: _Optional[str] = ..., value: _Optional[int] = ...) -> None: ...
     TENANT_ID_FIELD_NUMBER: _ClassVar[int]
     CLUSTER_FIELD_NUMBER: _ClassVar[int]
     JOB_ID_FIELD_NUMBER: _ClassVar[int]
@@ -976,6 +1020,9 @@ class SlurmJob(_message.Message):
     REQ_GPUS_FIELD_NUMBER: _ClassVar[int]
     ARRAY_JOB_MASTER_ID_FIELD_NUMBER: _ClassVar[int]
     ARRAY_JOB_INDEX_FIELD_NUMBER: _ClassVar[int]
+    ALLOC_TRES_PARSED_FIELD_NUMBER: _ClassVar[int]
+    REQ_TRES_PARSED_FIELD_NUMBER: _ClassVar[int]
+    GRES_DETAIL_FIELD_NUMBER: _ClassVar[int]
     tenant_id: str
     cluster: str
     job_id: str
@@ -1008,21 +1055,26 @@ class SlurmJob(_message.Message):
     req_gpus: int
     array_job_master_id: str
     array_job_index: str
-    def __init__(self, tenant_id: _Optional[str] = ..., cluster: _Optional[str] = ..., job_id: _Optional[str] = ..., job_name: _Optional[str] = ..., partition: _Optional[str] = ..., account: _Optional[str] = ..., user: _Optional[str] = ..., state: _Optional[str] = ..., exit_code: _Optional[str] = ..., submit: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., start: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., end: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., nodes: _Optional[_Iterable[str]] = ..., work_dir: _Optional[str] = ..., submit_line: _Optional[str] = ..., std_out: _Optional[str] = ..., std_err: _Optional[str] = ..., extra: _Optional[str] = ..., batch_script: _Optional[str] = ..., source_hostname: _Optional[str] = ..., log_files: _Optional[_Iterable[_Union[SlurmLogFile, _Mapping]]] = ..., links: _Optional[_Iterable[_Union[Link, _Mapping]]] = ..., alloc_cpus: _Optional[int] = ..., max_rss_bytes: _Optional[int] = ..., req_cpus: _Optional[int] = ..., req_mem_bytes: _Optional[int] = ..., alloc_tres: _Optional[str] = ..., req_tres: _Optional[str] = ..., alloc_gpus: _Optional[int] = ..., req_gpus: _Optional[int] = ..., array_job_master_id: _Optional[str] = ..., array_job_index: _Optional[str] = ...) -> None: ...
+    alloc_tres_parsed: _containers.ScalarMap[str, int]
+    req_tres_parsed: _containers.ScalarMap[str, int]
+    gres_detail: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, tenant_id: _Optional[str] = ..., cluster: _Optional[str] = ..., job_id: _Optional[str] = ..., job_name: _Optional[str] = ..., partition: _Optional[str] = ..., account: _Optional[str] = ..., user: _Optional[str] = ..., state: _Optional[str] = ..., exit_code: _Optional[str] = ..., submit: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., start: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., end: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., nodes: _Optional[_Iterable[str]] = ..., work_dir: _Optional[str] = ..., submit_line: _Optional[str] = ..., std_out: _Optional[str] = ..., std_err: _Optional[str] = ..., extra: _Optional[str] = ..., batch_script: _Optional[str] = ..., source_hostname: _Optional[str] = ..., log_files: _Optional[_Iterable[_Union[SlurmLogFile, _Mapping]]] = ..., links: _Optional[_Iterable[_Union[Link, _Mapping]]] = ..., alloc_cpus: _Optional[int] = ..., max_rss_bytes: _Optional[int] = ..., req_cpus: _Optional[int] = ..., req_mem_bytes: _Optional[int] = ..., alloc_tres: _Optional[str] = ..., req_tres: _Optional[str] = ..., alloc_gpus: _Optional[int] = ..., req_gpus: _Optional[int] = ..., array_job_master_id: _Optional[str] = ..., array_job_index: _Optional[str] = ..., alloc_tres_parsed: _Optional[_Mapping[str, int]] = ..., req_tres_parsed: _Optional[_Mapping[str, int]] = ..., gres_detail: _Optional[_Iterable[str]] = ...) -> None: ...
 
 class SlurmLogFile(_message.Message):
-    __slots__ = ("path", "content", "last_modified", "collected_at", "hash")
+    __slots__ = ("path", "content", "last_modified", "collected_at", "hash", "append_content")
     PATH_FIELD_NUMBER: _ClassVar[int]
     CONTENT_FIELD_NUMBER: _ClassVar[int]
     LAST_MODIFIED_FIELD_NUMBER: _ClassVar[int]
     COLLECTED_AT_FIELD_NUMBER: _ClassVar[int]
     HASH_FIELD_NUMBER: _ClassVar[int]
+    APPEND_CONTENT_FIELD_NUMBER: _ClassVar[int]
     path: str
     content: bytes
     last_modified: _timestamp_pb2.Timestamp
     collected_at: _timestamp_pb2.Timestamp
     hash: str
-    def __init__(self, path: _Optional[str] = ..., content: _Optional[bytes] = ..., last_modified: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., collected_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., hash: _Optional[str] = ...) -> None: ...
+    append_content: bytes
+    def __init__(self, path: _Optional[str] = ..., content: _Optional[bytes] = ..., last_modified: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., collected_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., hash: _Optional[str] = ..., append_content: _Optional[bytes] = ...) -> None: ...
 
 class IngestSlurmJobsResponse(_message.Message):
     __slots__ = ()

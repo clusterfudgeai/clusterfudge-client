@@ -1,5 +1,6 @@
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from google.protobuf import wrappers_pb2 as _wrappers_pb2
+from pagespb import pages_pb2 as _pages_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
@@ -8,15 +9,49 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class MintAuthTokenRequest(_message.Message):
+    __slots__ = ("machine_id",)
+    MACHINE_ID_FIELD_NUMBER: _ClassVar[int]
+    machine_id: str
+    def __init__(self, machine_id: _Optional[str] = ...) -> None: ...
+
+class MintAuthTokenResponse(_message.Message):
+    __slots__ = ("auth_token",)
+    AUTH_TOKEN_FIELD_NUMBER: _ClassVar[int]
+    auth_token: str
+    def __init__(self, auth_token: _Optional[str] = ...) -> None: ...
+
 class CreateSandboxRequest(_message.Message):
-    __slots__ = ("image_tag", "sidecar_pod_definitions", "display_name")
+    __slots__ = ("image_tag", "sidecar_pod_definitions", "display_name", "config")
     IMAGE_TAG_FIELD_NUMBER: _ClassVar[int]
     SIDECAR_POD_DEFINITIONS_FIELD_NUMBER: _ClassVar[int]
     DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
+    CONFIG_FIELD_NUMBER: _ClassVar[int]
     image_tag: str
     sidecar_pod_definitions: _containers.RepeatedScalarFieldContainer[str]
     display_name: str
-    def __init__(self, image_tag: _Optional[str] = ..., sidecar_pod_definitions: _Optional[_Iterable[str]] = ..., display_name: _Optional[str] = ...) -> None: ...
+    config: SandboxConfig
+    def __init__(self, image_tag: _Optional[str] = ..., sidecar_pod_definitions: _Optional[_Iterable[str]] = ..., display_name: _Optional[str] = ..., config: _Optional[_Union[SandboxConfig, _Mapping]] = ...) -> None: ...
+
+class SandboxConfig(_message.Message):
+    __slots__ = ("sandboxlet",)
+    SANDBOXLET_FIELD_NUMBER: _ClassVar[int]
+    sandboxlet: SandboxletConfig
+    def __init__(self, sandboxlet: _Optional[_Union[SandboxletConfig, _Mapping]] = ...) -> None: ...
+
+class SandboxletConfig(_message.Message):
+    __slots__ = ("proxied_paths",)
+    PROXIED_PATHS_FIELD_NUMBER: _ClassVar[int]
+    proxied_paths: _containers.RepeatedCompositeFieldContainer[ProxiedPath]
+    def __init__(self, proxied_paths: _Optional[_Iterable[_Union[ProxiedPath, _Mapping]]] = ...) -> None: ...
+
+class ProxiedPath(_message.Message):
+    __slots__ = ("incoming_path", "outgoing_port")
+    INCOMING_PATH_FIELD_NUMBER: _ClassVar[int]
+    OUTGOING_PORT_FIELD_NUMBER: _ClassVar[int]
+    incoming_path: str
+    outgoing_port: int
+    def __init__(self, incoming_path: _Optional[str] = ..., outgoing_port: _Optional[int] = ...) -> None: ...
 
 class CreateSandboxResponse(_message.Message):
     __slots__ = ("sandbox",)
@@ -25,16 +60,22 @@ class CreateSandboxResponse(_message.Message):
     def __init__(self, sandbox: _Optional[_Union[Sandbox, _Mapping]] = ...) -> None: ...
 
 class ListSandboxesRequest(_message.Message):
-    __slots__ = ()
-    def __init__(self) -> None: ...
+    __slots__ = ("page", "statuses")
+    PAGE_FIELD_NUMBER: _ClassVar[int]
+    STATUSES_FIELD_NUMBER: _ClassVar[int]
+    page: _pages_pb2.Page
+    statuses: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, page: _Optional[_Union[_pages_pb2.Page, _Mapping]] = ..., statuses: _Optional[_Iterable[str]] = ...) -> None: ...
 
 class ListSandboxesResponse(_message.Message):
-    __slots__ = ("sandboxes", "aggregates")
+    __slots__ = ("sandboxes", "aggregates", "page_details")
     SANDBOXES_FIELD_NUMBER: _ClassVar[int]
     AGGREGATES_FIELD_NUMBER: _ClassVar[int]
+    PAGE_DETAILS_FIELD_NUMBER: _ClassVar[int]
     sandboxes: _containers.RepeatedCompositeFieldContainer[Sandbox]
     aggregates: SandboxAggregates
-    def __init__(self, sandboxes: _Optional[_Iterable[_Union[Sandbox, _Mapping]]] = ..., aggregates: _Optional[_Union[SandboxAggregates, _Mapping]] = ...) -> None: ...
+    page_details: _pages_pb2.PageDetails
+    def __init__(self, sandboxes: _Optional[_Iterable[_Union[Sandbox, _Mapping]]] = ..., aggregates: _Optional[_Union[SandboxAggregates, _Mapping]] = ..., page_details: _Optional[_Union[_pages_pb2.PageDetails, _Mapping]] = ...) -> None: ...
 
 class SandboxAggregates(_message.Message):
     __slots__ = ("total_sandboxes", "total_running_sandboxes", "total_sandbox_seconds")
@@ -169,16 +210,18 @@ class GetComputerUseRequestLogsResponse(_message.Message):
     def __init__(self, logs: _Optional[_Iterable[_Union[ComputerUseRequestLog, _Mapping]]] = ...) -> None: ...
 
 class ComputerUseRequestLog(_message.Message):
-    __slots__ = ("request_timestamp", "raw_request_contents", "response_timestamp", "raw_response_contents")
+    __slots__ = ("request_timestamp", "raw_request_contents", "response_timestamp", "raw_response_contents", "method")
     REQUEST_TIMESTAMP_FIELD_NUMBER: _ClassVar[int]
     RAW_REQUEST_CONTENTS_FIELD_NUMBER: _ClassVar[int]
     RESPONSE_TIMESTAMP_FIELD_NUMBER: _ClassVar[int]
     RAW_RESPONSE_CONTENTS_FIELD_NUMBER: _ClassVar[int]
+    METHOD_FIELD_NUMBER: _ClassVar[int]
     request_timestamp: _timestamp_pb2.Timestamp
     raw_request_contents: bytes
     response_timestamp: _timestamp_pb2.Timestamp
     raw_response_contents: bytes
-    def __init__(self, request_timestamp: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., raw_request_contents: _Optional[bytes] = ..., response_timestamp: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., raw_response_contents: _Optional[bytes] = ...) -> None: ...
+    method: str
+    def __init__(self, request_timestamp: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., raw_request_contents: _Optional[bytes] = ..., response_timestamp: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., raw_response_contents: _Optional[bytes] = ..., method: _Optional[str] = ...) -> None: ...
 
 class WriteToTerminalRequest(_message.Message):
     __slots__ = ("machine_id", "terminal_id", "input", "wait_for_response_ms")

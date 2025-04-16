@@ -94,6 +94,11 @@ class FudgeletStub(object):
                 request_serializer=fudgelet_dot_fudgelet__pb2.IngestSlurmNodesRequest.SerializeToString,
                 response_deserializer=fudgelet_dot_fudgelet__pb2.IngestSlurmNodesResponse.FromString,
                 _registered_method=True)
+        self.IngestNodeMetrics = channel.unary_unary(
+                '/clusterfudge.Fudgelet/IngestNodeMetrics',
+                request_serializer=fudgelet_dot_fudgelet__pb2.IngestNodeMetricsRequest.SerializeToString,
+                response_deserializer=fudgelet_dot_fudgelet__pb2.IngestNodeMetricsResponse.FromString,
+                _registered_method=True)
 
 
 class FudgeletServicer(object):
@@ -165,6 +170,12 @@ class FudgeletServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def IngestNodeMetrics(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_FudgeletServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -222,6 +233,11 @@ def add_FudgeletServicer_to_server(servicer, server):
                     servicer.IngestSlurmNodes,
                     request_deserializer=fudgelet_dot_fudgelet__pb2.IngestSlurmNodesRequest.FromString,
                     response_serializer=fudgelet_dot_fudgelet__pb2.IngestSlurmNodesResponse.SerializeToString,
+            ),
+            'IngestNodeMetrics': grpc.unary_unary_rpc_method_handler(
+                    servicer.IngestNodeMetrics,
+                    request_deserializer=fudgelet_dot_fudgelet__pb2.IngestNodeMetricsRequest.FromString,
+                    response_serializer=fudgelet_dot_fudgelet__pb2.IngestNodeMetricsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -521,6 +537,33 @@ class Fudgelet(object):
             '/clusterfudge.Fudgelet/IngestSlurmNodes',
             fudgelet_dot_fudgelet__pb2.IngestSlurmNodesRequest.SerializeToString,
             fudgelet_dot_fudgelet__pb2.IngestSlurmNodesResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def IngestNodeMetrics(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/clusterfudge.Fudgelet/IngestNodeMetrics',
+            fudgelet_dot_fudgelet__pb2.IngestNodeMetricsRequest.SerializeToString,
+            fudgelet_dot_fudgelet__pb2.IngestNodeMetricsResponse.FromString,
             options,
             channel_credentials,
             insecure,

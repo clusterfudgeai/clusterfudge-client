@@ -59,6 +59,11 @@ class SandboxesStub(object):
                 request_serializer=sandboxespb_dot_sandboxes__pb2.GetSandboxRequest.SerializeToString,
                 response_deserializer=sandboxespb_dot_sandboxes__pb2.GetSandboxResponse.FromString,
                 _registered_method=True)
+        self.MintAuthToken = channel.unary_unary(
+                '/sandboxespb.Sandboxes/MintAuthToken',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.MintAuthTokenRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.MintAuthTokenResponse.FromString,
+                _registered_method=True)
         self.ComputerUse = channel.unary_unary(
                 '/sandboxespb.Sandboxes/ComputerUse',
                 request_serializer=sandboxespb_dot_sandboxes__pb2.ComputerUseRequest.SerializeToString,
@@ -153,6 +158,12 @@ class SandboxesServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def GetSandbox(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def MintAuthToken(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -264,6 +275,11 @@ def add_SandboxesServicer_to_server(servicer, server):
                     servicer.GetSandbox,
                     request_deserializer=sandboxespb_dot_sandboxes__pb2.GetSandboxRequest.FromString,
                     response_serializer=sandboxespb_dot_sandboxes__pb2.GetSandboxResponse.SerializeToString,
+            ),
+            'MintAuthToken': grpc.unary_unary_rpc_method_handler(
+                    servicer.MintAuthToken,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.MintAuthTokenRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.MintAuthTokenResponse.SerializeToString,
             ),
             'ComputerUse': grpc.unary_unary_rpc_method_handler(
                     servicer.ComputerUse,
@@ -444,6 +460,33 @@ class Sandboxes(object):
             '/sandboxespb.Sandboxes/GetSandbox',
             sandboxespb_dot_sandboxes__pb2.GetSandboxRequest.SerializeToString,
             sandboxespb_dot_sandboxes__pb2.GetSandboxResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def MintAuthToken(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/MintAuthToken',
+            sandboxespb_dot_sandboxes__pb2.MintAuthTokenRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.MintAuthTokenResponse.FromString,
             options,
             channel_credentials,
             insecure,

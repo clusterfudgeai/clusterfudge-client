@@ -44,6 +44,16 @@ class SlurmStub(object):
                 request_serializer=slurmpb_dot_slurm__pb2.GetSlurmJobRequest.SerializeToString,
                 response_deserializer=slurmpb_dot_slurm__pb2.GetSlurmJobResponse.FromString,
                 _registered_method=True)
+        self.GetSlurmArrayJob = channel.unary_unary(
+                '/clusterfudge.Slurm/GetSlurmArrayJob',
+                request_serializer=slurmpb_dot_slurm__pb2.GetSlurmArrayJobRequest.SerializeToString,
+                response_deserializer=slurmpb_dot_slurm__pb2.GetSlurmArrayJobResponse.FromString,
+                _registered_method=True)
+        self.GetSlurmArrayTasksForJob = channel.unary_unary(
+                '/clusterfudge.Slurm/GetSlurmArrayTasksForJob',
+                request_serializer=slurmpb_dot_slurm__pb2.GetSlurmArrayTasksForJobRequest.SerializeToString,
+                response_deserializer=slurmpb_dot_slurm__pb2.GetSlurmArrayTasksForJobResponse.FromString,
+                _registered_method=True)
         self.ListSlurmJobs = channel.unary_unary(
                 '/clusterfudge.Slurm/ListSlurmJobs',
                 request_serializer=slurmpb_dot_slurm__pb2.ListSlurmJobsRequest.SerializeToString,
@@ -64,12 +74,34 @@ class SlurmStub(object):
                 request_serializer=slurmpb_dot_slurm__pb2.LaunchJupyterRequest.SerializeToString,
                 response_deserializer=slurmpb_dot_slurm__pb2.LaunchJupyterResponse.FromString,
                 _registered_method=True)
+        self.DebugJobWithAI = channel.unary_unary(
+                '/clusterfudge.Slurm/DebugJobWithAI',
+                request_serializer=slurmpb_dot_slurm__pb2.DebugJobWithAIRequest.SerializeToString,
+                response_deserializer=slurmpb_dot_slurm__pb2.DebugJobWithAIResponse.FromString,
+                _registered_method=True)
+        self.LaunchSbatch = channel.unary_unary(
+                '/clusterfudge.Slurm/LaunchSbatch',
+                request_serializer=slurmpb_dot_slurm__pb2.LaunchSbatchRequest.SerializeToString,
+                response_deserializer=slurmpb_dot_slurm__pb2.LaunchSbatchResponse.FromString,
+                _registered_method=True)
 
 
 class SlurmServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def GetSlurmJob(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetSlurmArrayJob(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetSlurmArrayTasksForJob(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -99,6 +131,18 @@ class SlurmServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def DebugJobWithAI(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def LaunchSbatch(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SlurmServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -106,6 +150,16 @@ def add_SlurmServicer_to_server(servicer, server):
                     servicer.GetSlurmJob,
                     request_deserializer=slurmpb_dot_slurm__pb2.GetSlurmJobRequest.FromString,
                     response_serializer=slurmpb_dot_slurm__pb2.GetSlurmJobResponse.SerializeToString,
+            ),
+            'GetSlurmArrayJob': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetSlurmArrayJob,
+                    request_deserializer=slurmpb_dot_slurm__pb2.GetSlurmArrayJobRequest.FromString,
+                    response_serializer=slurmpb_dot_slurm__pb2.GetSlurmArrayJobResponse.SerializeToString,
+            ),
+            'GetSlurmArrayTasksForJob': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetSlurmArrayTasksForJob,
+                    request_deserializer=slurmpb_dot_slurm__pb2.GetSlurmArrayTasksForJobRequest.FromString,
+                    response_serializer=slurmpb_dot_slurm__pb2.GetSlurmArrayTasksForJobResponse.SerializeToString,
             ),
             'ListSlurmJobs': grpc.unary_unary_rpc_method_handler(
                     servicer.ListSlurmJobs,
@@ -126,6 +180,16 @@ def add_SlurmServicer_to_server(servicer, server):
                     servicer.LaunchJupyter,
                     request_deserializer=slurmpb_dot_slurm__pb2.LaunchJupyterRequest.FromString,
                     response_serializer=slurmpb_dot_slurm__pb2.LaunchJupyterResponse.SerializeToString,
+            ),
+            'DebugJobWithAI': grpc.unary_unary_rpc_method_handler(
+                    servicer.DebugJobWithAI,
+                    request_deserializer=slurmpb_dot_slurm__pb2.DebugJobWithAIRequest.FromString,
+                    response_serializer=slurmpb_dot_slurm__pb2.DebugJobWithAIResponse.SerializeToString,
+            ),
+            'LaunchSbatch': grpc.unary_unary_rpc_method_handler(
+                    servicer.LaunchSbatch,
+                    request_deserializer=slurmpb_dot_slurm__pb2.LaunchSbatchRequest.FromString,
+                    response_serializer=slurmpb_dot_slurm__pb2.LaunchSbatchResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -155,6 +219,60 @@ class Slurm(object):
             '/clusterfudge.Slurm/GetSlurmJob',
             slurmpb_dot_slurm__pb2.GetSlurmJobRequest.SerializeToString,
             slurmpb_dot_slurm__pb2.GetSlurmJobResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetSlurmArrayJob(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/clusterfudge.Slurm/GetSlurmArrayJob',
+            slurmpb_dot_slurm__pb2.GetSlurmArrayJobRequest.SerializeToString,
+            slurmpb_dot_slurm__pb2.GetSlurmArrayJobResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetSlurmArrayTasksForJob(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/clusterfudge.Slurm/GetSlurmArrayTasksForJob',
+            slurmpb_dot_slurm__pb2.GetSlurmArrayTasksForJobRequest.SerializeToString,
+            slurmpb_dot_slurm__pb2.GetSlurmArrayTasksForJobResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -263,6 +381,60 @@ class Slurm(object):
             '/clusterfudge.Slurm/LaunchJupyter',
             slurmpb_dot_slurm__pb2.LaunchJupyterRequest.SerializeToString,
             slurmpb_dot_slurm__pb2.LaunchJupyterResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DebugJobWithAI(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/clusterfudge.Slurm/DebugJobWithAI',
+            slurmpb_dot_slurm__pb2.DebugJobWithAIRequest.SerializeToString,
+            slurmpb_dot_slurm__pb2.DebugJobWithAIResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def LaunchSbatch(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/clusterfudge.Slurm/LaunchSbatch',
+            slurmpb_dot_slurm__pb2.LaunchSbatchRequest.SerializeToString,
+            slurmpb_dot_slurm__pb2.LaunchSbatchResponse.FromString,
             options,
             channel_credentials,
             insecure,

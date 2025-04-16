@@ -115,10 +115,22 @@ class QueueingBehaviour:
 
 
 @dataclasses.dataclass
+class ProxiedPath:
+    incoming_path: str
+    sandbox_port: int
+
+
+@dataclasses.dataclass
+class SandboxletConfig:
+    proxied_paths: Optional[list[ProxiedPath]] = None
+
+
+@dataclasses.dataclass
 class SandboxParams:
     sidecar_file_paths: Optional[list[str]] = None
     image_tag: Optional[str] = None
     display_name: Optional[str] = None
+    sandboxlet_config: Optional[SandboxletConfig] = None
 
 
 @dataclasses.dataclass()
@@ -396,6 +408,28 @@ class Client:
 
         return f"Unnamed sandbox #{self.sandbox_display_name_increment}"
 
+    def _proto_sandbox_config_from_params(
+        self, params: Optional[SandboxParams] = None
+    ) -> Optional[sandboxes_pb2.SandboxConfig]:
+        if (
+            not params
+            or not params.sandboxlet_config
+            or not params.sandboxlet_config.proxied_paths
+        ):
+            return None
+
+        return sandboxes_pb2.SandboxConfig(
+            sandboxlet=sandboxes_pb2.SandboxletConfig(
+                proxied_paths=[
+                    sandboxes_pb2.ProxiedPath(
+                        incoming_path=path.incoming_path,
+                        outgoing_port=path.sandbox_port,
+                    )
+                    for path in params.sandboxlet_config.proxied_paths
+                ]
+            )
+        )
+
     async def create_sandbox(self, params: Optional[SandboxParams] = None) -> str:
         """
         Create a new sandbox and wait for it to be ready.
@@ -425,6 +459,7 @@ class Client:
             sidecar_pod_definitions=sidecar_pod_definitions,
             image_tag=image_tag,
             display_name=self._display_name_or_default(params),
+            config=self._proto_sandbox_config_from_params(params),
         )
 
         try:

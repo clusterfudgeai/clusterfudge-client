@@ -1,4 +1,5 @@
 import base64
+import dataclasses
 import json
 import uuid
 from typing import Any, Literal, Union
@@ -10,6 +11,7 @@ from anthropic.types.beta import (
     BetaToolResultBlockParam,
     BetaToolUseBlockParam,
 )
+from clusterfudge_proto.sandboxespb import sandboxes_pb2
 
 from .clusterfudge import Client
 
@@ -175,6 +177,11 @@ BASH_INPUT_SCHEMA = {
         },
     }
 }
+
+
+@dataclasses.dataclass
+class SandboxAuthToken:
+    token: str
 
 
 async def _do_with_anthropic_shim(
@@ -768,6 +775,16 @@ class TerminalClient:
         }
 
 
+@dataclasses.dataclass
+class ProcessResponse:
+    stdin: list[str]
+    stdout: str
+    stderr: str
+    terminal_output: str
+    process_error: str | None
+    exit_code: int | None
+
+
 class ProcessClient:
     """Client for interacting with processes in the sandbox."""
 
@@ -777,7 +794,7 @@ class ProcessClient:
 
     async def write_to_process(
         self, process_id: str, input_bytes: bytes | str, wait_for_response_ms: int = 300
-    ) -> dict:
+    ) -> ProcessResponse:
         """Write bytes to a process and wait for a response.
 
         Args:
@@ -792,7 +809,15 @@ class ProcessClient:
         response = await self.clusterfudge_client.write_to_process(
             self.sandbox_id, process_id, input_bytes, wait_for_response_ms
         )
-        return response  # Return the full response dict
+
+        return ProcessResponse(
+            stdin=response["stdin"],
+            stdout=response["stdout"],
+            stderr=response["stderr"],
+            terminal_output=response["terminal_output"],
+            process_error=response["process_error"],
+            exit_code=response["exit_code"],
+        )
 
     async def kill_process(self, process_id: str) -> dict:
         """Kill a process.
@@ -960,3 +985,14 @@ class SandboxClient:
             ProcessClient instance
         """
         return self._process
+
+    async def mint_auth_token(self) -> SandboxAuthToken:
+        """Mint an auth token for the sandbox.
+
+        Returns:
+            An auth token for the sandbox.
+        """
+        response = await self.clusterfudge_client.sandbox_stub.MintAuthToken(
+            sandboxes_pb2.MintAuthTokenRequest(machine_id=self.sandbox_id)
+        )
+        return SandboxAuthToken(token=response.auth_token)

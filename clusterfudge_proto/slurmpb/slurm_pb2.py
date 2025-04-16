@@ -14,9 +14,10 @@ _sym_db = _symbol_database.Default()
 
 from ..fudgelet import fudgelet_pb2 as fudgelet_dot_fudgelet__pb2
 from ..pagespb import pages_pb2 as pagespb_dot_pages__pb2
+from ..exec import exec_pb2 as exec_dot_exec__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13slurmpb/slurm.proto\x12\x0c\x63lusterfudge\x1a\x17\x66udgelet/fudgelet.proto\x1a\x13pagespb/pages.proto\"5\n\x12GetSlurmJobRequest\x12\x0e\n\x06job_id\x18\x01 \x01(\t\x12\x0f\n\x07\x63luster\x18\x02 \x01(\t\":\n\x13GetSlurmJobResponse\x12#\n\x03job\x18\x01 \x01(\x0b\x32\x16.clusterfudge.SlurmJob\"Y\n\x14ListSlurmJobsRequest\x12 \n\x04page\x18\x01 \x01(\x0b\x32\x12.clusterfudge.Page\x12\r\n\x05users\x18\x02 \x03(\t\x12\x10\n\x08statuses\x18\x03 \x03(\t\"\xb7\x01\n\x15ListSlurmJobsResponse\x12$\n\x04jobs\x18\x01 \x03(\x0b\x32\x16.clusterfudge.SlurmJob\x12/\n\x0cpage_details\x18\x02 \x01(\x0b\x32\x19.clusterfudge.PageDetails\x12\x34\n\naggregates\x18\x03 \x01(\x0b\x32 .clusterfudge.SlurmJobAggregates\x12\x11\n\tall_users\x18\x04 \x03(\t\"\x17\n\x15ListSlurmNodesRequest\"@\n\x16ListSlurmNodesResponse\x12&\n\x05nodes\x18\x01 \x03(\x0b\x32\x17.clusterfudge.SlurmNode\":\n\x15\x43\x61ncelSlurmJobRequest\x12\x0e\n\x06job_id\x18\x01 \x01(\t\x12\x11\n\thead_node\x18\x02 \x01(\t\"\x18\n\x16\x43\x61ncelSlurmJobResponse\"Y\n\x14LaunchJupyterRequest\x12\x18\n\x10virtual_env_path\x18\x01 \x01(\t\x12\x14\n\x0cgpu_per_node\x18\x02 \x01(\x05\x12\x11\n\thead_node\x18\x03 \x01(\t\"\x17\n\x15LaunchJupyterResponse\"L\n\x12SlurmJobAggregates\x12\x1a\n\x12running_jobs_count\x18\x01 \x01(\x05\x12\x1a\n\x12pending_jobs_count\x18\x02 \x01(\x05\x32\xd3\x03\n\x05Slurm\x12T\n\x0bGetSlurmJob\x12 .clusterfudge.GetSlurmJobRequest\x1a!.clusterfudge.GetSlurmJobResponse\"\x00\x12Z\n\rListSlurmJobs\x12\".clusterfudge.ListSlurmJobsRequest\x1a#.clusterfudge.ListSlurmJobsResponse\"\x00\x12]\n\x0eListSlurmNodes\x12#.clusterfudge.ListSlurmNodesRequest\x1a$.clusterfudge.ListSlurmNodesResponse\"\x00\x12]\n\x0e\x43\x61ncelSlurmJob\x12#.clusterfudge.CancelSlurmJobRequest\x1a$.clusterfudge.CancelSlurmJobResponse\"\x00\x12Z\n\rLaunchJupyter\x12\".clusterfudge.LaunchJupyterRequest\x1a#.clusterfudge.LaunchJupyterResponse\"\x00\x42/Z-github.com/clusterfudgeai/fudge/proto/slurmpbb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13slurmpb/slurm.proto\x12\x0c\x63lusterfudge\x1a\x17\x66udgelet/fudgelet.proto\x1a\x13pagespb/pages.proto\x1a\x0f\x65xec/exec.proto\"5\n\x12GetSlurmJobRequest\x12\x0e\n\x06job_id\x18\x01 \x01(\t\x12\x0f\n\x07\x63luster\x18\x02 \x01(\t\":\n\x13GetSlurmJobResponse\x12#\n\x03job\x18\x01 \x01(\x0b\x32\x16.clusterfudge.SlurmJob\"G\n\x17GetSlurmArrayJobRequest\x12\x1b\n\x13\x61rray_master_job_id\x18\x01 \x01(\t\x12\x0f\n\x07\x63luster\x18\x02 \x01(\t\"?\n\x18GetSlurmArrayJobResponse\x12#\n\x03job\x18\x01 \x01(\x0b\x32\x16.clusterfudge.SlurmJob\"O\n\x1fGetSlurmArrayTasksForJobRequest\x12\x1b\n\x13\x61rray_master_job_id\x18\x01 \x01(\t\x12\x0f\n\x07\x63luster\x18\x02 \x01(\t\"I\n GetSlurmArrayTasksForJobResponse\x12%\n\x05tasks\x18\x01 \x03(\x0b\x32\x16.clusterfudge.SlurmJob\"Y\n\x14ListSlurmJobsRequest\x12 \n\x04page\x18\x01 \x01(\x0b\x32\x12.clusterfudge.Page\x12\r\n\x05users\x18\x02 \x03(\t\x12\x10\n\x08statuses\x18\x03 \x03(\t\"\xcd\x01\n\x15ListSlurmJobsResponse\x12$\n\x04jobs\x18\x01 \x03(\x0b\x32\x16.clusterfudge.SlurmJob\x12/\n\x0cpage_details\x18\x02 \x01(\x0b\x32\x19.clusterfudge.PageDetails\x12\x34\n\naggregates\x18\x03 \x01(\x0b\x32 .clusterfudge.SlurmJobAggregates\x12\x11\n\tall_users\x18\x04 \x03(\t\x12\x14\n\x0c\x61ll_clusters\x18\x05 \x03(\t\"\x17\n\x15ListSlurmNodesRequest\"@\n\x16ListSlurmNodesResponse\x12&\n\x05nodes\x18\x01 \x03(\x0b\x32\x17.clusterfudge.SlurmNode\":\n\x15\x43\x61ncelSlurmJobRequest\x12\x0e\n\x06job_id\x18\x01 \x01(\t\x12\x11\n\thead_node\x18\x02 \x01(\t\"\x18\n\x16\x43\x61ncelSlurmJobResponse\"Y\n\x14LaunchJupyterRequest\x12\x18\n\x10virtual_env_path\x18\x01 \x01(\t\x12\x14\n\x0cgpu_per_node\x18\x02 \x01(\x05\x12\x11\n\thead_node\x18\x03 \x01(\t\"\x17\n\x15LaunchJupyterResponse\"8\n\x15\x44\x65\x62ugJobWithAIRequest\x12\x0e\n\x06job_id\x18\x01 \x01(\t\x12\x0f\n\x07\x63luster\x18\x02 \x01(\t\">\n\x16\x44\x65\x62ugJobWithAIResponse\x12\x10\n\x08\x61nalysis\x18\x01 \x01(\t\x12\x12\n\ncreated_at\x18\x02 \x01(\t\"?\n\tUserStats\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x11\n\tjob_count\x18\x02 \x01(\x05\x12\x11\n\tgpu_hours\x18\x03 \x01(\x01\"\xf2\x01\n\x12SlurmJobAggregates\x12\x1a\n\x12running_jobs_count\x18\x01 \x01(\x05\x12\x1a\n\x12pending_jobs_count\x18\x02 \x01(\x05\x12\x35\n\x14user_stats_past_week\x18\x03 \x03(\x0b\x32\x17.clusterfudge.UserStats\x12\x36\n\x15user_stats_past_month\x18\x04 \x03(\x0b\x32\x17.clusterfudge.UserStats\x12\x35\n\x14user_stats_past_year\x18\x05 \x03(\x0b\x32\x17.clusterfudge.UserStats\"\xc1\x01\n\x13LaunchSbatchRequest\x12\x11\n\thead_node\x18\x01 \x01(\t\x12\x13\n\x0bscript_path\x18\x02 \x01(\t\x12\x14\n\x0creference_id\x18\x03 \x01(\t\x12\x11\n\tunix_user\x18\x04 \x01(\t\x12\x33\n\x08\x65nv_vars\x18\x05 \x03(\x0b\x32!.clusterfudge.EnvironmentVariable\x12\x0c\n\x04\x61rgs\x18\x06 \x03(\t\x12\x16\n\x0esbatch_content\x18\x07 \x01(\t\">\n\x14LaunchSbatchResponse\x12&\n\x07\x63ommand\x18\x01 \x01(\x0b\x32\x15.clusterfudge.Command2\xed\x06\n\x05Slurm\x12T\n\x0bGetSlurmJob\x12 .clusterfudge.GetSlurmJobRequest\x1a!.clusterfudge.GetSlurmJobResponse\"\x00\x12\x63\n\x10GetSlurmArrayJob\x12%.clusterfudge.GetSlurmArrayJobRequest\x1a&.clusterfudge.GetSlurmArrayJobResponse\"\x00\x12{\n\x18GetSlurmArrayTasksForJob\x12-.clusterfudge.GetSlurmArrayTasksForJobRequest\x1a..clusterfudge.GetSlurmArrayTasksForJobResponse\"\x00\x12Z\n\rListSlurmJobs\x12\".clusterfudge.ListSlurmJobsRequest\x1a#.clusterfudge.ListSlurmJobsResponse\"\x00\x12]\n\x0eListSlurmNodes\x12#.clusterfudge.ListSlurmNodesRequest\x1a$.clusterfudge.ListSlurmNodesResponse\"\x00\x12]\n\x0e\x43\x61ncelSlurmJob\x12#.clusterfudge.CancelSlurmJobRequest\x1a$.clusterfudge.CancelSlurmJobResponse\"\x00\x12Z\n\rLaunchJupyter\x12\".clusterfudge.LaunchJupyterRequest\x1a#.clusterfudge.LaunchJupyterResponse\"\x00\x12]\n\x0e\x44\x65\x62ugJobWithAI\x12#.clusterfudge.DebugJobWithAIRequest\x1a$.clusterfudge.DebugJobWithAIResponse\"\x00\x12W\n\x0cLaunchSbatch\x12!.clusterfudge.LaunchSbatchRequest\x1a\".clusterfudge.LaunchSbatchResponse\"\x00\x42/Z-github.com/clusterfudgeai/fudge/proto/slurmpbb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -24,28 +25,46 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'slurmpb.slurm_pb2', _global
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'Z-github.com/clusterfudgeai/fudge/proto/slurmpb'
-  _globals['_GETSLURMJOBREQUEST']._serialized_start=83
-  _globals['_GETSLURMJOBREQUEST']._serialized_end=136
-  _globals['_GETSLURMJOBRESPONSE']._serialized_start=138
-  _globals['_GETSLURMJOBRESPONSE']._serialized_end=196
-  _globals['_LISTSLURMJOBSREQUEST']._serialized_start=198
-  _globals['_LISTSLURMJOBSREQUEST']._serialized_end=287
-  _globals['_LISTSLURMJOBSRESPONSE']._serialized_start=290
-  _globals['_LISTSLURMJOBSRESPONSE']._serialized_end=473
-  _globals['_LISTSLURMNODESREQUEST']._serialized_start=475
-  _globals['_LISTSLURMNODESREQUEST']._serialized_end=498
-  _globals['_LISTSLURMNODESRESPONSE']._serialized_start=500
-  _globals['_LISTSLURMNODESRESPONSE']._serialized_end=564
-  _globals['_CANCELSLURMJOBREQUEST']._serialized_start=566
-  _globals['_CANCELSLURMJOBREQUEST']._serialized_end=624
-  _globals['_CANCELSLURMJOBRESPONSE']._serialized_start=626
-  _globals['_CANCELSLURMJOBRESPONSE']._serialized_end=650
-  _globals['_LAUNCHJUPYTERREQUEST']._serialized_start=652
-  _globals['_LAUNCHJUPYTERREQUEST']._serialized_end=741
-  _globals['_LAUNCHJUPYTERRESPONSE']._serialized_start=743
-  _globals['_LAUNCHJUPYTERRESPONSE']._serialized_end=766
-  _globals['_SLURMJOBAGGREGATES']._serialized_start=768
-  _globals['_SLURMJOBAGGREGATES']._serialized_end=844
-  _globals['_SLURM']._serialized_start=847
-  _globals['_SLURM']._serialized_end=1314
+  _globals['_GETSLURMJOBREQUEST']._serialized_start=100
+  _globals['_GETSLURMJOBREQUEST']._serialized_end=153
+  _globals['_GETSLURMJOBRESPONSE']._serialized_start=155
+  _globals['_GETSLURMJOBRESPONSE']._serialized_end=213
+  _globals['_GETSLURMARRAYJOBREQUEST']._serialized_start=215
+  _globals['_GETSLURMARRAYJOBREQUEST']._serialized_end=286
+  _globals['_GETSLURMARRAYJOBRESPONSE']._serialized_start=288
+  _globals['_GETSLURMARRAYJOBRESPONSE']._serialized_end=351
+  _globals['_GETSLURMARRAYTASKSFORJOBREQUEST']._serialized_start=353
+  _globals['_GETSLURMARRAYTASKSFORJOBREQUEST']._serialized_end=432
+  _globals['_GETSLURMARRAYTASKSFORJOBRESPONSE']._serialized_start=434
+  _globals['_GETSLURMARRAYTASKSFORJOBRESPONSE']._serialized_end=507
+  _globals['_LISTSLURMJOBSREQUEST']._serialized_start=509
+  _globals['_LISTSLURMJOBSREQUEST']._serialized_end=598
+  _globals['_LISTSLURMJOBSRESPONSE']._serialized_start=601
+  _globals['_LISTSLURMJOBSRESPONSE']._serialized_end=806
+  _globals['_LISTSLURMNODESREQUEST']._serialized_start=808
+  _globals['_LISTSLURMNODESREQUEST']._serialized_end=831
+  _globals['_LISTSLURMNODESRESPONSE']._serialized_start=833
+  _globals['_LISTSLURMNODESRESPONSE']._serialized_end=897
+  _globals['_CANCELSLURMJOBREQUEST']._serialized_start=899
+  _globals['_CANCELSLURMJOBREQUEST']._serialized_end=957
+  _globals['_CANCELSLURMJOBRESPONSE']._serialized_start=959
+  _globals['_CANCELSLURMJOBRESPONSE']._serialized_end=983
+  _globals['_LAUNCHJUPYTERREQUEST']._serialized_start=985
+  _globals['_LAUNCHJUPYTERREQUEST']._serialized_end=1074
+  _globals['_LAUNCHJUPYTERRESPONSE']._serialized_start=1076
+  _globals['_LAUNCHJUPYTERRESPONSE']._serialized_end=1099
+  _globals['_DEBUGJOBWITHAIREQUEST']._serialized_start=1101
+  _globals['_DEBUGJOBWITHAIREQUEST']._serialized_end=1157
+  _globals['_DEBUGJOBWITHAIRESPONSE']._serialized_start=1159
+  _globals['_DEBUGJOBWITHAIRESPONSE']._serialized_end=1221
+  _globals['_USERSTATS']._serialized_start=1223
+  _globals['_USERSTATS']._serialized_end=1286
+  _globals['_SLURMJOBAGGREGATES']._serialized_start=1289
+  _globals['_SLURMJOBAGGREGATES']._serialized_end=1531
+  _globals['_LAUNCHSBATCHREQUEST']._serialized_start=1534
+  _globals['_LAUNCHSBATCHREQUEST']._serialized_end=1727
+  _globals['_LAUNCHSBATCHRESPONSE']._serialized_start=1729
+  _globals['_LAUNCHSBATCHRESPONSE']._serialized_end=1791
+  _globals['_SLURM']._serialized_start=1794
+  _globals['_SLURM']._serialized_end=2671
 # @@protoc_insertion_point(module_scope)
