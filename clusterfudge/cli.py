@@ -152,34 +152,56 @@ async def _login(tenant_id: Optional[str] = None):
             future.set_result(None)
 
         html_content = """
-            <html>
+            <!DOCTYPE html>
+            <html class="h-full bg-gray-50 antialiased">
+
             <head>
+                <title>Clusterfudge - Login</title>
+                <meta name="robots" content="noindex,nofollow">
+                <link rel="icon" type="image/x-icon" href="https://cdn.clusterfudge.com/favicon.ico">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <link rel="preconnect" href="https://fonts.googleapis.com">
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
+                    rel="stylesheet">
+                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
                 <style>
                     body {
-                        font-family: sans-serif;
-                        background-color: hsl(240 10% 3.9%);
-                        text-align: center;
-                        color: white;
-                        font-size: 16px;
+                        font-family: 'Inter', sans-serif;
+                        font-weight: 400;
                     }
+
                     .logo {
-                        font-family: 'Quantico', sans-serif;
-                        text-shadow: 1px 1px 0px red;
-                        letter-spacing: 0.05em;
-                        font-style: italic;
-                        font-weight: 700;
-                        text-transform: uppercase;
-                        font-size: 1.5rem;
-                        margin: 2rem 0;
+                        font-family: 'EB Garamond', sans-serif;
+                        font-weight: 200;
                     }
+                    
                 </style>
+                <style>/* ! tailwindcss v3.4.3 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]{display:none}*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }.mx-4{margin-left:1rem;margin-right:1rem}.mt-10{margin-top:2.5rem}.mt-2{margin-top:0.5rem}.flex{display:flex}.h-full{height:100%}.min-h-full{min-height:100%}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-center{justify-content:center}.gap-5{gap:1.25rem}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity))}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-12{padding-top:3rem;padding-bottom:3rem}.pb-12{padding-bottom:3rem}.pl-2{padding-left:0.5rem}.pt-12{padding-top:3rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.font-semibold{font-weight:600}.leading-6{line-height:1.5rem}.text-gray-900{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity))}.text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity))}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.shadow{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.hover\:text-indigo-500:hover{--tw-text-opacity:1;color:rgb(99 102 241 / var(--tw-text-opacity))}.hover\:underline:hover{-webkit-text-decoration-line:underline;text-decoration-line:underline}@media (min-width: 640px){.sm\:mx-auto{margin-left:auto;margin-right:auto}.sm\:w-full{width:100%}.sm\:max-w-\[480px\]{max-width:480px}.sm\:max-w-md{max-width:28rem}.sm\:rounded-lg{border-radius:0.5rem}.sm\:px-12{padding-left:3rem;padding-right:3rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}}@media (min-width: 1024px){.lg\:px-8{padding-left:2rem;padding-right:2rem}}</style>
             </head>
-            <body>
-                <h1 class="logo">Clusterfudge</h1>
-                <div>
-                    <p style="padding:3em;">Login successful, you can now return to your terminal to start using Clusterfudge.</p>
-                    <p>If you have not already installed the <b>fudgelet</b> on your nodes, please follow the instructions <a href="https://docs.clusterfudge.com/quickstart#2-install-the-fudgelet-on-a-linux-node">here</a>.</p>
-                    <p>More documentation about the Clusterfudge platform can be found <a href="https://docs.clusterfudge.com/">here</a>.</p>
+
+            <body class="h-full">
+
+                <div class="flex min-h-full flex-col justify-center py-12 mx-4 sm:px-6 lg:px-8">
+
+                    <div class="sm:mx-auto sm:w-full sm:max-w-[480px]">
+                        <div class="bg-white px-6 pb-12 pt-12 shadow sm:rounded-lg sm:px-12">
+
+                            <div class="flex items-center justify-center sm:mx-auto sm:w-full sm:max-w-md">
+                                <div class="flex items-center">
+                                    <img src="https://cdn.clusterfudge.com/img/logo-icon.svg" alt="Clusterfudge" width="40" height="40">
+                                    <h2 class="logo flex items-center text-2xl pl-2">Clusterfudge</h2>
+                                </div>
+                            </div>
+
+                            <div class="mt-10 gap-5 text-center text-gray-900">
+                                <p class="text-lg font-semibold">Login successful!</p>
+                                <p class="text-sm mt-2 leading-6">You can now return to your terminal. For more information about the Clusterfudge platform, please visit our <a class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 hover:underline" href="https://docs.clusterfudge.com/" target="_blank" rel="noopener noreferrer">documentation</a>.</p>
+                            </div>
+                        </div>
+
+
+                    </div>
                 </div>
             </body>
             </html>
