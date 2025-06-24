@@ -910,6 +910,36 @@ class FileManagerClient:
         return response
 
 
+class AuditLog:
+    """Audit log entry for a sandbox containing a request and response."""
+
+    def __init__(self, log: sandboxes_pb2.ComputerUseRequestLog):
+        self.raw_log = log
+
+    def request(self) -> dict:
+        return json.loads(self.raw_log.raw_request_contents)
+
+    def response(self) -> dict:
+        return json.loads(self.raw_log.raw_response_contents)
+
+    def get_response_images(self) -> list[bytes]:
+        """Extract screenshot data from the response if present.
+
+        Returns:
+            The decoded screenshot data as bytes, or None if no screenshot found
+        """
+        screenshots = []
+        response_data = self.response()
+        for item in response_data.get("content", []):
+            if (
+                item.get("type") == "image"
+                and item.get("source", {}).get("media_type") == "image/png"
+            ):
+                base64_data = item["source"]["data"]
+                screenshots.append(base64.b64decode(base64_data))
+        return screenshots
+
+
 class SandboxClient:
     """Main client for interacting with a Clusterfudge Sandbox.
 
@@ -996,3 +1026,16 @@ class SandboxClient:
             sandboxes_pb2.MintAuthTokenRequest(machine_id=self.sandbox_id)
         )
         return SandboxAuthToken(token=response.auth_token)
+
+    async def get_audit_logs(self) -> list[AuditLog]:
+        """Get audit logs for the sandbox.
+
+        Returns:
+            A list of audit logs.
+        """
+        response = await self.clusterfudge_client.beta.get_sandbox_audit_logs(
+            sandboxes_pb2.GetComputerUseRequestLogsRequest(
+                machine_id=self.sandbox_id,
+            )
+        )
+        return list(AuditLog(log) for log in response.logs)

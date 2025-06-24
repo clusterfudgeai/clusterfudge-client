@@ -281,13 +281,19 @@ def _proto_req_from_create_launch_request_v2(
 
 
 class BetaClient:
-    def __init__(self, channel: grpc.Channel):
+    def __init__(self, channel: grpc.aio.Channel):
         self.slurm_stub = slurm_pb2_grpc.SlurmStub(channel)
+        self.sandboxes_stub = sandboxes_pb2_grpc.SandboxesStub(channel)
 
     def list_slurm_jobs(
         self, req: slurm_pb2.ListSlurmJobsRequest
     ) -> slurm_pb2.ListSlurmJobsResponse:
         return self.slurm_stub.ListSlurmJobs(req)
+
+    async def get_sandbox_audit_logs(
+        self, req: sandboxes_pb2.GetComputerUseRequestLogsRequest
+    ) -> sandboxes_pb2.GetComputerUseRequestLogsResponse:
+        return await self.sandboxes_stub.GetComputerUseRequestLogs(req)
 
 
 class Client:
@@ -315,7 +321,7 @@ class Client:
         self.launches_stub = launches_pb2_grpc.LaunchesStub(self.channel)
         self.tunnel_stub = tunnel_pb2_grpc.TunnelStub(self.async_channel)
         self.sandbox_stub = sandboxes_pb2_grpc.SandboxesStub(self.async_channel)
-        self.beta = BetaClient(self.channel)
+        self.beta = BetaClient(self.async_channel)
 
     def _load_config_from_file(self) -> ClusterfudgeConfig:
         config_path = os.path.join(
