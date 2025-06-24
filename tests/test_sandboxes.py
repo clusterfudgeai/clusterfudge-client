@@ -1,28 +1,27 @@
 import os
 import sys
-import pytest
-from typing import cast
 from datetime import datetime
+from typing import cast
+
+import pytest
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import clusterfudge
-
 from anthropic import (
     Anthropic,
     APIError,
     APIResponseValidationError,
     APIStatusError,
 )
-
 from anthropic.types.beta import (
-    BetaMessageParam,
-    BetaTextBlockParam,
-    BetaToolUnionParam,
     BetaMessage,
+    BetaMessageParam,
     BetaTextBlock,
-    BetaToolUseBlockParam,
-    BetaToolUseBlock,
+    BetaTextBlockParam,
     BetaToolResultBlockParam,
+    BetaToolUnionParam,
+    BetaToolUseBlock,
+    BetaToolUseBlockParam,
 )
 
 SYSTEM_PROMPT = f"""<SYSTEM_CAPABILITY>
@@ -33,7 +32,7 @@ SYSTEM_PROMPT = f"""<SYSTEM_CAPABILITY>
 * When using your bash tool with commands that are expected to output very large quantities of text, redirect into a tmp file and use str_replace_editor or `grep -n -B <lines before> -A <lines after> <query> <filename>` to confirm output.
 * When viewing a page it can be helpful to zoom out so that you can see everything on the page.  Either that, or make sure you scroll down to see everything before deciding something isn't available.
 * When using your computer function calls, they take a while to run and send back to you.  Where possible/feasible, try to chain multiple of these calls all into one function calls request.
-* The current date is {datetime.today().strftime('%A, %B %-d, %Y')}.
+* The current date is {datetime.today().strftime("%A, %B %-d, %Y")}.
 </SYSTEM_CAPABILITY>
 
 <ENVIRONMENT>
@@ -60,35 +59,35 @@ tools: list[BetaToolUnionParam] = [
         "name": "computer",
         "display_width_px": 1024,
         "display_height_px": 768,
-        "display_number": 1
+        "display_number": 1,
     },
-    {
-        "type": "text_editor_20241022",
-        "name": "str_replace_editor"
-    },
-    {
-        "type": "bash_20241022",
-        "name": "bash"
-    }
+    {"type": "text_editor_20241022", "name": "str_replace_editor"},
+    {"type": "bash_20241022", "name": "bash"},
 ]
+
 
 @pytest.mark.asyncio
 async def test_sdk():
-    """Test the full lifecycle of creating, using and deleting an Imp"""
-    
+    """Test the full lifecycle of creating, using and deleting a Sandbox"""
+
+    if "CLUSTERFUDGE_API_KEY" not in os.environ:
+        pytest.skip()
+
     client = clusterfudge.Client(api_key=os.environ["CLUSTERFUDGE_API_KEY"])
 
     sandbox_id = await client.create_sandbox()
     assert sandbox_id, "Expected non-empty Sandbox ID"
-    
+
     anthropic_client = Anthropic(
         api_key=os.environ["ANTHROPIC_API_KEY"],
     )
 
     initial_prompt = "Navigate to https://cnbc.com, click on the first article you see, save the text of the article to a file called joke.txt on the local machine, then, for fun, edit that file to prefix every proper noun with 'Mc', then dump the contents of that file into a terminal and finally, take a screenshot of the output."
-    
+
     anthropic_messages = [
-        BetaMessageParam(role="user", content=[BetaTextBlockParam(type="text", text=initial_prompt)])
+        BetaMessageParam(
+            role="user", content=[BetaTextBlockParam(type="text", text=initial_prompt)]
+        )
     ]
 
     num_calls = 0
@@ -111,16 +110,22 @@ async def test_sdk():
             raise Exception(f"APIError: {e}")
 
         num_calls += 1
-        anthropic_messages.append(BetaMessageParam(
-            role="assistant",
-            content=_message_to_params(response),
-        ))
+        anthropic_messages.append(
+            BetaMessageParam(
+                role="assistant",
+                content=_message_to_params(response),
+            )
+        )
 
         try:
-            anthropic_messages = await client.claude_computer_use(sandbox_id, anthropic_messages)
+            anthropic_messages = await client.claude_computer_use(
+                sandbox_id, anthropic_messages
+            )
         except Exception as e:
             await client.delete_sandbox(sandbox_id)
-            pytest.fail(f"failed to perform computer-use action inside Sandbox: {str(e)}")
+            pytest.fail(
+                f"failed to perform computer-use action inside Sandbox: {str(e)}"
+            )
 
     try:
         await client.delete_sandbox(sandbox_id)
@@ -128,20 +133,28 @@ async def test_sdk():
         pytest.fail(f"Failed to delete Sandbox: {str(e)}")
 
 
-def _message_to_params(message: BetaMessage) -> list[BetaTextBlockParam | BetaToolUseBlockParam]:
+def _message_to_params(
+    message: BetaMessage,
+) -> list[BetaTextBlockParam | BetaToolUseBlockParam]:
     res: list[BetaTextBlockParam | BetaToolUseBlockParam] = []
     if not message.content:
         return res
 
     for block in message.content:
         if isinstance(block, BetaTextBlock):
-           res.append(BetaTextBlockParam(type="text", text=block.text))
+            res.append(BetaTextBlockParam(type="text", text=block.text))
         elif isinstance(block, BetaToolUseBlock):
-            res.append(BetaToolUseBlockParam(type="tool_use", id=block.id, input=block.input, name=block.name))
+            res.append(
+                BetaToolUseBlockParam(
+                    type="tool_use", id=block.id, input=block.input, name=block.name
+                )
+            )
     return res
 
 
-def _maybe_filter_to_n_most_recent_images(messages: list[BetaMessageParam], max_images: int = 3) -> list[BetaMessageParam]:
+def _maybe_filter_to_n_most_recent_images(
+    messages: list[BetaMessageParam], max_images: int = 3
+) -> list[BetaMessageParam]:
     tool_result_blocks = cast(
         list[BetaToolResultBlockParam],
         [

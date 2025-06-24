@@ -64,11 +64,6 @@ class SandboxesStub(object):
                 request_serializer=sandboxespb_dot_sandboxes__pb2.MintAuthTokenRequest.SerializeToString,
                 response_deserializer=sandboxespb_dot_sandboxes__pb2.MintAuthTokenResponse.FromString,
                 _registered_method=True)
-        self.ComputerUse = channel.unary_unary(
-                '/sandboxespb.Sandboxes/ComputerUse',
-                request_serializer=sandboxespb_dot_sandboxes__pb2.ComputerUseRequest.SerializeToString,
-                response_deserializer=sandboxespb_dot_sandboxes__pb2.ComputerUseResponse.FromString,
-                _registered_method=True)
         self.ClaudeComputerUse = channel.unary_unary(
                 '/sandboxespb.Sandboxes/ClaudeComputerUse',
                 request_serializer=sandboxespb_dot_sandboxes__pb2.ClaudeComputerUseRequest.SerializeToString,
@@ -134,6 +129,66 @@ class SandboxesStub(object):
                 request_serializer=sandboxespb_dot_sandboxes__pb2.GetProcessRequest.SerializeToString,
                 response_deserializer=sandboxespb_dot_sandboxes__pb2.GetProcessResponse.FromString,
                 _registered_method=True)
+        self.Screenshot = channel.unary_unary(
+                '/sandboxespb.Sandboxes/Screenshot',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.ScreenshotRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.ScreenshotResponse.FromString,
+                _registered_method=True)
+        self.Key = channel.unary_unary(
+                '/sandboxespb.Sandboxes/Key',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.KeyRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.KeyResponse.FromString,
+                _registered_method=True)
+        self.Type = channel.unary_unary(
+                '/sandboxespb.Sandboxes/Type',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.TypeRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.TypeResponse.FromString,
+                _registered_method=True)
+        self.MouseMove = channel.unary_unary(
+                '/sandboxespb.Sandboxes/MouseMove',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.MouseMoveRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.MouseMoveResponse.FromString,
+                _registered_method=True)
+        self.LeftClickDrag = channel.unary_unary(
+                '/sandboxespb.Sandboxes/LeftClickDrag',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.LeftClickDragRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.LeftClickDragResponse.FromString,
+                _registered_method=True)
+        self.CursorPosition = channel.unary_unary(
+                '/sandboxespb.Sandboxes/CursorPosition',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.CursorPositionRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.CursorPositionResponse.FromString,
+                _registered_method=True)
+        self.Click = channel.unary_unary(
+                '/sandboxespb.Sandboxes/Click',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.ClickRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.ClickResponse.FromString,
+                _registered_method=True)
+        self.LeftMouseDown = channel.unary_unary(
+                '/sandboxespb.Sandboxes/LeftMouseDown',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.LeftMouseDownRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.LeftMouseDownResponse.FromString,
+                _registered_method=True)
+        self.LeftMouseUp = channel.unary_unary(
+                '/sandboxespb.Sandboxes/LeftMouseUp',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.LeftMouseUpRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.LeftMouseUpResponse.FromString,
+                _registered_method=True)
+        self.Scroll = channel.unary_unary(
+                '/sandboxespb.Sandboxes/Scroll',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.ScrollRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.ScrollResponse.FromString,
+                _registered_method=True)
+        self.HoldKey = channel.unary_unary(
+                '/sandboxespb.Sandboxes/HoldKey',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.HoldKeyRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.HoldKeyResponse.FromString,
+                _registered_method=True)
+        self.Wait = channel.unary_unary(
+                '/sandboxespb.Sandboxes/Wait',
+                request_serializer=sandboxespb_dot_sandboxes__pb2.WaitRequest.SerializeToString,
+                response_deserializer=sandboxespb_dot_sandboxes__pb2.WaitResponse.FromString,
+                _registered_method=True)
 
 
 class SandboxesServicer(object):
@@ -164,12 +219,6 @@ class SandboxesServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def MintAuthToken(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def ComputerUse(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -253,6 +302,79 @@ class SandboxesServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def Screenshot(self, request, context):
+        """Computer-use interface methods
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def Key(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def Type(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def MouseMove(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def LeftClickDrag(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CursorPosition(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def Click(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def LeftMouseDown(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def LeftMouseUp(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def Scroll(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def HoldKey(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def Wait(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SandboxesServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -280,11 +402,6 @@ def add_SandboxesServicer_to_server(servicer, server):
                     servicer.MintAuthToken,
                     request_deserializer=sandboxespb_dot_sandboxes__pb2.MintAuthTokenRequest.FromString,
                     response_serializer=sandboxespb_dot_sandboxes__pb2.MintAuthTokenResponse.SerializeToString,
-            ),
-            'ComputerUse': grpc.unary_unary_rpc_method_handler(
-                    servicer.ComputerUse,
-                    request_deserializer=sandboxespb_dot_sandboxes__pb2.ComputerUseRequest.FromString,
-                    response_serializer=sandboxespb_dot_sandboxes__pb2.ComputerUseResponse.SerializeToString,
             ),
             'ClaudeComputerUse': grpc.unary_unary_rpc_method_handler(
                     servicer.ClaudeComputerUse,
@@ -350,6 +467,66 @@ def add_SandboxesServicer_to_server(servicer, server):
                     servicer.GetProcess,
                     request_deserializer=sandboxespb_dot_sandboxes__pb2.GetProcessRequest.FromString,
                     response_serializer=sandboxespb_dot_sandboxes__pb2.GetProcessResponse.SerializeToString,
+            ),
+            'Screenshot': grpc.unary_unary_rpc_method_handler(
+                    servicer.Screenshot,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.ScreenshotRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.ScreenshotResponse.SerializeToString,
+            ),
+            'Key': grpc.unary_unary_rpc_method_handler(
+                    servicer.Key,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.KeyRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.KeyResponse.SerializeToString,
+            ),
+            'Type': grpc.unary_unary_rpc_method_handler(
+                    servicer.Type,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.TypeRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.TypeResponse.SerializeToString,
+            ),
+            'MouseMove': grpc.unary_unary_rpc_method_handler(
+                    servicer.MouseMove,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.MouseMoveRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.MouseMoveResponse.SerializeToString,
+            ),
+            'LeftClickDrag': grpc.unary_unary_rpc_method_handler(
+                    servicer.LeftClickDrag,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.LeftClickDragRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.LeftClickDragResponse.SerializeToString,
+            ),
+            'CursorPosition': grpc.unary_unary_rpc_method_handler(
+                    servicer.CursorPosition,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.CursorPositionRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.CursorPositionResponse.SerializeToString,
+            ),
+            'Click': grpc.unary_unary_rpc_method_handler(
+                    servicer.Click,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.ClickRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.ClickResponse.SerializeToString,
+            ),
+            'LeftMouseDown': grpc.unary_unary_rpc_method_handler(
+                    servicer.LeftMouseDown,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.LeftMouseDownRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.LeftMouseDownResponse.SerializeToString,
+            ),
+            'LeftMouseUp': grpc.unary_unary_rpc_method_handler(
+                    servicer.LeftMouseUp,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.LeftMouseUpRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.LeftMouseUpResponse.SerializeToString,
+            ),
+            'Scroll': grpc.unary_unary_rpc_method_handler(
+                    servicer.Scroll,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.ScrollRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.ScrollResponse.SerializeToString,
+            ),
+            'HoldKey': grpc.unary_unary_rpc_method_handler(
+                    servicer.HoldKey,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.HoldKeyRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.HoldKeyResponse.SerializeToString,
+            ),
+            'Wait': grpc.unary_unary_rpc_method_handler(
+                    servicer.Wait,
+                    request_deserializer=sandboxespb_dot_sandboxes__pb2.WaitRequest.FromString,
+                    response_serializer=sandboxespb_dot_sandboxes__pb2.WaitResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -487,33 +664,6 @@ class Sandboxes(object):
             '/sandboxespb.Sandboxes/MintAuthToken',
             sandboxespb_dot_sandboxes__pb2.MintAuthTokenRequest.SerializeToString,
             sandboxespb_dot_sandboxes__pb2.MintAuthTokenResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def ComputerUse(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/sandboxespb.Sandboxes/ComputerUse',
-            sandboxespb_dot_sandboxes__pb2.ComputerUseRequest.SerializeToString,
-            sandboxespb_dot_sandboxes__pb2.ComputerUseResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -865,6 +1015,330 @@ class Sandboxes(object):
             '/sandboxespb.Sandboxes/GetProcess',
             sandboxespb_dot_sandboxes__pb2.GetProcessRequest.SerializeToString,
             sandboxespb_dot_sandboxes__pb2.GetProcessResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Screenshot(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/Screenshot',
+            sandboxespb_dot_sandboxes__pb2.ScreenshotRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.ScreenshotResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Key(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/Key',
+            sandboxespb_dot_sandboxes__pb2.KeyRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.KeyResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Type(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/Type',
+            sandboxespb_dot_sandboxes__pb2.TypeRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.TypeResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def MouseMove(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/MouseMove',
+            sandboxespb_dot_sandboxes__pb2.MouseMoveRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.MouseMoveResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def LeftClickDrag(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/LeftClickDrag',
+            sandboxespb_dot_sandboxes__pb2.LeftClickDragRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.LeftClickDragResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CursorPosition(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/CursorPosition',
+            sandboxespb_dot_sandboxes__pb2.CursorPositionRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.CursorPositionResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Click(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/Click',
+            sandboxespb_dot_sandboxes__pb2.ClickRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.ClickResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def LeftMouseDown(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/LeftMouseDown',
+            sandboxespb_dot_sandboxes__pb2.LeftMouseDownRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.LeftMouseDownResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def LeftMouseUp(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/LeftMouseUp',
+            sandboxespb_dot_sandboxes__pb2.LeftMouseUpRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.LeftMouseUpResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Scroll(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/Scroll',
+            sandboxespb_dot_sandboxes__pb2.ScrollRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.ScrollResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def HoldKey(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/HoldKey',
+            sandboxespb_dot_sandboxes__pb2.HoldKeyRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.HoldKeyResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def Wait(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/sandboxespb.Sandboxes/Wait',
+            sandboxespb_dot_sandboxes__pb2.WaitRequest.SerializeToString,
+            sandboxespb_dot_sandboxes__pb2.WaitResponse.FromString,
             options,
             channel_credentials,
             insecure,

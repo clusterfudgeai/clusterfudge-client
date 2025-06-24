@@ -1,6 +1,6 @@
 [project]
 name = "clusterfudge"
-version = "0.63.0"
+version = "0.64.0"
 description = "SDK for the Clusterfudge platform"
 requires-python = ">=3.10"
 readme = "readme.md"
@@ -15,11 +15,14 @@ email = "support@clusterfudge.com"
 requires = [ "hatchling",]
 build-backend = "hatchling.build"
 
+[dependency-groups]
+dev = [ "pytest>=8.4.1", "pytest-asyncio>=1.0.0",]
+
 [project.license]
 text = "Apache-2.0"
 
 [project.optional-dependencies]
-dev = [ "grpcio-tools>=1.69.0", "pytest>=8.3.4", "inspect-ai==0.3.59", "pytest-asyncio>=0.25.3",]
+dev = [ "grpcio-tools>=1.69.0", "inspect-ai==0.3.59",]
 
 [project.urls]
 Homepage = "https://clusterfudge.com"
