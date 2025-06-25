@@ -123,6 +123,7 @@ class ProxiedPath:
 @dataclasses.dataclass
 class SandboxletConfig:
     proxied_paths: Optional[list[ProxiedPath]] = None
+    screen_width_height: Optional[tuple[int, int]] = None
 
 
 @dataclasses.dataclass
@@ -420,19 +421,41 @@ class Client:
         if (
             not params
             or not params.sandboxlet_config
-            or not params.sandboxlet_config.proxied_paths
+            or (
+                not params.sandboxlet_config.proxied_paths
+                and not params.sandboxlet_config.screen_width_height
+            )
         ):
             return None
 
+        if (
+            params.sandboxlet_config.screen_width_height
+            and len(params.sandboxlet_config.screen_width_height) != 2
+        ):
+            raise ValueError(
+                "screen_width_height must be a tuple of two integers (width, height) in pixels."
+            )
+
+        res = (
+            sandboxes_pb2.ScreenResolution(
+                width=params.sandboxlet_config.screen_width_height[0],
+                height=params.sandboxlet_config.screen_width_height[1],
+            )
+            if params.sandboxlet_config.screen_width_height
+            else None
+        )
+
         return sandboxes_pb2.SandboxConfig(
             sandboxlet=sandboxes_pb2.SandboxletConfig(
+                screen_resolution=res,
                 proxied_paths=[
                     sandboxes_pb2.ProxiedPath(
                         incoming_path=path.incoming_path,
                         outgoing_port=path.sandbox_port,
                     )
-                    for path in params.sandboxlet_config.proxied_paths
+                    for path in (params.sandboxlet_config.proxied_paths or [])
                 ]
+                or None,
             )
         )
 

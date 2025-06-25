@@ -83,10 +83,20 @@ class SandboxConfig(_message.Message):
     def __init__(self, sandboxlet: _Optional[_Union[SandboxletConfig, _Mapping]] = ...) -> None: ...
 
 class SandboxletConfig(_message.Message):
-    __slots__ = ("proxied_paths",)
+    __slots__ = ("proxied_paths", "screen_resolution")
     PROXIED_PATHS_FIELD_NUMBER: _ClassVar[int]
+    SCREEN_RESOLUTION_FIELD_NUMBER: _ClassVar[int]
     proxied_paths: _containers.RepeatedCompositeFieldContainer[ProxiedPath]
-    def __init__(self, proxied_paths: _Optional[_Iterable[_Union[ProxiedPath, _Mapping]]] = ...) -> None: ...
+    screen_resolution: ScreenResolution
+    def __init__(self, proxied_paths: _Optional[_Iterable[_Union[ProxiedPath, _Mapping]]] = ..., screen_resolution: _Optional[_Union[ScreenResolution, _Mapping]] = ...) -> None: ...
+
+class ScreenResolution(_message.Message):
+    __slots__ = ("width", "height")
+    WIDTH_FIELD_NUMBER: _ClassVar[int]
+    HEIGHT_FIELD_NUMBER: _ClassVar[int]
+    width: int
+    height: int
+    def __init__(self, width: _Optional[int] = ..., height: _Optional[int] = ...) -> None: ...
 
 class ProxiedPath(_message.Message):
     __slots__ = ("incoming_path", "outgoing_port")
